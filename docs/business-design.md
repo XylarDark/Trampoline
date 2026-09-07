@@ -97,7 +97,9 @@ A durable record of demonstrated progress, plus the routing that record makes po
 
 Three propositions, each with evidence and a named payer.
 
-**1. Outcome-evidence infrastructure — the wedge.** Funders settle on exact milestones: 6 and 13 cumulative weeks, retention to 15 and 33 months, 20-plus hours, wage, employment within 60 days of program completion. Employment Ontario's Service Coordination measure counts supported referrals in *and* out. We are a referral router, so this is the tightest product-to-metric fit available to us, and the manual cost it removes is documented in the government's own evaluation.
+**1. Outcome-evidence infrastructure — the wedge.** Under the live Integrated Employment Services regime a funded outcome is an average of 20-plus hours per week at or above minimum wage, checked at 1, 3, 6, and 12 months after job start, and evidenced by an offer letter, a pay stub, or an employment letter. Client self-report does not count, and a provider attestation needs Service System Manager pre-approval. So a provider must extract a document from an employer with no obligation to supply one, four times per client, up to a year after that client stopped being their client. The manual cost is documented in the government's own evaluation.
+
+The referral tables serve the Service Coordination measure, which counts supported referrals in *and* out — including referrals made *to* the provider. Carry the caveat: that measure sits in the legacy Employment Service quality standard and the equivalent IES weighting is not public. See [`outreach/ontario-outcome-framework.md`](outreach/ontario-outcome-framework.md) for the full framework, the evidence rules, and what is still unconfirmed.
 
 **2. Accommodation specification.** Our restriction model, rendered in Functional Abilities Form style and released post-offer with a request path, operationalizes two of the few strongly-evidenced levers for cutting work-disability duration. Readiness certification has no comparable evidence base; this does.
 

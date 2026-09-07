@@ -28,12 +28,12 @@ It is also what the law says. Ontario treats pre-offer medical inquiry as presum
 
 **Primary:** the person rebuilding both at once. They are hiring Trampoline to stop re-explaining their situation to every new organization, and to get the adjustment they need written into the job rather than discovered after they start.
 
-**Secondary:** the provider and the funder. A provider is hiring Trampoline to stop proving 13 cumulative weeks of employment by hand. A funder is hiring it to see referrals, placements, and retention as they happen instead of in a year-end survey their own evaluators flagged for selection bias.
+**Secondary:** the provider and the funder. A provider is hiring Trampoline to stop chasing employer letters and pay stubs at the 1-, 3-, 6-, and 12-month checkpoints by hand — client self-report is not acceptable evidence, so the chasing is not optional. A funder is hiring it to see referrals, placements, and retention as they happen instead of in a year-end survey their own evaluators flagged for selection bias.
 
 ## Key metrics
 
-- **Milestones evidenced without manual chasing** — 6- and 13-week and retention milestones captured as a by-product of the record. This is the wedge, so it is the first metric.
-- **Supported referrals accepted, in and out** — Employment Ontario's Service Coordination measure counts exactly this, in both directions. We are a referral router, which makes it the tightest product-to-funded-metric fit available to us.
+- **Milestones evidenced without manual chasing** — the 1-, 3-, 6-, and 12-month checkpoints captured as a by-product of the record. This is the wedge, so it is the first metric.
+- **Supported referrals accepted, in and out** — the Service Coordination measure counts exactly this, in both directions, and we are a referral router. Caveat worth carrying: that measure is documented under the legacy Employment Service quality standard, and the equivalent weighting under the live Integrated Employment Services regime is not published. Strong fit in intent, unconfirmed in weight.
 - **Accommodations specified and provided** — restrictions that became a written workplace adjustment rather than a quiet rejection.
 - **Retention at 12 months** — the number that collapsed from 86% to 62%. If we do not move it, we have built reporting software.
 - **Zero health-derived hiring blocks** — an audit metric, expected to stay at zero permanently.

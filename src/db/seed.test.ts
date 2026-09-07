@@ -7,6 +7,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 
 import { PGlite } from "@electric-sql/pglite";
+import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/pglite";
 import { beforeAll, describe, expect, it } from "vitest";
 
@@ -134,35 +135,45 @@ describe("migrations and seed", () => {
     );
   });
 
-  it("only accepts follow-ups at the months funders report on", async () => {
+  it("keeps follow-ups inside the reportable window, measured from job start", async () => {
     const [user] = await db
       .insert(schema.users)
       .values({ email: "follow-up-window@example.test" })
       .returning();
 
+    // 34 is past the longest ODSP retention period.
     await expectConstraintViolation(
       db.insert(schema.outcomeFollowUps).values({
         userId: user.id,
-        monthsAfterExit: 9,
+        monthsAfterJobStart: 34,
         contactedOn: new Date(),
         contactOutcome: "reached",
       }),
       "outcome_follow_ups_reported_window",
     );
 
-    await db.insert(schema.outcomeFollowUps).values({
-      userId: user.id,
-      monthsAfterExit: 12,
-      contactedOn: new Date(),
-      contactOutcome: "reached",
-      employed: true,
-      weeklyHours: "22.50",
-      hourlyWage: "19.00",
-    });
+    // Month 4 is not an IES checkpoint but is a legacy ODSP retention month,
+    // so the window has to admit it.
+    await db.insert(schema.outcomeFollowUps).values([
+      {
+        userId: user.id,
+        monthsAfterJobStart: 4,
+        contactedOn: new Date(),
+        contactOutcome: "no_response",
+      },
+      {
+        userId: user.id,
+        monthsAfterJobStart: 12,
+        contactedOn: new Date(),
+        contactOutcome: "reached",
+        employed: true,
+        weeklyHours: "22.50",
+        hourlyWage: "19.00",
+      },
+    ]);
 
     const rows = await db.select().from(schema.outcomeFollowUps);
-    expect(rows).toHaveLength(1);
-    expect(rows[0].monthsAfterExit).toBe(12);
+    expect(rows.map((row) => row.monthsAfterJobStart).sort((a, b) => a - b)).toEqual([4, 12]);
   });
 
   it("records the milestones funders settle on, once each", async () => {
@@ -187,7 +198,7 @@ describe("migrations and seed", () => {
       periodStart: new Date("2026-01-05T00:00:00Z"),
       weeklyHours: "24.00",
       hourlyWage: "18.50",
-      verificationSource: "employer_confirmation",
+      verificationSource: "employment_letter",
       verifiedByOrganizationId: employer.id,
       verifiedAt: new Date("2026-04-06T00:00:00Z"),
     });
@@ -195,11 +206,10 @@ describe("migrations and seed", () => {
     const milestone = {
       userId: user.id,
       placementId: placement.id,
-      kind: "weeks_13_cumulative" as const,
+      kind: "ies_month_3" as const,
       achievedOn: new Date("2026-04-06T00:00:00Z"),
-      cumulativeWeeks: "13.00",
       weeklyHoursAtMilestone: "24.00",
-      evidenceNote: "Employer confirmation email, 2026-04-06",
+      evidenceNote: "Employment letter from employer, 2026-04-06",
     };
 
     await db.insert(schema.outcomeMilestones).values(milestone);
@@ -207,6 +217,81 @@ describe("migrations and seed", () => {
       db.insert(schema.outcomeMilestones).values(milestone),
       "outcome_milestones_once_per_placement",
     );
+  });
+
+  it("refuses a provider attestation with no SSM pre-approval reference", async () => {
+    // Ontario permits a provider attestation only as a last resort, and only
+    // with SSM pre-approval before submission. An attestation recorded without
+    // that reference is a claim that will be rejected downstream.
+    const [user] = await db
+      .insert(schema.users)
+      .values({ email: "attestation-evidence@example.test" })
+      .returning();
+
+    const [placement] = await db
+      .insert(schema.placements)
+      .values({
+        userId: user.id,
+        jobTitle: "Kitchen helper",
+        startedOn: new Date("2026-02-02T00:00:00Z"),
+      })
+      .returning();
+
+    await expectConstraintViolation(
+      db.insert(schema.employmentSpells).values({
+        placementId: placement.id,
+        periodStart: new Date("2026-02-02T00:00:00Z"),
+        weeklyHours: "21.00",
+        verificationSource: "provider_attestation",
+      }),
+      "employment_spells_attestation_needs_preapproval",
+    );
+
+    await db.insert(schema.employmentSpells).values({
+      placementId: placement.id,
+      periodStart: new Date("2026-02-02T00:00:00Z"),
+      weeklyHours: "21.00",
+      verificationSource: "provider_attestation",
+      ssmPreApprovalRef: "SSM-2026-0417",
+    });
+
+    const rows = await db
+      .select()
+      .from(schema.employmentSpells)
+      .where(eq(schema.employmentSpells.placementId, placement.id));
+    expect(rows).toHaveLength(1);
+  });
+
+  it("records a subsidized spell as subsidized, since it earns no outcome", async () => {
+    const [user] = await db
+      .insert(schema.users)
+      .values({ email: "subsidized@example.test" })
+      .returning();
+
+    const [placement] = await db
+      .insert(schema.placements)
+      .values({
+        userId: user.id,
+        jobTitle: "Shipping assistant",
+        startedOn: new Date("2026-03-02T00:00:00Z"),
+      })
+      .returning();
+
+    await db.insert(schema.employmentSpells).values({
+      placementId: placement.id,
+      periodStart: new Date("2026-03-02T00:00:00Z"),
+      weeklyHours: "30.00",
+      subsidized: true,
+      verificationSource: "pay_stub",
+    });
+
+    const [spell] = await db
+      .select()
+      .from(schema.employmentSpells)
+      .where(eq(schema.employmentSpells.placementId, placement.id));
+
+    expect(spell.subsidized).toBe(true);
+    expect(placement.primaryJob).toBe(true);
   });
 
   it("keeps exit satisfaction on the 1-5 scale, from both sides", async () => {

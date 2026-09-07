@@ -4,14 +4,14 @@ CREATE TYPE "public"."attestation_result" AS ENUM('pass', 'fail', 'restricted');
 CREATE TYPE "public"."check_domain" AS ENUM('medical', 'wellness', 'mental', 'skills');--> statement-breakpoint
 CREATE TYPE "public"."follow_up_contact" AS ENUM('reached', 'no_response', 'declined_to_answer', 'unreachable');--> statement-breakpoint
 CREATE TYPE "public"."gate_kind" AS ENUM('employment', 'training');--> statement-breakpoint
-CREATE TYPE "public"."milestone_kind" AS ENUM('placement_start', 'weeks_6_cumulative', 'weeks_13_cumulative', 'hours_20_plus', 'employed_within_60_days_of_completion', 'retention_15_months', 'retention_33_months', 'program_completion');--> statement-breakpoint
+CREATE TYPE "public"."milestone_kind" AS ENUM('placement_start', 'program_completion', 'ies_month_1', 'ies_month_3', 'ies_month_6', 'ies_month_12', 'odsp_weeks_6_cumulative', 'odsp_weeks_13_cumulative', 'odsp_retention_month');--> statement-breakpoint
 CREATE TYPE "public"."org_kind" AS ENUM('vendor', 'school', 'employer', 'funder', 'clinic', 'wellness', 'mental', 'skills');--> statement-breakpoint
 CREATE TYPE "public"."referral_direction" AS ENUM('inbound', 'outbound');--> statement-breakpoint
 CREATE TYPE "public"."referral_status" AS ENUM('sent', 'accepted', 'declined', 'placed', 'lost_contact');--> statement-breakpoint
 CREATE TYPE "public"."role" AS ENUM('user', 'attestor', 'org_admin', 'funder');--> statement-breakpoint
 CREATE TYPE "public"."satisfaction_respondent" AS ENUM('client', 'employer');--> statement-breakpoint
 CREATE TYPE "public"."share_scope" AS ENUM('skills', 'functional_abilities', 'personal');--> statement-breakpoint
-CREATE TYPE "public"."verification_source" AS ENUM('employer_confirmation', 'pay_stub', 'provider_case_note', 'self_report');--> statement-breakpoint
+CREATE TYPE "public"."verification_source" AS ENUM('offer_letter', 'initial_pay_stub', 'pay_stub', 'employment_letter', 'provider_attestation', 'client_self_report');--> statement-breakpoint
 CREATE TABLE "accommodation_requests" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" uuid NOT NULL,
@@ -92,9 +92,12 @@ CREATE TABLE "employment_spells" (
 	"period_end" timestamp with time zone,
 	"weekly_hours" numeric(5, 2) NOT NULL,
 	"hourly_wage" numeric(7, 2),
+	"subsidized" boolean DEFAULT false NOT NULL,
 	"verification_source" "verification_source" NOT NULL,
 	"verified_by_organization_id" uuid,
-	"verified_at" timestamp with time zone
+	"verified_at" timestamp with time zone,
+	"ssm_pre_approval_ref" text,
+	CONSTRAINT "employment_spells_attestation_needs_preapproval" CHECK ("employment_spells"."verification_source" <> 'provider_attestation' OR "employment_spells"."ssm_pre_approval_ref" IS NOT NULL)
 );
 --> statement-breakpoint
 CREATE TABLE "exit_satisfaction" (
@@ -161,15 +164,15 @@ CREATE TABLE "outcome_follow_ups" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" uuid NOT NULL,
 	"placement_id" uuid,
-	"months_after_exit" smallint NOT NULL,
+	"months_after_job_start" smallint NOT NULL,
 	"contacted_on" timestamp with time zone NOT NULL,
 	"contact_outcome" "follow_up_contact" NOT NULL,
 	"employed" boolean,
 	"weekly_hours" numeric(5, 2),
 	"hourly_wage" numeric(7, 2),
 	"in_education_or_training" boolean,
-	CONSTRAINT "outcome_follow_ups_once_per_window" UNIQUE("user_id","placement_id","months_after_exit"),
-	CONSTRAINT "outcome_follow_ups_reported_window" CHECK ("outcome_follow_ups"."months_after_exit" IN (1, 3, 6, 12, 15, 33))
+	CONSTRAINT "outcome_follow_ups_once_per_window" UNIQUE("user_id","placement_id","months_after_job_start"),
+	CONSTRAINT "outcome_follow_ups_reported_window" CHECK ("outcome_follow_ups"."months_after_job_start" BETWEEN 1 AND 33)
 );
 --> statement-breakpoint
 CREATE TABLE "outcome_milestones" (
@@ -196,6 +199,7 @@ CREATE TABLE "placements" (
 	"started_on" timestamp with time zone NOT NULL,
 	"ended_on" timestamp with time zone,
 	"end_reason" text,
+	"primary_job" boolean DEFAULT true NOT NULL,
 	"gate_id" uuid,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );

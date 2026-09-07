@@ -7,7 +7,7 @@ Companion to [`business-design.md`](business-design.md). That document says what
 Ontario first, and specifically Hamilton-Niagara. The reasons are practical rather than sentimental:
 
 - It is a former prototype catchment, so its outcome data is **published and citable** — including the collapse from 86% to 62% employment at 20-plus hours between exit and twelve months. We can open a conversation with the buyer's own numbers.
-- Its Service System Manager is a Fedcap-led consortium that includes four former employment and ODSP providers who feel the retention cliff directly.
+- Its Service System Manager is Fedcap Canada, whose catchment actually spans Hamilton, Haldimand-Norfolk, Niagara, Brant, and Halton. Its current provider network includes **AGILEC and March of Dimes**, which also sit on the WSIB assessment roster — provider interview and attestor supply in the same conversation.
 - It sits inside the Greater Toronto and Hamilton Area, so expansion is cheap.
 - Nine Service System Managers cover the whole province. That is a nine-relationship scale path, not a city-by-city grind.
 
@@ -25,13 +25,19 @@ UK Fit for Work died because referrers did not refer and employers found the rec
 
 So: **get one organization to commit to consuming our output before building the attestation network that feeds it.** An attestor network with nobody reading it is the expensive way to learn this.
 
+**One encouraging finding on the consumption side.** EOIS-CaMS is the system of record, and no public API exists — but third-party software already runs alongside it. ESCases links clients to CaMS by client reference number, supports batch import, and is coupled to a client-facing dashboard through Thrive Career Wellness, which is itself a named consortium member in another Service System Manager's bid. So the precedent for a third-party system in this workflow is not hypothetical; someone shipped it and providers use it daily. The route in is **Service System Manager procurement, not a ministry integration programme** — which makes the SSM relationship the real gate, and makes "would your funder accept a milestone evidenced through a third-party system" the highest-value question in the interview guide.
+
 ## 3. Outreach in dependency order
 
 ### 1. Retention-cliff interviews (weeks 1-3)
 
-Corbrook, Community Living Toronto, the Canadian Council on Rehabilitation and Work, Operation Springboard — all inside the Fedcap consortium.
+Community Living Toronto, Corbrook, Springboard, and the Canadian Council on Rehabilitation and Work.
 
-One question: *how do you currently prove 13 cumulative weeks and month-by-month retention, and what does it cost you?*
+One question: *how do you currently prove employment at the 1-, 3-, 6-, and 12-month checkpoints, and what does it cost you?*
+
+Two corrections carried from verification, both of which would have made the first call go badly. These four are in **WCG's** Toronto network, not Fedcap's — the consortium listing naming all four is a 2020 bid-stage announcement. And the milestones are not 13 cumulative weeks; that is the legacy ODSP framework, now scoped to First Nations sites. Details in [`outreach/ontario-outcome-framework.md`](outreach/ontario-outcome-framework.md).
+
+Start with Community Living Toronto. They published an evaluation of their own attempt to reduce this exact burden and found it got worse — 23 of 48 staff responses said the change added to it. Best-informed call available, and the least likely to be polite.
 
 This validates or kills the wedge for the price of four phone calls. It is allowed to kill it. If the answer is "it's fine, our case management handles it," the reporting thesis is wrong and we should know in week three rather than month nine.
 

@@ -85,24 +85,55 @@ export const referralStatusEnum = pgEnum("referral_status", [
   "lost_contact",
 ]);
 
-/** The milestones Ontario employment funding actually settles on. */
+/**
+ * The milestones Ontario employment funding settles on. Two frameworks, kept
+ * distinct on purpose, because conflating them is easy and expensive:
+ *
+ *  - **IES** (Integrated Employment Services) is the live regime. A Funded
+ *    Outcome is an average of 20-plus hours per week at or above general
+ *    minimum wage, checked at 1, 3, 6, and 12 months **after job start**.
+ *    There is no 13-week measure in IES.
+ *  - **ODSP Employment Supports** is the legacy regime that carries the 6- and
+ *    13-cumulative-week placement measures and monthly retention fees to 33
+ *    months (income support recipients) or 15 months (non-recipients). Its
+ *    directive is now scoped to First Nations sites, and it is tracked in
+ *    ESMS-SPM rather than CaMS.
+ *
+ * We model both because providers straddle the transition, and because which
+ * regime a given contract sits under is a question for the provider rather
+ * than something we can infer.
+ */
 export const milestoneKindEnum = pgEnum("milestone_kind", [
   "placement_start",
-  "weeks_6_cumulative",
-  "weeks_13_cumulative",
-  "hours_20_plus",
-  "employed_within_60_days_of_completion",
-  "retention_15_months",
-  "retention_33_months",
   "program_completion",
+  // IES funded-outcome checkpoints, measured from job start.
+  "ies_month_1",
+  "ies_month_3",
+  "ies_month_6",
+  "ies_month_12",
+  // Legacy ODSP Employment Supports.
+  "odsp_weeks_6_cumulative",
+  "odsp_weeks_13_cumulative",
+  "odsp_retention_month",
 ]);
 
-/** Who stood behind the hours and wage. Self-report is countable but weaker. */
+/**
+ * How employment was evidenced, in the terms the funder accepts.
+ *
+ * The ordering is not cosmetic. Ontario's documented rule is that a provider
+ * attestation is a last resort: it requires the lead caseworker's signature,
+ * must satisfy a reasonable-person standard, and needs SSM pre-approval before
+ * submission. Client self-report is **not** listed as acceptable evidence for
+ * performance-based funding at all — which is precisely why providers spend
+ * staff time chasing pay stubs, and why this table exists.
+ */
 export const verificationSourceEnum = pgEnum("verification_source", [
-  "employer_confirmation",
+  "offer_letter",
+  "initial_pay_stub",
   "pay_stub",
-  "provider_case_note",
-  "self_report",
+  "employment_letter",
+  "provider_attestation",
+  "client_self_report",
 ]);
 
 export const followUpContactEnum = pgEnum("follow_up_contact", [
@@ -370,14 +401,24 @@ export const accommodationRequests = pgTable("accommodation_requests", {
 
 // --- Outcome evidence -------------------------------------------------------
 //
-// This is the part funders pay on, and it is modelled on the measures they
-// actually settle against rather than on outcomes we find interesting.
-// Employment Ontario's Service Coordination measure counts supported referrals
-// in and out; performance funding settles on 6 and 13 cumulative weeks of
-// employment, 20-plus weekly hours, employment within 60 days of program
-// completion, and retention at 15 and 33 months. Providers currently prove
-// these by hand — one told government evaluators they had converted a whole
-// department into a "retention department". That manual cost is the wedge.
+// This is the part funders pay on, modelled on the measures they settle
+// against rather than on outcomes we find interesting.
+//
+// Under the live Integrated Employment Services regime, a funded outcome is an
+// average of 20-plus hours per week at or above general minimum wage, checked
+// at 1, 3, 6, and 12 months after job start, and evidenced by an offer letter,
+// a pay stub, or an employment letter. Client self-report does not count.
+//
+// The referral tables serve the Service Coordination measure, which counts
+// supported referrals in *and* out. Note that Service Coordination is
+// documented under the legacy Employment Service quality standard; the
+// equivalent IES measure is not published, so treat the referral model as
+// well-founded in intent and unconfirmed in weighting.
+//
+// Providers prove all of this by hand today. One told government evaluators
+// they had converted a whole department into a "retention department" that
+// "strictly captures proof of employment", and that it detracts from client
+// service. That manual cost is the wedge.
 
 /**
  * A referral in or out. `direction` and `supported` exist because the funded
@@ -419,6 +460,13 @@ export const placements = pgTable("placements", {
   startedOn: timestamp("started_on", { withTimezone: true }).notNull(),
   endedOn: timestamp("ended_on", { withTimezone: true }),
   endReason: text("end_reason"),
+  /**
+   * A funded outcome is assessed on the client's primary job. Concurrent jobs
+   * summing to 20-plus hours are allowed only for a capped share of a
+   * catchment's clients, so which job is primary has to be recorded, not
+   * guessed.
+   */
+  primaryJob: boolean("primary_job").notNull().default(true),
   /** Set when the placement came through a gate, for pilot analysis. */
   gateId: uuid("gate_id").references(() => gates.id),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
@@ -426,22 +474,41 @@ export const placements = pgTable("placements", {
 
 /**
  * A continuous stretch of employment at known hours and wage. Milestones count
- * *cumulative* weeks, so a person who works, stops, and restarts needs the
- * spells kept separate rather than a single start and end date.
+ * cumulative weeks and checkpoint averages, so a person who works, stops, and
+ * restarts needs the spells kept separate rather than a single start and end
+ * date.
  */
-export const employmentSpells = pgTable("employment_spells", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  placementId: uuid("placement_id")
-    .notNull()
-    .references(() => placements.id, { onDelete: "cascade" }),
-  periodStart: timestamp("period_start", { withTimezone: true }).notNull(),
-  periodEnd: timestamp("period_end", { withTimezone: true }),
-  weeklyHours: numeric("weekly_hours", { precision: 5, scale: 2 }).notNull(),
-  hourlyWage: numeric("hourly_wage", { precision: 7, scale: 2 }),
-  verificationSource: verificationSourceEnum("verification_source").notNull(),
-  verifiedByOrganizationId: uuid("verified_by_organization_id").references(() => organizations.id),
-  verifiedAt: timestamp("verified_at", { withTimezone: true }),
-});
+export const employmentSpells = pgTable(
+  "employment_spells",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    placementId: uuid("placement_id")
+      .notNull()
+      .references(() => placements.id, { onDelete: "cascade" }),
+    periodStart: timestamp("period_start", { withTimezone: true }).notNull(),
+    periodEnd: timestamp("period_end", { withTimezone: true }),
+    /** Average hours per week over the period. The 20-hour threshold is an average. */
+    weeklyHours: numeric("weekly_hours", { precision: 5, scale: 2 }).notNull(),
+    hourlyWage: numeric("hourly_wage", { precision: 7, scale: 2 }),
+    /**
+     * True while an employer is receiving employer financial supports. No
+     * funded outcome is payable until the placement is unsubsidized, so a
+     * spell that omits this produces a claim the funder will reject.
+     */
+    subsidized: boolean("subsidized").notNull().default(false),
+    verificationSource: verificationSourceEnum("verification_source").notNull(),
+    verifiedByOrganizationId: uuid("verified_by_organization_id").references(() => organizations.id),
+    verifiedAt: timestamp("verified_at", { withTimezone: true }),
+    /** SSM pre-approval reference. Mandatory for a provider attestation. */
+    ssmPreApprovalRef: text("ssm_pre_approval_ref"),
+  },
+  (t) => [
+    check(
+      "employment_spells_attestation_needs_preapproval",
+      sql`${t.verificationSource} <> 'provider_attestation' OR ${t.ssmPreApprovalRef} IS NOT NULL`,
+    ),
+  ],
+);
 
 /**
  * A funder-payable milestone, recorded once with the evidence that supports
@@ -468,8 +535,18 @@ export const outcomeMilestones = pgTable(
 );
 
 /**
- * Post-exit follow-up at the months funders ask about. 15 and 33 months look
- * arbitrary but are the retention points written into Ontario reporting.
+ * Follow-up contact, measured in months **after job start** rather than after
+ * program exit — IES checkpoints are anchored to the job, not to the exit.
+ *
+ * The window is 1 to 33 rather than an enumerated list. IES checks at 1, 3, 6,
+ * and 12; legacy ODSP retention runs month by month to 33 (income support
+ * recipients) or 15 (non-recipients). An enumerated list looked tidier and
+ * would have made monthly ODSP retention unrecordable.
+ *
+ * This table also holds the attempts that fail. "Client stopped answering the
+ * phone at month four" is the operational reality that costs providers the
+ * outcome, and a schema that only records successful contacts cannot show
+ * anyone where the effort went.
  */
 export const outcomeFollowUps = pgTable(
   "outcome_follow_ups",
@@ -479,7 +556,7 @@ export const outcomeFollowUps = pgTable(
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     placementId: uuid("placement_id").references(() => placements.id, { onDelete: "set null" }),
-    monthsAfterExit: smallint("months_after_exit").notNull(),
+    monthsAfterJobStart: smallint("months_after_job_start").notNull(),
     contactedOn: timestamp("contacted_on", { withTimezone: true }).notNull(),
     contactOutcome: followUpContactEnum("contact_outcome").notNull(),
     employed: boolean("employed"),
@@ -488,10 +565,14 @@ export const outcomeFollowUps = pgTable(
     inEducationOrTraining: boolean("in_education_or_training"),
   },
   (t) => [
-    unique("outcome_follow_ups_once_per_window").on(t.userId, t.placementId, t.monthsAfterExit),
+    unique("outcome_follow_ups_once_per_window").on(
+      t.userId,
+      t.placementId,
+      t.monthsAfterJobStart,
+    ),
     check(
       "outcome_follow_ups_reported_window",
-      sql`${t.monthsAfterExit} IN (1, 3, 6, 12, 15, 33)`,
+      sql`${t.monthsAfterJobStart} BETWEEN 1 AND 33`,
     ),
   ],
 );
