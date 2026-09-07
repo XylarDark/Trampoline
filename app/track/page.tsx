@@ -1,55 +1,50 @@
-import { DEMO_SHARE_TOKEN, demoPassport } from "@/src/db/demo-passport";
-import { OPPORTUNITIES, UNLOCK_RULES } from "@/src/db/seed-data";
-import { currentByCheckType } from "@/src/engine/decay";
-import { computeLevel, levelStatuses, nextLevelGap } from "@/src/engine/levels";
-import { evaluateUnlock, parseUnlockRule } from "@/src/engine/rules";
-import { LEVEL_NAMES } from "@/src/engine/types";
 import Link from "next/link";
+
+import { DEMO_SHARE_TOKEN, demoPassport } from "@/src/db/demo-passport";
+import { GATES, OPPORTUNITIES } from "@/src/db/seed-data";
+import { evaluateGate, parseGate } from "@/src/engine/rules";
+import { nextStep } from "@/src/engine/routing";
+import { buildPersonalView } from "@/src/engine/share";
 
 export default function TrackPage() {
   const now = new Date();
   const snapshot = demoPassport();
 
-  const level = computeLevel(snapshot.attestations, snapshot.levelRequirements, now);
-  const statuses = levelStatuses(snapshot.attestations, snapshot.levelRequirements, now);
-  const gap = nextLevelGap(snapshot.attestations, snapshot.levelRequirements, now);
-  const current = [...currentByCheckType(snapshot.attestations, now).values()];
+  const view = buildPersonalView(snapshot, now);
+  const step = nextStep(snapshot, now);
 
-  const gates = OPPORTUNITIES.map((seat) => {
-    const ruleSeed = UNLOCK_RULES.find((rule) => rule.key === seat.unlockRuleKey);
-    if (!ruleSeed) throw new Error(`Missing gate for ${seat.key}`);
+  const seats = OPPORTUNITIES.map((seat) => {
+    const gateSeed = GATES.find((gate) => gate.key === seat.gateKey);
+    if (!gateSeed) throw new Error(`Missing gate for ${seat.key}`);
 
-    const verdict = evaluateUnlock(
-      parseUnlockRule(ruleSeed.definition),
-      {
-        id: seat.key,
-        title: seat.title,
-        targetLevel: seat.targetLevel,
-        tags: seat.tags,
-      },
+    const gate = parseGate(gateSeed.definition);
+    const verdict = evaluateGate(
+      gate,
+      { id: seat.key, title: seat.title, tags: seat.tags },
       snapshot,
       now,
     );
 
-    return { seat, verdict };
+    return { seat, gate, verdict };
   });
 
   return (
     <div className="space-y-8">
       <header className="space-y-2">
         <h1 className="text-2xl font-semibold">
-          Level {level} — {LEVEL_NAMES[level]}
+          Level {view.level} — {view.levelName}
         </h1>
         <p className="text-sm text-muted-foreground">
-          Placeholder passport, computed by the rules engine. Attestations are not read from the
-          database yet.
+          This page is yours. Your level is a private routing signal, not a credential: it decides
+          what support to offer you, and no employer ever sees it. Attestations are not read from
+          the database yet.
         </p>
       </header>
 
       <section className="space-y-3">
         <h2 className="text-lg font-medium">Level bundles</h2>
         <ul className="space-y-1 text-sm">
-          {statuses.map((status) => (
+          {view.levelStatuses.map((status) => (
             <li key={status.level} className="flex gap-3">
               <span className="w-10 shrink-0 font-mono">L{status.level}</span>
               <span className="w-20 shrink-0">{status.held ? "held" : "open"}</span>
@@ -61,24 +56,39 @@ export default function TrackPage() {
             </li>
           ))}
         </ul>
-        {gap.nextLevel !== null && (
-          <p className="text-sm">
-            Next: Level {gap.nextLevel} needs {gap.missingCheckTypes.join(", ") || "a hold period"}.
-          </p>
-        )}
+        <p className="text-sm">{step.headline}</p>
       </section>
+
+      {view.support.length > 0 && (
+        <section className="space-y-3">
+          <h2 className="text-lg font-medium">Support available to you</h2>
+          <p className="text-sm text-muted-foreground">
+            An expired or restricted check triggers an offer of help. It never closes a job to you.
+          </p>
+          <ul className="space-y-2 text-sm">
+            {view.support.map((trigger, index) => (
+              <li key={`${trigger.action}-${index}`} className="space-y-1">
+                <span className="font-mono text-xs uppercase text-muted-foreground">
+                  {trigger.action.replaceAll("_", " ")}
+                </span>
+                <p>{trigger.reason}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <section className="space-y-3">
         <h2 className="text-lg font-medium">Evidence locker</h2>
         <ul className="space-y-1 text-sm">
-          {current.map((attestation) => (
-            <li key={attestation.id} className="flex flex-wrap gap-3">
+          {view.checks.map((check) => (
+            <li key={check.checkTypeKey} className="flex flex-wrap gap-3">
               <span className="font-mono text-xs uppercase text-muted-foreground">
-                {attestation.domain}
+                {check.domain}
               </span>
-              <span>{attestation.checkTypeKey}</span>
+              <span>{check.checkTypeKey}</span>
               <span className="text-muted-foreground">
-                {attestation.result} · expires {attestation.expiresAt.toISOString().slice(0, 10)}
+                expires {check.expiresAt.toISOString().slice(0, 10)}
               </span>
             </li>
           ))}
@@ -86,29 +96,55 @@ export default function TrackPage() {
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-lg font-medium">Gated opportunities</h2>
-        {gates.map(({ seat, verdict }) => (
+        <h2 className="text-lg font-medium">Seats</h2>
+        {seats.map(({ seat, gate, verdict }) => (
           <div key={seat.key} className="space-y-1 text-sm">
             <p className="font-medium">
-              {seat.title} — {verdict.unlocked ? "unlocked" : "locked"}
+              {seat.title} — {verdict.open ? "open" : "not yet"}
             </p>
             <p className="text-muted-foreground">
-              Level {seat.targetLevel} gate · tags {seat.tags.join(", ")}
+              {gate.kind === "employment"
+                ? "Employment gate: skills and attendance only."
+                : "Training gate: may consider a restriction, with a written safety rationale."}{" "}
+              Tags {seat.tags.join(", ")}.
             </p>
             {verdict.reasons.map((reason) => (
               <p key={reason} className="text-muted-foreground">
                 {reason}
               </p>
             ))}
+            {verdict.blockingRestrictions.length > 0 && (
+              <p>
+                <Link
+                  href={`/accommodation?opportunity=${seat.key}&restriction=${verdict.blockingRestrictions[0]}`}
+                  className="underline"
+                >
+                  Request an accommodation for this
+                </Link>
+              </p>
+            )}
           </div>
         ))}
       </section>
 
-      <p className="text-sm">
-        <Link href={`/share/${DEMO_SHARE_TOKEN}`} className="underline">
-          See what a school or employer would see
-        </Link>
-      </p>
+      <section className="space-y-2 text-sm">
+        <h2 className="text-lg font-medium">What others can see</h2>
+        <p>
+          <Link href={`/share/${DEMO_SHARE_TOKEN}`} className="underline">
+            The skills view an employer gets before an offer
+          </Link>
+        </p>
+        <p>
+          <Link href={`/share/${DEMO_SHARE_TOKEN}?scope=functional_abilities`} className="underline">
+            The functional abilities view, only after a conditional offer
+          </Link>
+        </p>
+        <p>
+          <Link href="/access-log" className="underline">
+            Who has looked at your record
+          </Link>
+        </p>
+      </section>
     </div>
   );
 }

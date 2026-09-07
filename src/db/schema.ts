@@ -1,18 +1,27 @@
 /**
  * Trampoline schema.
  *
- * Two rules constrain everything here, and they come from the business design
- * rather than from engineering taste:
+ * Four rules constrain everything here. They come from the business design and
+ * from Ontario law, not from engineering taste:
  *
  *  1. No personal health information. We store who attested, the verdict, any
  *     restriction, and the dates. Never charts, therapy notes, or programs.
  *  2. Attestations are append-only. A revocation is a new row in
  *     `attestationEvents`; the attestation itself is never edited or deleted.
+ *  3. An employment gate cannot express a health requirement. This is a check
+ *     constraint on `gates`, not a convention, because pre-offer medical
+ *     inquiry is presumptively unlawful under Human Rights Code s. 23(2).
+ *  4. Expiry never restricts work. There is no column anywhere that pauses a
+ *     person's job access, and `tracks.healthRenewalDueAt` is a private
+ *     reminder that no employer surface reads.
  */
+import { sql } from "drizzle-orm";
 import {
   boolean,
+  check,
   integer,
   jsonb,
+  numeric,
   pgEnum,
   pgTable,
   primaryKey,
@@ -44,19 +53,68 @@ export const attestationResultEnum = pgEnum("attestation_result", ["pass", "fail
 
 export const attestationEventKindEnum = pgEnum("attestation_event_kind", ["issued", "revoked"]);
 
+/**
+ * Employment gates may reference skills checks only. Training gates may use a
+ * level or a restriction, but only with a written safety rationale.
+ */
+export const gateKindEnum = pgEnum("gate_kind", ["employment", "training"]);
+
+/** Scopes a share link can carry. `functional_abilities` is post-offer only. */
+export const shareScopeEnum = pgEnum("share_scope", [
+  "skills",
+  "functional_abilities",
+  "personal",
+]);
+
+export const accommodationStatusEnum = pgEnum("accommodation_status", [
+  "requested",
+  "in_discussion",
+  "provided",
+  "declined",
+  "withdrawn",
+]);
+
+/** Referrals are counted in both directions by Employment Ontario reporting. */
+export const referralDirectionEnum = pgEnum("referral_direction", ["inbound", "outbound"]);
+
 export const referralStatusEnum = pgEnum("referral_status", [
   "sent",
   "accepted",
   "declined",
   "placed",
+  "lost_contact",
 ]);
 
-export const outcomeKindEnum = pgEnum("outcome_kind", [
-  "showed_up",
-  "stayed",
-  "relapsed",
-  "hired",
-  "kept_90_days",
+/** The milestones Ontario employment funding actually settles on. */
+export const milestoneKindEnum = pgEnum("milestone_kind", [
+  "placement_start",
+  "weeks_6_cumulative",
+  "weeks_13_cumulative",
+  "hours_20_plus",
+  "employed_within_60_days_of_completion",
+  "retention_15_months",
+  "retention_33_months",
+  "program_completion",
+]);
+
+/** Who stood behind the hours and wage. Self-report is countable but weaker. */
+export const verificationSourceEnum = pgEnum("verification_source", [
+  "employer_confirmation",
+  "pay_stub",
+  "provider_case_note",
+  "self_report",
+]);
+
+export const followUpContactEnum = pgEnum("follow_up_contact", [
+  "reached",
+  "no_response",
+  "declined_to_answer",
+  "unreachable",
+]);
+
+export const satisfactionRespondentEnum = pgEnum("satisfaction_respondent", [
+  "client",
+  "employer",
 ]);
 
 export const users = pgTable("users", {
@@ -99,10 +157,15 @@ export const tracks = pgTable("tracks", {
     .notNull()
     .unique()
     .references(() => users.id, { onDelete: "cascade" }),
+  /** Private routing signal. Never rendered on an employer surface. */
   currentLevel: smallint("current_level").notNull().default(0),
   levelComputedAt: timestamp("level_computed_at", { withTimezone: true }),
-  /** Set when a cross-domain rule pauses applications, e.g. a health floor drop. */
-  applicationsPausedAt: timestamp("applications_paused_at", { withTimezone: true }),
+  /**
+   * Set when a health check the track depends on has lapsed. This drives a
+   * reminder and an offer of support to the person. It does not, and must not,
+   * restrict access to any job.
+   */
+  healthRenewalDueAt: timestamp("health_renewal_due_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
@@ -203,15 +266,38 @@ export const attestationRestrictions = pgTable(
 
 /**
  * A gate, published by a school or employer. `definition` holds the rule as
- * data — see `unlockRuleDefinitionSchema` in src/engine/types.ts.
+ * data — see `gateDefinitionSchema` in src/engine/types.ts.
+ *
+ * The check constraint is the hard stop: Postgres refuses to store an
+ * employment gate whose definition contains a level requirement, a restriction
+ * requirement, or a health-expiry pause. An application bug cannot route
+ * around it, and neither can a hand-written INSERT.
  */
-export const unlockRules = pgTable("unlock_rules", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  key: text("key").notNull().unique(),
-  label: text("label").notNull(),
-  definition: jsonb("definition").notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-});
+export const gates = pgTable(
+  "gates",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    key: text("key").notNull().unique(),
+    label: text("label").notNull(),
+    kind: gateKindEnum("kind").notNull(),
+    definition: jsonb("definition").notNull(),
+    /** Written bona fide safety rationale. Required for health-derived training gates. */
+    safetyRationale: text("safety_rationale"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    check(
+      "gates_employment_is_skills_only",
+      sql`${t.kind} <> 'employment' OR NOT (${t.definition} ?| array['requiredLevel', 'restrictionsMustBeClear', 'pauseOnHealthDrop'])`,
+    ),
+    check(
+      "gates_health_derived_training_needs_rationale",
+      sql`${t.kind} <> 'training'
+        OR NOT (${t.definition} ?| array['requiredLevel', 'restrictionsMustBeClear'])
+        OR length(coalesce(${t.safetyRationale}, '')) >= 20`,
+    ),
+  ],
+);
 
 export const opportunities = pgTable("opportunities", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -221,50 +307,217 @@ export const opportunities = pgTable("opportunities", {
   title: text("title").notNull(),
   summary: text("summary"),
   seats: integer("seats").notNull().default(1),
-  targetLevel: smallint("target_level").notNull(),
-  unlockRuleId: uuid("unlock_rule_id")
+  gateId: uuid("gate_id")
     .notNull()
-    .references(() => unlockRules.id),
+    .references(() => gates.id),
+  /** Conditions of the work, e.g. day_shift, lifting. Matched against restrictions. */
   tags: text("tags").array().notNull().default([]),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
-/** Scoped, expiring token. The share view carries level, restrictions, expiry. */
+/**
+ * Scoped, expiring, revocable, and issued to one named recipient so the access
+ * log can answer "who saw what". A `functional_abilities` link is only ever
+ * created after a conditional offer.
+ */
 export const shareLinks = pgTable("share_links", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: uuid("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   token: text("token").notNull().unique(),
-  scope: text("scope").notNull().default("readiness"),
+  scope: shareScopeEnum("scope").notNull().default("skills"),
+  /** Who this link was issued to, shown back to the person in their access log. */
+  recipientLabel: text("recipient_label").notNull(),
+  recipientOrganizationId: uuid("recipient_organization_id").references(() => organizations.id),
   expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
   revokedAt: timestamp("revoked_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
+/** Append-only record of every view of a share link, surfaced to the person. */
+export const shareAccessLog = pgTable("share_access_log", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  shareLinkId: uuid("share_link_id")
+    .notNull()
+    .references(() => shareLinks.id, { onDelete: "cascade" }),
+  viewedAt: timestamp("viewed_at", { withTimezone: true }).notNull().defaultNow(),
+  /** Scope actually served, so a later scope change stays auditable. */
+  scopeServed: shareScopeEnum("scope_served").notNull(),
+  viewerIpHash: text("viewer_ip_hash"),
+  userAgent: text("user_agent"),
+});
+
+/**
+ * A request to have a functional limit written into the job as an
+ * accommodation. AODA IASR s. 23 requires this path to exist wherever an
+ * assessment or selection process does, so it is a table, not a mailto link.
+ */
+export const accommodationRequests = pgTable("accommodation_requests", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  opportunityId: uuid("opportunity_id").references(() => opportunities.id),
+  /** Restriction the person wants accommodated, when it maps to one. */
+  restrictionId: uuid("restriction_id").references(() => restrictions.id),
+  /** What the person asked for, in their words. Not a clinical note. */
+  requestedSupport: text("requested_support").notNull(),
+  status: accommodationStatusEnum("status").notNull().default("requested"),
+  requestedAt: timestamp("requested_at", { withTimezone: true }).notNull().defaultNow(),
+  respondedAt: timestamp("responded_at", { withTimezone: true }),
+});
+
+// --- Outcome evidence -------------------------------------------------------
+//
+// This is the part funders pay on, and it is modelled on the measures they
+// actually settle against rather than on outcomes we find interesting.
+// Employment Ontario's Service Coordination measure counts supported referrals
+// in and out; performance funding settles on 6 and 13 cumulative weeks of
+// employment, 20-plus weekly hours, employment within 60 days of program
+// completion, and retention at 15 and 33 months. Providers currently prove
+// these by hand — one told government evaluators they had converted a whole
+// department into a "retention department". That manual cost is the wedge.
+
+/**
+ * A referral in or out. `direction` and `supported` exist because the funded
+ * measure is specifically *supported* referrals, in both directions, with
+ * acceptance by the receiving organization — not contacts made.
+ */
 export const referrals = pgTable("referrals", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: uuid("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
+  direction: referralDirectionEnum("direction").notNull(),
   fromOrganizationId: uuid("from_organization_id").references(() => organizations.id),
   toOrganizationId: uuid("to_organization_id")
     .notNull()
     .references(() => organizations.id),
   opportunityId: uuid("opportunity_id").references(() => opportunities.id),
+  /** Warm handoff with a named contact, as the funded measure requires. */
+  supported: boolean("supported").notNull().default(true),
   status: referralStatusEnum("status").notNull().default("sent"),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  sentAt: timestamp("sent_at", { withTimezone: true }).notNull().defaultNow(),
+  /** Acceptance by the receiving org is what makes the referral countable. */
+  acceptedAt: timestamp("accepted_at", { withTimezone: true }),
+  declinedReason: text("declined_reason"),
 });
 
-export const outcomes = pgTable("outcomes", {
+/** A person starting work or a program. One placement can span many spells. */
+export const placements = pgTable("placements", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: uuid("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
+  employerOrganizationId: uuid("employer_organization_id").references(() => organizations.id),
   opportunityId: uuid("opportunity_id").references(() => opportunities.id),
-  kind: outcomeKindEnum("kind").notNull(),
-  occurredAt: timestamp("occurred_at", { withTimezone: true }).notNull().defaultNow(),
+  referralId: uuid("referral_id").references(() => referrals.id),
+  jobTitle: text("job_title").notNull(),
+  /** National Occupational Classification code, which funder reporting asks for. */
+  nocCode: text("noc_code"),
+  startedOn: timestamp("started_on", { withTimezone: true }).notNull(),
+  endedOn: timestamp("ended_on", { withTimezone: true }),
+  endReason: text("end_reason"),
+  /** Set when the placement came through a gate, for pilot analysis. */
+  gateId: uuid("gate_id").references(() => gates.id),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
+
+/**
+ * A continuous stretch of employment at known hours and wage. Milestones count
+ * *cumulative* weeks, so a person who works, stops, and restarts needs the
+ * spells kept separate rather than a single start and end date.
+ */
+export const employmentSpells = pgTable("employment_spells", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  placementId: uuid("placement_id")
+    .notNull()
+    .references(() => placements.id, { onDelete: "cascade" }),
+  periodStart: timestamp("period_start", { withTimezone: true }).notNull(),
+  periodEnd: timestamp("period_end", { withTimezone: true }),
+  weeklyHours: numeric("weekly_hours", { precision: 5, scale: 2 }).notNull(),
+  hourlyWage: numeric("hourly_wage", { precision: 7, scale: 2 }),
+  verificationSource: verificationSourceEnum("verification_source").notNull(),
+  verifiedByOrganizationId: uuid("verified_by_organization_id").references(() => organizations.id),
+  verifiedAt: timestamp("verified_at", { withTimezone: true }),
+});
+
+/**
+ * A funder-payable milestone, recorded once with the evidence that supports
+ * it. `cumulativeWeeks` and `weeklyHoursAtMilestone` are stored rather than
+ * recomputed so a claim stays reproducible after later corrections.
+ */
+export const outcomeMilestones = pgTable(
+  "outcome_milestones",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    placementId: uuid("placement_id").references(() => placements.id, { onDelete: "cascade" }),
+    kind: milestoneKindEnum("kind").notNull(),
+    achievedOn: timestamp("achieved_on", { withTimezone: true }).notNull(),
+    cumulativeWeeks: numeric("cumulative_weeks", { precision: 6, scale: 2 }),
+    weeklyHoursAtMilestone: numeric("weekly_hours_at_milestone", { precision: 5, scale: 2 }),
+    /** How it was proven, e.g. "employer confirmation email, 2026-11-02". */
+    evidenceNote: text("evidence_note"),
+    recordedAt: timestamp("recorded_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [unique("outcome_milestones_once_per_placement").on(t.userId, t.placementId, t.kind)],
+);
+
+/**
+ * Post-exit follow-up at the months funders ask about. 15 and 33 months look
+ * arbitrary but are the retention points written into Ontario reporting.
+ */
+export const outcomeFollowUps = pgTable(
+  "outcome_follow_ups",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    placementId: uuid("placement_id").references(() => placements.id, { onDelete: "set null" }),
+    monthsAfterExit: smallint("months_after_exit").notNull(),
+    contactedOn: timestamp("contacted_on", { withTimezone: true }).notNull(),
+    contactOutcome: followUpContactEnum("contact_outcome").notNull(),
+    employed: boolean("employed"),
+    weeklyHours: numeric("weekly_hours", { precision: 5, scale: 2 }),
+    hourlyWage: numeric("hourly_wage", { precision: 7, scale: 2 }),
+    inEducationOrTraining: boolean("in_education_or_training"),
+  },
+  (t) => [
+    unique("outcome_follow_ups_once_per_window").on(t.userId, t.placementId, t.monthsAfterExit),
+    check(
+      "outcome_follow_ups_reported_window",
+      sql`${t.monthsAfterExit} IN (1, 3, 6, 12, 15, 33)`,
+    ),
+  ],
+);
+
+/**
+ * Exit satisfaction from both sides. Service quality is a scored measure in
+ * Ontario employment funding, and the employer half is what a Sectoral
+ * Workforce Innovation Fund application has to evidence.
+ */
+export const exitSatisfaction = pgTable(
+  "exit_satisfaction",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    placementId: uuid("placement_id").references(() => placements.id, { onDelete: "set null" }),
+    respondent: satisfactionRespondentEnum("respondent").notNull(),
+    /** 1-5, the scale Ontario service quality reporting uses. */
+    score: smallint("score").notNull(),
+    wouldUseAgain: boolean("would_use_again"),
+    comment: text("comment"),
+    collectedAt: timestamp("collected_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [check("exit_satisfaction_score_range", sql`${t.score} BETWEEN 1 AND 5`)],
+);
 
 // --- Auth.js tables (email magic link; identity stays in our Postgres) ---
 

@@ -5,7 +5,7 @@
  */
 import type { AttestationSnapshot, PassportSnapshot } from "@/src/engine/types";
 
-import { CHECK_TYPES, LEVEL_BUNDLES, RESTRICTIONS } from "./seed-data";
+import { CHECK_TYPES, LEVEL_BUNDLES, RESTRICTIONS, checkTypeDomainMap } from "./seed-data";
 
 const DAY = 24 * 60 * 60 * 1000;
 
@@ -39,10 +39,12 @@ export function demoPassport(): PassportSnapshot {
       demoAttestation("wellness.movement_floor", 60),
       demoAttestation("mental.check_in", 90),
       demoAttestation("skills.placement_ready", 150),
+      demoAttestation("skills.reliability_window", 100),
       demoAttestation("medical.work_clearance", 120, ["no_night_shift"]),
     ],
     levelRequirements: LEVEL_BUNDLES,
     restrictions: RESTRICTIONS,
+    checkTypeDomains: checkTypeDomainMap(),
     attendanceDays: 16,
   };
 }

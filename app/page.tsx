@@ -9,14 +9,23 @@ export default function Home() {
       <section className="space-y-2">
         <h1 className="text-2xl font-semibold">Readiness passport</h1>
         <p className="text-sm leading-6">
-          Health and work readiness on one record. Partners perform the checks; the passport carries
-          the level, the restrictions, and the expiry date. Trampoline does not deliver care,
-          training, or job inventory.
+          Health and work readiness on one record. Partners perform the checks; we hold the record,
+          route people to the support a check implies, and carry the evidence a funder needs.
+          Trampoline does not deliver care, training, or job inventory.
+        </p>
+        <p className="text-sm leading-6">
+          A check that lapses or comes back restricted triggers support. It never closes a job. On
+          the hiring side we carry demonstrated skills before an offer, and functional limits with
+          an accommodation path after one — never a health verdict and never a score.
         </p>
       </section>
 
       <section className="space-y-3">
         <h2 className="text-lg font-medium">Levels</h2>
+        <p className="text-sm text-muted-foreground">
+          Private to the person. Levels decide what support to offer and let someone see their own
+          progress; they are not shown to employers.
+        </p>
         <ul className="space-y-1 text-sm">
           {LEVELS.map((level) => (
             <li key={level} className="flex gap-3">
@@ -50,8 +59,9 @@ export default function Home() {
       <section className="space-y-2 text-sm">
         <h2 className="text-lg font-medium">Where things are</h2>
         <p className="text-muted-foreground">
-          These routes are scaffolding. The first vertical slice — one user completes a check, levels
-          up, and unlocks a mocked seat — is the next piece of work.
+          These routes are scaffolding. The first vertical slice — one user completes a check, opens
+          a mocked seat, and the placement is recorded as funder-reportable evidence — is the next
+          piece of work.
         </p>
         <ul className="list-inside list-disc space-y-1">
           <li>
@@ -64,7 +74,7 @@ export default function Home() {
             <Link href="/track" className="underline">
               Track
             </Link>{" "}
-            — levels, gaps, and gated opportunities
+            — levels, gaps, support offered, and seats
           </li>
           <li>
             <Link href="/attestor" className="underline">
@@ -77,6 +87,18 @@ export default function Home() {
               Share view
             </Link>{" "}
             — what a school or employer sees
+          </li>
+          <li>
+            <Link href="/accommodation" className="underline">
+              Accommodation
+            </Link>{" "}
+            — ask for a process or a job to be adjusted
+          </li>
+          <li>
+            <Link href="/access-log" className="underline">
+              Access log
+            </Link>{" "}
+            — per-recipient consent, revocable, with every view listed
           </li>
         </ul>
       </section>

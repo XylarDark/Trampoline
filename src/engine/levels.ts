@@ -2,6 +2,11 @@
  * Levels are bundles of passed checks, not quiz scores. A person holds level N
  * only when every bundle from 0 through N is currently satisfied — the levels
  * are a sequence, so a lapsed Level 0 check drops the whole track.
+ *
+ * A level is a private routing signal: it decides which support to offer and
+ * lets the person see their own progress. It is not a credential, and it is
+ * never shown to an employer, because a bundle spanning medical, wellness, and
+ * mental checks makes the composite a health disclosure by inference.
  */
 import { currentByCheckType, isHealthDomain, satisfiedCheckTypeKeys } from "./decay";
 import type { AttestationSnapshot, Level, LevelRequirementMap } from "./types";
@@ -81,11 +86,17 @@ export function nextLevelGap(
 }
 
 /**
- * The health floor has dropped when a medical, wellness, or mental check that
- * the person's held level depends on is no longer current. This is what pauses
- * job applications — a cross-domain rule, not a job-search preference.
+ * A health renewal is due when a medical, wellness, or mental check that the
+ * person's held level depends on is no longer current.
+ *
+ * This signal is private to the person. It never reaches a gate, an employer,
+ * or a share view: expiry triggers a reminder and an offer of support, and
+ * cannot restrict access to a job. The evidence runs the other way — rapid
+ * placement beats pre-employment preparation (34% vs 12% employed at 18
+ * months), so withholding work while someone renews a check would make the
+ * outcome worse, not safer.
  */
-export function hasHealthFloorDrop(
+export function healthRenewalDue(
   attestations: AttestationSnapshot[],
   levelRequirements: LevelRequirementMap,
   now: Date = new Date(),

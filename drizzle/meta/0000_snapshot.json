@@ -1,9 +1,114 @@
 {
-  "id": "9f52bfe5-e528-4e0a-b914-dd7b5c9e9e96",
+  "id": "2a7fc16d-1adc-4e3f-8cbf-736a329e4d41",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.accommodation_requests": {
+      "name": "accommodation_requests",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "opportunity_id": {
+          "name": "opportunity_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "restriction_id": {
+          "name": "restriction_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "requested_support": {
+          "name": "requested_support",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "accommodation_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'requested'"
+        },
+        "requested_at": {
+          "name": "requested_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "responded_at": {
+          "name": "responded_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "accommodation_requests_user_id_users_id_fk": {
+          "name": "accommodation_requests_user_id_users_id_fk",
+          "tableFrom": "accommodation_requests",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "accommodation_requests_opportunity_id_opportunities_id_fk": {
+          "name": "accommodation_requests_opportunity_id_opportunities_id_fk",
+          "tableFrom": "accommodation_requests",
+          "tableTo": "opportunities",
+          "columnsFrom": [
+            "opportunity_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "accommodation_requests_restriction_id_restrictions_id_fk": {
+          "name": "accommodation_requests_restriction_id_restrictions_id_fk",
+          "tableFrom": "accommodation_requests",
+          "tableTo": "restrictions",
+          "columnsFrom": [
+            "restriction_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.accounts": {
       "name": "accounts",
       "schema": "",
@@ -498,6 +603,273 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.employment_spells": {
+      "name": "employment_spells",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "placement_id": {
+          "name": "placement_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "period_start": {
+          "name": "period_start",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "period_end": {
+          "name": "period_end",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "weekly_hours": {
+          "name": "weekly_hours",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hourly_wage": {
+          "name": "hourly_wage",
+          "type": "numeric(7, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "verification_source": {
+          "name": "verification_source",
+          "type": "verification_source",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "verified_by_organization_id": {
+          "name": "verified_by_organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "verified_at": {
+          "name": "verified_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "employment_spells_placement_id_placements_id_fk": {
+          "name": "employment_spells_placement_id_placements_id_fk",
+          "tableFrom": "employment_spells",
+          "tableTo": "placements",
+          "columnsFrom": [
+            "placement_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "employment_spells_verified_by_organization_id_organizations_id_fk": {
+          "name": "employment_spells_verified_by_organization_id_organizations_id_fk",
+          "tableFrom": "employment_spells",
+          "tableTo": "organizations",
+          "columnsFrom": [
+            "verified_by_organization_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.exit_satisfaction": {
+      "name": "exit_satisfaction",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "placement_id": {
+          "name": "placement_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "respondent": {
+          "name": "respondent",
+          "type": "satisfaction_respondent",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "score": {
+          "name": "score",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "would_use_again": {
+          "name": "would_use_again",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "comment": {
+          "name": "comment",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "collected_at": {
+          "name": "collected_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "exit_satisfaction_user_id_users_id_fk": {
+          "name": "exit_satisfaction_user_id_users_id_fk",
+          "tableFrom": "exit_satisfaction",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "exit_satisfaction_placement_id_placements_id_fk": {
+          "name": "exit_satisfaction_placement_id_placements_id_fk",
+          "tableFrom": "exit_satisfaction",
+          "tableTo": "placements",
+          "columnsFrom": [
+            "placement_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "exit_satisfaction_score_range": {
+          "name": "exit_satisfaction_score_range",
+          "value": "\"exit_satisfaction\".\"score\" BETWEEN 1 AND 5"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.gates": {
+      "name": "gates",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "key": {
+          "name": "key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "label": {
+          "name": "label",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "kind": {
+          "name": "kind",
+          "type": "gate_kind",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "definition": {
+          "name": "definition",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "safety_rationale": {
+          "name": "safety_rationale",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "gates_key_unique": {
+          "name": "gates_key_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "key"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "gates_employment_is_skills_only": {
+          "name": "gates_employment_is_skills_only",
+          "value": "\"gates\".\"kind\" <> 'employment' OR NOT (\"gates\".\"definition\" ?| array['requiredLevel', 'restrictionsMustBeClear', 'pauseOnHealthDrop'])"
+        },
+        "gates_health_derived_training_needs_rationale": {
+          "name": "gates_health_derived_training_needs_rationale",
+          "value": "\"gates\".\"kind\" <> 'training'\n        OR NOT (\"gates\".\"definition\" ?| array['requiredLevel', 'restrictionsMustBeClear'])\n        OR length(coalesce(\"gates\".\"safety_rationale\", '')) >= 20"
+        }
+      },
+      "isRLSEnabled": false
+    },
     "public.level_requirements": {
       "name": "level_requirements",
       "schema": "",
@@ -657,14 +1029,8 @@
           "notNull": true,
           "default": 1
         },
-        "target_level": {
-          "name": "target_level",
-          "type": "smallint",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "unlock_rule_id": {
-          "name": "unlock_rule_id",
+        "gate_id": {
+          "name": "gate_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -699,12 +1065,12 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "opportunities_unlock_rule_id_unlock_rules_id_fk": {
-          "name": "opportunities_unlock_rule_id_unlock_rules_id_fk",
+        "opportunities_gate_id_gates_id_fk": {
+          "name": "opportunities_gate_id_gates_id_fk",
           "tableFrom": "opportunities",
-          "tableTo": "unlock_rules",
+          "tableTo": "gates",
           "columnsFrom": [
-            "unlock_rule_id"
+            "gate_id"
           ],
           "columnsTo": [
             "id"
@@ -766,8 +1132,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.outcomes": {
-      "name": "outcomes",
+    "public.outcome_follow_ups": {
+      "name": "outcome_follow_ups",
       "schema": "",
       "columns": {
         "id": {
@@ -783,32 +1149,61 @@
           "primaryKey": false,
           "notNull": true
         },
-        "opportunity_id": {
-          "name": "opportunity_id",
+        "placement_id": {
+          "name": "placement_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
-        "kind": {
-          "name": "kind",
-          "type": "outcome_kind",
+        "months_after_exit": {
+          "name": "months_after_exit",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "contacted_on": {
+          "name": "contacted_on",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "contact_outcome": {
+          "name": "contact_outcome",
+          "type": "follow_up_contact",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
         },
-        "occurred_at": {
-          "name": "occurred_at",
-          "type": "timestamp with time zone",
+        "employed": {
+          "name": "employed",
+          "type": "boolean",
           "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
+          "notNull": false
+        },
+        "weekly_hours": {
+          "name": "weekly_hours",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hourly_wage": {
+          "name": "hourly_wage",
+          "type": "numeric(7, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "in_education_or_training": {
+          "name": "in_education_or_training",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "outcomes_user_id_users_id_fk": {
-          "name": "outcomes_user_id_users_id_fk",
-          "tableFrom": "outcomes",
+        "outcome_follow_ups_user_id_users_id_fk": {
+          "name": "outcome_follow_ups_user_id_users_id_fk",
+          "tableFrom": "outcome_follow_ups",
           "tableTo": "users",
           "columnsFrom": [
             "user_id"
@@ -819,12 +1214,287 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "outcomes_opportunity_id_opportunities_id_fk": {
-          "name": "outcomes_opportunity_id_opportunities_id_fk",
-          "tableFrom": "outcomes",
+        "outcome_follow_ups_placement_id_placements_id_fk": {
+          "name": "outcome_follow_ups_placement_id_placements_id_fk",
+          "tableFrom": "outcome_follow_ups",
+          "tableTo": "placements",
+          "columnsFrom": [
+            "placement_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "outcome_follow_ups_once_per_window": {
+          "name": "outcome_follow_ups_once_per_window",
+          "nullsNotDistinct": false,
+          "columns": [
+            "user_id",
+            "placement_id",
+            "months_after_exit"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "outcome_follow_ups_reported_window": {
+          "name": "outcome_follow_ups_reported_window",
+          "value": "\"outcome_follow_ups\".\"months_after_exit\" IN (1, 3, 6, 12, 15, 33)"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.outcome_milestones": {
+      "name": "outcome_milestones",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "placement_id": {
+          "name": "placement_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "kind": {
+          "name": "kind",
+          "type": "milestone_kind",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "achieved_on": {
+          "name": "achieved_on",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cumulative_weeks": {
+          "name": "cumulative_weeks",
+          "type": "numeric(6, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "weekly_hours_at_milestone": {
+          "name": "weekly_hours_at_milestone",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "evidence_note": {
+          "name": "evidence_note",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "recorded_at": {
+          "name": "recorded_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "outcome_milestones_user_id_users_id_fk": {
+          "name": "outcome_milestones_user_id_users_id_fk",
+          "tableFrom": "outcome_milestones",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "outcome_milestones_placement_id_placements_id_fk": {
+          "name": "outcome_milestones_placement_id_placements_id_fk",
+          "tableFrom": "outcome_milestones",
+          "tableTo": "placements",
+          "columnsFrom": [
+            "placement_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "outcome_milestones_once_per_placement": {
+          "name": "outcome_milestones_once_per_placement",
+          "nullsNotDistinct": false,
+          "columns": [
+            "user_id",
+            "placement_id",
+            "kind"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.placements": {
+      "name": "placements",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "employer_organization_id": {
+          "name": "employer_organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "opportunity_id": {
+          "name": "opportunity_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "referral_id": {
+          "name": "referral_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "job_title": {
+          "name": "job_title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "noc_code": {
+          "name": "noc_code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "started_on": {
+          "name": "started_on",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ended_on": {
+          "name": "ended_on",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "end_reason": {
+          "name": "end_reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gate_id": {
+          "name": "gate_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "placements_user_id_users_id_fk": {
+          "name": "placements_user_id_users_id_fk",
+          "tableFrom": "placements",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "placements_employer_organization_id_organizations_id_fk": {
+          "name": "placements_employer_organization_id_organizations_id_fk",
+          "tableFrom": "placements",
+          "tableTo": "organizations",
+          "columnsFrom": [
+            "employer_organization_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "placements_opportunity_id_opportunities_id_fk": {
+          "name": "placements_opportunity_id_opportunities_id_fk",
+          "tableFrom": "placements",
           "tableTo": "opportunities",
           "columnsFrom": [
             "opportunity_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "placements_referral_id_referrals_id_fk": {
+          "name": "placements_referral_id_referrals_id_fk",
+          "tableFrom": "placements",
+          "tableTo": "referrals",
+          "columnsFrom": [
+            "referral_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "placements_gate_id_gates_id_fk": {
+          "name": "placements_gate_id_gates_id_fk",
+          "tableFrom": "placements",
+          "tableTo": "gates",
+          "columnsFrom": [
+            "gate_id"
           ],
           "columnsTo": [
             "id"
@@ -856,6 +1526,13 @@
           "primaryKey": false,
           "notNull": true
         },
+        "direction": {
+          "name": "direction",
+          "type": "referral_direction",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
         "from_organization_id": {
           "name": "from_organization_id",
           "type": "uuid",
@@ -874,6 +1551,13 @@
           "primaryKey": false,
           "notNull": false
         },
+        "supported": {
+          "name": "supported",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
         "status": {
           "name": "status",
           "type": "referral_status",
@@ -882,12 +1566,24 @@
           "notNull": true,
           "default": "'sent'"
         },
-        "created_at": {
-          "name": "created_at",
+        "sent_at": {
+          "name": "sent_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "accepted_at": {
+          "name": "accepted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "declined_reason": {
+          "name": "declined_reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -1043,6 +1739,72 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.share_access_log": {
+      "name": "share_access_log",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "share_link_id": {
+          "name": "share_link_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "viewed_at": {
+          "name": "viewed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "scope_served": {
+          "name": "scope_served",
+          "type": "share_scope",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "viewer_ip_hash": {
+          "name": "viewer_ip_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "user_agent": {
+          "name": "user_agent",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "share_access_log_share_link_id_share_links_id_fk": {
+          "name": "share_access_log_share_link_id_share_links_id_fk",
+          "tableFrom": "share_access_log",
+          "tableTo": "share_links",
+          "columnsFrom": [
+            "share_link_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.share_links": {
       "name": "share_links",
       "schema": "",
@@ -1068,10 +1830,23 @@
         },
         "scope": {
           "name": "scope",
-          "type": "text",
+          "type": "share_scope",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": "'readiness'"
+          "default": "'skills'"
+        },
+        "recipient_label": {
+          "name": "recipient_label",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "recipient_organization_id": {
+          "name": "recipient_organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
         },
         "expires_at": {
           "name": "expires_at",
@@ -1106,6 +1881,19 @@
             "id"
           ],
           "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "share_links_recipient_organization_id_organizations_id_fk": {
+          "name": "share_links_recipient_organization_id_organizations_id_fk",
+          "tableFrom": "share_links",
+          "tableTo": "organizations",
+          "columnsFrom": [
+            "recipient_organization_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
           "onUpdate": "no action"
         }
       },
@@ -1153,8 +1941,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "applications_paused_at": {
-          "name": "applications_paused_at",
+        "health_renewal_due_at": {
+          "name": "health_renewal_due_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
@@ -1190,59 +1978,6 @@
           "nullsNotDistinct": false,
           "columns": [
             "user_id"
-          ]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.unlock_rules": {
-      "name": "unlock_rules",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "key": {
-          "name": "key",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "label": {
-          "name": "label",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "definition": {
-          "name": "definition",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "unlock_rules_key_unique": {
-          "name": "unlock_rules_key_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "key"
           ]
         }
       },
@@ -1350,6 +2085,17 @@
     }
   },
   "enums": {
+    "public.accommodation_status": {
+      "name": "accommodation_status",
+      "schema": "public",
+      "values": [
+        "requested",
+        "in_discussion",
+        "provided",
+        "declined",
+        "withdrawn"
+      ]
+    },
     "public.attestation_event_kind": {
       "name": "attestation_event_kind",
       "schema": "public",
@@ -1377,6 +2123,38 @@
         "skills"
       ]
     },
+    "public.follow_up_contact": {
+      "name": "follow_up_contact",
+      "schema": "public",
+      "values": [
+        "reached",
+        "no_response",
+        "declined_to_answer",
+        "unreachable"
+      ]
+    },
+    "public.gate_kind": {
+      "name": "gate_kind",
+      "schema": "public",
+      "values": [
+        "employment",
+        "training"
+      ]
+    },
+    "public.milestone_kind": {
+      "name": "milestone_kind",
+      "schema": "public",
+      "values": [
+        "placement_start",
+        "weeks_6_cumulative",
+        "weeks_13_cumulative",
+        "hours_20_plus",
+        "employed_within_60_days_of_completion",
+        "retention_15_months",
+        "retention_33_months",
+        "program_completion"
+      ]
+    },
     "public.org_kind": {
       "name": "org_kind",
       "schema": "public",
@@ -1391,15 +2169,12 @@
         "skills"
       ]
     },
-    "public.outcome_kind": {
-      "name": "outcome_kind",
+    "public.referral_direction": {
+      "name": "referral_direction",
       "schema": "public",
       "values": [
-        "showed_up",
-        "stayed",
-        "relapsed",
-        "hired",
-        "kept_90_days"
+        "inbound",
+        "outbound"
       ]
     },
     "public.referral_status": {
@@ -1409,7 +2184,8 @@
         "sent",
         "accepted",
         "declined",
-        "placed"
+        "placed",
+        "lost_contact"
       ]
     },
     "public.role": {
@@ -1420,6 +2196,33 @@
         "attestor",
         "org_admin",
         "funder"
+      ]
+    },
+    "public.satisfaction_respondent": {
+      "name": "satisfaction_respondent",
+      "schema": "public",
+      "values": [
+        "client",
+        "employer"
+      ]
+    },
+    "public.share_scope": {
+      "name": "share_scope",
+      "schema": "public",
+      "values": [
+        "skills",
+        "functional_abilities",
+        "personal"
+      ]
+    },
+    "public.verification_source": {
+      "name": "verification_source",
+      "schema": "public",
+      "values": [
+        "employer_confirmation",
+        "pay_stub",
+        "provider_case_note",
+        "self_report"
       ]
     }
   },

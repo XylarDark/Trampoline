@@ -1,6 +1,7 @@
 /**
  * Idempotent seed: check types, level bundles, restrictions, the mocked
- * warehouse gate, and the partner organizations that would issue checks.
+ * employment and training gates, and the partner organizations that would
+ * issue checks.
  *
  * Run with: npm run db:seed
  *
@@ -12,20 +13,22 @@ import type { PgDatabase, PgQueryResultHKT } from "drizzle-orm/pg-core";
 
 import {
   CHECK_TYPES,
+  GATES,
   LEVEL_BUNDLES,
   OPPORTUNITIES,
   RESTRICTIONS,
   SEED_ORGANIZATIONS,
-  UNLOCK_RULES,
+  checkTypeDomainMap,
 } from "./seed-data";
+import { assertEmploymentGateScope, parseGate } from "@/src/engine/rules";
 import * as schema from "./schema";
 import {
   checkTypes,
+  gates,
   levelRequirements,
   opportunities,
   organizations,
   restrictions,
-  unlockRules,
 } from "./schema";
 import type { Level } from "@/src/engine/types";
 
@@ -109,26 +112,36 @@ async function seedOrganizations(db: Database) {
 }
 
 async function seedGates(db: Database, orgIds: Map<string, string>) {
-  for (const rule of UNLOCK_RULES) {
+  for (const gate of GATES) {
+    // Parse before insert: the schema refuses a health requirement on an
+    // employment gate, and we would rather find out here than in Postgres.
+    const definition = parseGate(gate.definition);
+
+    if (definition.kind === "employment") {
+      assertEmploymentGateScope(definition, checkTypeDomainMap());
+    }
+
+    const values = {
+      key: gate.key,
+      label: gate.label,
+      kind: definition.kind,
+      definition,
+      safetyRationale:
+        definition.kind === "training" ? (definition.safetyRationale ?? null) : null,
+    };
+
     await db
-      .insert(unlockRules)
-      .values({ key: rule.key, label: rule.label, definition: rule.definition })
-      .onConflictDoUpdate({
-        target: unlockRules.key,
-        set: { label: rule.label, definition: rule.definition },
-      });
+      .insert(gates)
+      .values(values)
+      .onConflictDoUpdate({ target: gates.key, set: values });
   }
 
   const employerId = orgIds.get("employer");
   if (!employerId) throw new Error("Seed employer organization missing.");
 
   for (const seat of OPPORTUNITIES) {
-    const [rule] = await db
-      .select()
-      .from(unlockRules)
-      .where(eq(unlockRules.key, seat.unlockRuleKey))
-      .limit(1);
-    if (!rule) throw new Error(`Opportunity references unknown gate: ${seat.unlockRuleKey}`);
+    const [gate] = await db.select().from(gates).where(eq(gates.key, seat.gateKey)).limit(1);
+    if (!gate) throw new Error(`Opportunity references unknown gate: ${seat.gateKey}`);
 
     const [existing] = await db
       .select()
@@ -142,8 +155,7 @@ async function seedGates(db: Database, orgIds: Map<string, string>) {
       title: seat.title,
       summary: seat.summary,
       seats: seat.seats,
-      targetLevel: seat.targetLevel,
-      unlockRuleId: rule.id,
+      gateId: gate.id,
       tags: seat.tags,
     });
   }
@@ -161,7 +173,7 @@ export async function runSeed(db: Database) {
     levelRequirements: Object.values(LEVEL_BUNDLES).flat().length,
     restrictions: RESTRICTIONS.length,
     organizations: SEED_ORGANIZATIONS.length,
-    gates: UNLOCK_RULES.length,
+    gates: GATES.length,
     opportunities: OPPORTUNITIES.length,
   };
 }
@@ -173,7 +185,7 @@ async function main() {
   console.log(
     `Seeded ${counts.checkTypes} check types, ${counts.levelRequirements} level requirements, ` +
       `${counts.restrictions} restrictions, ${counts.organizations} organizations, ` +
-      `${counts.gates} gate, ${counts.opportunities} mocked opportunity.`,
+      `${counts.gates} gates, ${counts.opportunities} mocked opportunities.`,
   );
   process.exit(0);
 }
