@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <div className="space-y-8">
       <section className="space-y-2">
-        <h1 className="text-2xl font-semibold">Readiness passport</h1>
+        <h1 className="text-2xl font-semibold">One record that follows you between services</h1>
         <p className="text-sm leading-6">
           Health and work readiness on one record. Partners perform the checks; we hold the record,
           route people to the support a check implies, and carry the evidence a funder needs.
