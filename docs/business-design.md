@@ -2,6 +2,57 @@
 
 Working name: **Trampoline**. Subtitle: dual-rebuild readiness record.
 
+---
+
+# Do this next
+
+**What the business is, in plain terms.** People rebuilding health and income at the same time have to re-explain themselves to every new organization, because every existing record dies when they leave the organization that made it. We hold a record that survives the move, and we sell it first to employment-services providers — who are paid on client retention at 1, 3, 6, and 12 months and currently prove it by hand, chasing pay stubs from employers a year after the client stopped being their client.
+
+**Nothing about a person's health may ever restrict their access to work.** That is a legal requirement, not a value statement, and it is enforced in the code rather than in a policy document.
+
+## The nine things to do, in order
+
+Items 1 and 2 are **kill tests**: they can tell us the product should not exist, and they cost only phone calls. Do them before spending money or building further.
+
+### Now — needs no money and no incorporation
+
+| # | Action | Where |
+| --- | --- | --- |
+| 1 | **Interview four providers on what retention proof costs them.** Corbrook, Community Living Toronto, CCRW, Springboard. One question: how do you evidence the 1, 3, 6, and 12-month milestones today, and what does it cost you? **This is the wedge, or there is no wedge.** | [`outreach/retention-interviews.md`](outreach/retention-interviews.md) |
+| 2 | **Ask SALUS Safety what an outside issuer must prove to register as a certificate provider.** `connect@salussafety.io`. They already refuse work on expired credentials *and* publish an API endpoint for external issuers, so the structural question is half-answered — ask for the requirements list. | [`outreach/gate-falsification.md`](outreach/gate-falsification.md) |
+| 3 | **Email WSIB.** `grants@wsib.on.ca`. Two questions: did the 2026 competition run, and can a private company be a funded collaborator? Their page has been stale for a year, so this may reveal there is nothing to apply to. Draft is written. | [`funding/wsib-collaborator.md`](funding/wsib-collaborator.md) |
+| 4 | **Email Dr. Rebecca Gewurtz at McMaster.** `gewurtz@mcmaster.ca`. She directs the IDEA lab and is an IWH adjunct scientist, so one conversation reaches both institutions. Do not wait on item 3. Draft is written. | [`funding/wsib-collaborator.md`](funding/wsib-collaborator.md) |
+| 5 | **Read JDAPT and write down what we do that it does not.** IWH's accommodation planning tool is award-winning, free, and aimed at our exact population. If the distinction does not hold up, proposition 2 needs rethinking. | [`research/competitive-landscape.md`](research/competitive-landscape.md) |
+
+### After incorporating
+
+**Incorporate as an Ontario CCPC.** It gates the three items below and nothing else on this page, so it is not urgent — but it is also the point of no return on the corporate form, which costs us the Ontario Trillium Foundation entirely and bars us from leading a WSIB project. We take that trade to get SR&ED, the only money on the list no committee can decline. Revisit it early if no nonprofit will hold a grant with a for-profit vendor line in it, rather than after a year of declines.
+
+| # | Action | Where |
+| --- | --- | --- |
+| 6 | **Request SR&ED pre-claim approval** for the multi-attester reconciliation work — web form for a case number, then Form T1322. A written CRA determination in about eight weeks, valid three years, *before* the money is spent. Do it **before** starting that work. | [`funding/verified-facts.md`](funding/verified-facts.md) |
+| 7 | **Call NRC IRAP: 1-877-994-4727.** A senior executive has to place the call; there is no web form. Expect advice and referrals for six months, not money. | [`funding/irap-and-tpon.md`](funding/irap-and-tpon.md) |
+| 8 | **Register on Transfer Payment Ontario.** Completes in-session, but system access takes up to five business days. Being unregistered when a narrow call opens is an avoidable loss. | [`funding/irap-and-tpon.md`](funding/irap-and-tpon.md) |
+
+### Once the interviews confirm the wedge
+
+| # | Action | Where |
+| --- | --- | --- |
+| 9 | **Get one sector council to lead a Sectoral Workforce Innovation Fund application.** Start with Food Processing Skills Canada (`jgriffith@fpsc-ctac.com`), which has a $9.7M federal precedent and has already built credential infrastructure. Continuous intake, so no deadline pressure. | [`funding/swif-partner.md`](funding/swif-partner.md) |
+
+## What would make us stop
+
+Written down in advance so the answer cannot be reinterpreted later in our own favour.
+
+- **If providers say retention proof is cheap or already solved,** the wedge is gone. Fall back to accommodation specification, which has its own evidence base and a different payer.
+- **If two or more gating platforms refuse an external issuer in principle** — not "not yet," not "come back with customers" — then we are not a portable credential and must stop describing ourselves as one. The outcome-evidence and accommodation propositions both survive without portability.
+
+## The one number that says it worked
+
+A provider stops manually chasing retention proof, and their 12-month retention figure moves. Not seats gated, not levels earned.
+
+---
+
 This document supersedes the original brief where the two disagree. The brief described a gating product: checks that unlock training seats and jobs, with a health drop pausing applications. Four independent research streams — [evidence and economics](research/evidence-and-economics.md), [legal and privacy](research/legal-and-privacy.md), [competitive landscape](research/competitive-landscape.md), and [funding](research/funding-landscape.md) — each rejected that one mechanic, for different reasons. Section 4 records what replaced it and why.
 
 ## 1. Problem
@@ -50,6 +101,8 @@ Most components of this product already exist. What does not exist is a record t
 | CaMS | An open action plan |
 
 Our population is between containers. That is the unserved gap, and it is a trust and coordination problem more than an engineering one.
+
+**One qualification, found late and worth keeping visible.** SALUS Safety, a Canadian construction-safety platform, already markets a worker-held portable record in almost our own words — "the record belongs to the worker" — and publishes an API for registering outside credential issuers. So cross-container persistence is not an unclaimed idea; it is unclaimed *for our population*, in a sector with less money in it than construction. That is a thinner moat than the table above suggests, and it is why item 2 in the action list is a kill test rather than a partnership call.
 
 ## 3. Design rules that are not negotiable
 
@@ -102,6 +155,8 @@ Three propositions, each with evidence and a named payer.
 The referral tables serve the Service Coordination measure, which counts supported referrals in *and* out — including referrals made *to* the provider. Carry the caveat: that measure sits in the legacy Employment Service quality standard and the equivalent IES weighting is not public. See [`outreach/ontario-outcome-framework.md`](outreach/ontario-outcome-framework.md) for the full framework, the evidence rules, and what is still unconfirmed.
 
 **2. Accommodation specification.** Our restriction model, rendered in Functional Abilities Form style and released post-offer with a request path, operationalizes two of the few strongly-evidenced levers for cutting work-disability duration. Readiness certification has no comparable evidence base; this does.
+
+Contested, and we should say so. The Institute for Work & Health's **JDAPT** is an award-winning, peer-reviewed, free accommodation planning tool built for people with chronic and episodic conditions — our population, named. The distinction we are relying on is that JDAPT is a *planning instrument* used inside one conversation, while we are a *durable multi-party record* with expiry, per-recipient revocable consent, and evidence that survives the person changing providers. Different object, adjacent purpose. Item 5 in the action list exists to test that claim before a funder tests it for us; the best available outcome is that JDAPT specifies the accommodation and we are the record it writes to.
 
 **3. Cross-container persistence.** Section 2 above.
 
@@ -199,11 +254,17 @@ Rules that follow:
 | --- | --- | --- |
 | Providers | Automated evidence for referrals, placements, and retention milestones | The wedge. Validate first. |
 | Funders and Service System Managers | Service Coordination and retention reporting as a by-product of delivery | Follows the provider relationship. |
-| Sector bodies | Shared infrastructure inside a Sectoral Workforce Innovation Fund proposal they lead | Requires a partner to hold the grant. |
+| Sector bodies | Shared infrastructure inside a Sectoral Workforce Innovation Fund proposal they lead | Wants a partner to lead — see the correction below. |
 | Employers | Accommodation specification and audit trail — administrative and legal value | Later, and never persuasion-based. |
 | Consumers | Not primary. This user has the least ability to pay. | Not planned. |
 
-Structure: a for-profit Canadian-controlled private corporation, because SR&ED requires it and SR&ED is the only money with no gatekeeper. Program grants are held by nonprofit and association partners, because Ontario's workforce funding stack pays service deliverers rather than software vendors. Details in [`execution-strategy.md`](execution-strategy.md).
+Structure: a for-profit Canadian-controlled private corporation, because SR&ED requires it and SR&ED is the only money with no gatekeeper. Program grants are mostly held by nonprofit and association partners, because the workforce funding stack largely pays service deliverers rather than software vendors — the Ontario Trillium Foundation excludes for-profits outright, WSIB bars them as project lead, and a for-profit vendor cannot lead a Skills Development Fund Training Stream application.
+
+**One correction to that generalization, because it changes how we negotiate.** For-profits *are* eligible applicants for the federal Sectoral Workforce Innovation Fund. We want a sector council to lead for reasons of capacity, not eligibility: we would fail the multi-employer and multi-province tests and the 100-participant regional minimum, and could be deprioritized for duplicating an existing digital workforce platform. A council fails none of those. Say that plainly when approaching one — anyone can check the eligibility page in thirty seconds, and being caught overstating a constraint ends the conversation.
+
+Full detail, verified figures, and what remains unconfirmed in [`funding/verified-facts.md`](funding/verified-facts.md) and [`execution-strategy.md`](execution-strategy.md).
+
+**A discipline the corporate structure imposes on our own writing.** SR&ED statutorily excludes social sciences research, and we are an employment-services company — which puts us permanently one careless sentence from voiding the claim. "Can restriction data predict work-disability duration" is a social-science question: it is genuinely valuable, it is nearly verbatim a WSIB research priority, and it must never appear in an SR&ED claim. "Can contradictory multi-attester assertions be reconciled deterministically" is a technology question and is the claimable one. The two narratives cannot share a document, and the [SR&ED log](funding/sred-log.md) carries the framing table that keeps them apart.
 
 ## 12. Trust, fairness, privacy
 
@@ -222,6 +283,25 @@ Supporting measures live in [`../STRATEGY.md`](../STRATEGY.md).
 
 ## 14. Related documents
 
+**Anchors**
+
 - [`../STRATEGY.md`](../STRATEGY.md) — short product anchor.
 - [`execution-strategy.md`](execution-strategy.md) — beachhead, outreach order, capital, and the pilot.
-- [`research/`](research/) — the four research streams behind section 3 and section 4.
+- [`research/`](research/) — the four research streams behind sections 3 and 4.
+
+**Execution, one file per action above**
+
+| Action | Document |
+| --- | --- |
+| 1 — provider interviews | [`outreach/retention-interviews.md`](outreach/retention-interviews.md) |
+| 2 — gate falsification | [`outreach/gate-falsification.md`](outreach/gate-falsification.md) |
+| 3, 4 — WSIB and the researcher | [`funding/wsib-collaborator.md`](funding/wsib-collaborator.md) |
+| 6 — SR&ED | [`funding/sred-log.md`](funding/sred-log.md), [`funding/verified-facts.md`](funding/verified-facts.md) |
+| 7, 8 — IRAP and TPON | [`funding/irap-and-tpon.md`](funding/irap-and-tpon.md) |
+| 9 — sector council | [`funding/swif-partner.md`](funding/swif-partner.md) |
+| Contact details for all of the above | [`outreach/contacts.md`](outreach/contacts.md) |
+
+**Reference**
+
+- [`outreach/ontario-outcome-framework.md`](outreach/ontario-outcome-framework.md) — what the funder actually measures and how it must be evidenced. Read before any provider conversation.
+- [`funding/verified-facts.md`](funding/verified-facts.md) — primary-sourced figures, and an explicit list of what is *not* confirmed. Nothing from the research should be quoted to an outside party without checking here first.
