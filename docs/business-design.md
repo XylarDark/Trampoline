@@ -12,13 +12,16 @@ Working name: **Trampoline**. Subtitle: dual-rebuild readiness record.
 
 ## The nine things to do, in order
 
-Items 1 and 2 are **kill tests**: they can tell us the product should not exist, and they cost only phone calls. Do them before spending money or building further.
+Items 1 and 2 are **kill tests**: they can tell us the product should not exist, and they cost only phone calls. Do them before spending money on the product.
+
+**One thing has been built ahead of them, deliberately.** A read-only demo now derives the funded-outcome checkpoints for a twelve-client synthetic cohort and prints a funder evidence pack. It was built as an instrument *for* the kill tests, not as a bet placed ahead of them: showing a provider a milestone table and asking "is this what you do, and which of these verdicts do you actually see?" extracts far more than asking them to describe a process from memory. It cost engineering time and no money, nothing writes, and it can still be thrown away. The rule stands unchanged for anything that costs money.
 
 ### Now — needs no money and no incorporation
 
 | # | Action | Where |
 | --- | --- | --- |
-| 1 | **Interview four providers on what retention proof costs them.** Corbrook, Community Living Toronto, CCRW, Springboard. One question: how do you evidence the 1, 3, 6, and 12-month milestones today, and what does it cost you? **This is the wedge, or there is no wedge.** | [`outreach/retention-interviews.md`](outreach/retention-interviews.md) |
+| 0 | **Commit the working tree, docs separately from code.** Costs one minute. Until it is done the SR&ED log's dated entries prove nothing, because an entry only carries a tamper-evident date once committed, and the pre-existing-IP boundary we rely on with a research partner is unprovable. | [`funding/sred-log.md`](funding/sred-log.md) |
+| 1 | **Interview four providers on what retention proof costs them.** Start with Community Living Toronto, then CCRW, Corbrook, and Springboard — all four sit in WCG's network rather than Fedcap's, which is worth knowing before the first call. Open question: how do you evidence the 1, 3, 6, and 12-month milestones today, and what does it cost you? Get their number for work they earned and could not substantiate **before** showing anything. Then, and only then, show the caseload screen and ask which of the eleven verdicts they actually see and which we have got wrong. **This is the wedge, or there is no wedge.** | [`outreach/retention-interviews.md`](outreach/retention-interviews.md) |
 | 2 | **Ask SALUS Safety what an outside issuer must prove to register as a certificate provider.** `connect@salussafety.io`. They already refuse work on expired credentials *and* publish an API endpoint for external issuers, so the structural question is half-answered — ask for the requirements list. | [`outreach/gate-falsification.md`](outreach/gate-falsification.md) |
 | 3 | **Email WSIB.** `grants@wsib.on.ca`. Two questions: did the 2026 competition run, and can a private company be a funded collaborator? Their page has been stale for a year, so this may reveal there is nothing to apply to. Draft is written. | [`funding/wsib-collaborator.md`](funding/wsib-collaborator.md) |
 | 4 | **Email Dr. Rebecca Gewurtz at McMaster.** `gewurtz@mcmaster.ca`. She directs the IDEA lab and is an IWH adjunct scientist, so one conversation reaches both institutions. Do not wait on item 3. Draft is written. | [`funding/wsib-collaborator.md`](funding/wsib-collaborator.md) |
@@ -30,7 +33,7 @@ Items 1 and 2 are **kill tests**: they can tell us the product should not exist,
 
 | # | Action | Where |
 | --- | --- | --- |
-| 6 | **Request SR&ED pre-claim approval** for the multi-attester reconciliation work — web form for a case number, then Form T1322. A written CRA determination in about eight weeks, valid three years, *before* the money is spent. Do it **before** starting that work. | [`funding/verified-facts.md`](funding/verified-facts.md) |
+| 6 | **Request SR&ED pre-claim approval for the multi-attester reconciliation work, and for nothing else** — web form for a case number, then Form T1322. A written CRA determination in about eight weeks, valid three years, *before* the money is spent. Do it **before** starting that work. Scope it to reconciliation alone: the outcome-derivation work is already built and our own contemporaneous log assesses it as not claimable, and pre-claim approval covers planned work only. | [`funding/verified-facts.md`](funding/verified-facts.md) |
 | 7 | **Call NRC IRAP: 1-877-994-4727.** A senior executive has to place the call; there is no web form. Expect advice and referrals for six months, not money. | [`funding/irap-and-tpon.md`](funding/irap-and-tpon.md) |
 | 8 | **Register on Transfer Payment Ontario.** Completes in-session, but system access takes up to five business days. Being unregistered when a narrow call opens is an avoidable loss. | [`funding/irap-and-tpon.md`](funding/irap-and-tpon.md) |
 
@@ -50,6 +53,8 @@ Written down in advance so the answer cannot be reinterpreted later in our own f
 ## The one number that says it worked
 
 A provider stops manually chasing retention proof, and their 12-month retention figure moves. Not seats gated, not levels earned.
+
+That number needs a provider's own longitudinal data, so it is the destination rather than something we can read today. The interim measurable is **checkpoints earned but not provable, driven toward zero** — the client worked the hours and the paper is missing. It is the headline figure on the provider caseload screen, and it excludes subsidized checkpoints because no document makes those payable.
 
 ---
 
@@ -132,6 +137,11 @@ A single share-everything toggle is not specific consent under PIPEDA or PHIPA. 
 **R8. Health-derived requirements survive only for training, and only with a written rationale.**
 `TrainingGate` may reference a level or a restriction, but the schema and a second check constraint both require a stated bona fide safety rationale of substance. A forklift course whose practical exam requires lifting test loads qualifies. A warehouse job does not.
 
+R1 through R8 protect the person. The build added a rule that protects the provider, and it belongs on the same list because it is enforced the same way.
+
+**R9. A document evidences the employment period it covers, and no other.**
+A funded-outcome claim is made against the provider's own contract, so a wrong "claimable" verdict costs them more than no product would. Hours are credited only from employment periods whose own evidence is acceptable, which is why the hours shown as *worked* can exceed the hours shown as *evidenced*. A check constraint on `employment_spells` separately refuses a provider attestation with no Service System Manager pre-approval reference, so that row cannot exist at all. This rule was violated by the first implementation — an eight-hour employer letter was certifying twenty-four hours backed only by the client's word — which is exactly why it is written down here rather than left to review.
+
 ## 4. What changed from the original brief, and why
 
 | Original mechanic | Now | Why |
@@ -150,7 +160,21 @@ A durable record of demonstrated progress, plus the routing that record makes po
 
 Three propositions, each with evidence and a named payer.
 
-**1. Outcome-evidence infrastructure — the wedge.** Under the live Integrated Employment Services regime a funded outcome is an average of 20-plus hours per week at or above minimum wage, checked at 1, 3, 6, and 12 months after job start, and evidenced by an offer letter, a pay stub, or an employment letter. Client self-report does not count, and a provider attestation needs Service System Manager pre-approval. So a provider must extract a document from an employer with no obligation to supply one, four times per client, up to a year after that client stopped being their client. The manual cost is documented in the government's own evaluation.
+**1. Outcome-evidence infrastructure — the wedge.** Under the live Integrated Employment Services regime a funded outcome is checked at 1, 3, 6, and 12 months **after job start** — not after program exit. The definition is more conditional than a single sentence suggests, and getting it wrong in a provider conversation is expensive, so state it in full.
+
+It starts with the client's **entry state**. Someone who arrived already working 20-plus hours needs 20-plus hours with a *new* employer; the same employer cannot produce an outcome no matter what else is true. For everyone else, the test is 20-plus hours per week at or above **general** minimum wage — the general rate specifically, which is why a server paid a low base wage plus tips needs a human decision rather than an automatic rejection.
+
+Then three conditions sit on top of the hours-and-wage test, each able to void an outcome on its own:
+
+- A **subsidized** placement earns nothing while the employer is still receiving financial supports.
+- Reaching the threshold by **summing concurrent jobs** is permitted for only 5% of clients per catchment — a cap that cannot be evaluated from one client's record, because it needs catchment-level data the Service System Manager holds.
+- The evidence must be an offer letter, a pay stub, or an employment letter, and **the document must carry five named fields** — employer name, employee name, hours, wage, and the period covered. A document missing any of them fails. Client self-report is not on the list of acceptable evidence at all, and a provider attestation counts only with a Service System Manager pre-approval reference.
+
+So a provider must extract a conforming document from an employer with no obligation to supply one, four times per client, up to a year after that client stopped being their client. The manual cost is documented in the government's own evaluation.
+
+**What building the derivation taught us, and it sharpens the pitch.** Of the eleven verdicts a checkpoint can carry, **only three are fixable by chasing paper**: missing evidence, unacceptable evidence, and a missing pre-approval. The other eight — below-threshold hours, sub-minimum wage, a subsidized placement, uncounted stacking, a client needing a new employer, and no employment at the checkpoint — are immune to effort. So the product has two jobs, not one: evidence what is claimable, and name what is unclaimable so that chasing stops going to it. Reporting a subsidized placement as a subsidy problem rather than an evidence problem is the difference between a useful screen and a to-do list of wasted work.
+
+**One assumption we cannot source, and it is load-bearing.** No public directive defines how cumulative hours aggregate across *non-consecutive* weeks. The engine assumes a checkpoint is assessed on the employment period covering that date, because the required evidence is a document covering the checkpoint date — an inference, not a rule. It is isolated in a single named constant, disclosed on every screen that shows a verdict, and printed in the evidence pack. A provider interview can invalidate it, and that is a question to ask rather than a footnote to bury.
 
 The referral tables serve the Service Coordination measure, which counts supported referrals in *and* out — including referrals made *to* the provider. Carry the caveat: that measure sits in the legacy Employment Service quality standard and the equivalent IES weighting is not public. See [`outreach/ontario-outcome-framework.md`](outreach/ontario-outcome-framework.md) for the full framework, the evidence rules, and what is still unconfirmed.
 
@@ -169,8 +193,8 @@ This is **not** a habit tracker with a jobs tab, not a social feed, and no longe
 | Person | Holds the record, completes checks, applies to anything they like, releases scoped views, requests accommodations. |
 | Attestor | A partner practitioner or assessor who issues or revokes a check. |
 | Org admin | Manages an organization's attestors, opportunities, and gates. |
-| Provider | Uses the record to evidence referrals, placements, and retention milestones without manual chasing. |
-| Funder | Receives milestone evidence as a by-product of service delivery rather than a year-end survey. |
+| Provider | Reads a derived caseload of funded-outcome checkpoints, sees which are claimable and which cannot be proven, and prints a per-client evidence pack. Capture, import from their existing system, and organization scoping are **not built** — the demo caseload currently returns every client in the database to anyone who loads the page. |
+| Funder | Today, receives paper: a printable evidence pack the provider generates and submits. There is no funder account and no transmission path. The by-product-of-delivery version is the goal, not the current state. |
 
 ## 6. Levels
 
@@ -234,11 +258,12 @@ Rules that follow:
 
 - The record: append-only attestations with expiry, revocation, and restrictions.
 - Dual intake: health load and work load on one scale.
-- Milestone definitions partners can attest against in a standard way.
+- A milestone derivation engine, plus an append-only recorded ledger holding the evidence as it was stated at the time. Two layers deliberately, so a later spell correction cannot silently rewrite a claim already submitted.
 - The routing engine: what support a signal triggers.
 - Accommodation specification and the request path.
 - Two employer views, and the consent and access log around them.
-- Outcome evidence: referrals with acceptance, placements, employment spells, funder milestones, follow-ups, satisfaction.
+- Outcome evidence: referrals with acceptance, placements, employment spells, funder milestones, follow-ups, satisfaction — surfaced as a provider caseload, a per-client evidence timeline, and a printable funder evidence pack.
+- A twelve-client demo cohort engineered so every reachable verdict appears at least once, most of them failures. It is an argument rather than a showcase, and it is the instrument the provider interviews use.
 
 ## 10. What we do not own
 
@@ -271,6 +296,8 @@ Full detail, verified figures, and what remains unconfirmed in [`funding/verifie
 - **Everything in section 3 is a privacy control as much as a legal one.** Start there.
 - Rubrics are published. No hidden caste.
 - Minimum-necessary disclosure, per recipient, time-limited, revocable, with an access log the person can read and no bulk export.
+- **That control governs employer disclosure. Provider and funder surfaces are a different question, and the distinction has to be explicit.** A caseworker sees their caseload because of the service relationship, not because the client issued them a share link, and the funder evidence pack necessarily prints one named client's employment periods, wages, contact history, and end reason. So "no bulk export" is a promise about employer-facing views; the printable pack is an export by design, because a Service System Manager submission is the whole point of it. Two open decisions follow: whether generating a pack should write to the access log the person can read, and whether the caseload screen should be scoped to the caseworker's own clients rather than the organization's. Neither is built, and the first provider to ask "who can see this, and what happens when I print it?" deserves a straight answer.
+- **The 20-hour threshold can work against the person it is measuring.** ODSP claws back 75 cents per dollar above $1,000 per month, which drives documented deliberate underworking. So the hours that make a checkpoint payable to the provider can leave the client materially worse off. No record fixes that, and the provider caseload screen says so per client rather than hiding it.
 - Attestations are append-only with revoke events, so the record has an audit trail rather than an edit history.
 - **AI disclosure.** Since January 1, 2026, Ontario employers with 25 or more employees must disclose AI used to screen, assess, or select. Our level computation plausibly meets the definition and the duty follows the employer, so we supply the disclosure language rather than leaving them to write it.
 - **WCAG 2.0 Level AA** from the first page, regardless of headcount — the Ontario standard is still 2.0, not 2.2.

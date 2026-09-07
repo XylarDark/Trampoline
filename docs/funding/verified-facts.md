@@ -53,6 +53,8 @@ Available since **2026-04-01**. Lets a business find out whether planned project
 
 This directly answers the first open question in [`sred-log.md`](sred-log.md). Rather than documenting for a year and hoping, we can put the reconciliation work to CRA and get a three-year answer in about ten weeks. Do this before writing a line of the claimable work.
 
+**Note what "planned" costs us, because it has already cost us something.** Outcome milestone derivation was implemented on 2026-09-07 and is therefore permanently outside this route; the money is spent and no determination can be sought. Our own log assesses it as not claimable anyway, so nothing was lost that we wanted — but the lesson generalizes. Multi-attester reconciliation is the only remaining candidate that is still unstarted, so it is the only thing the T1322 should name. Submitting work already done alongside it would invite scrutiny of the whole request.
+
 Note the First-Time Claimant Advisory Service is a different thing: post-filing, mandatory only if CRA selects us, and it makes no eligibility determinations.
 
 ### Forms and deadlines
@@ -74,7 +76,9 @@ From decided cases, not commentary:
 
 Dated, signed, specific to the work. Must show what was done, who was involved, when, and how the expenditure was calculated. CRA's list includes: project planning documents, experimentation plans, design documents, project records, **design, system architecture, and source code**, records of trial runs, progress reports, **minutes of project meetings and virtual meeting chats**, **whiteboard drawings**, test protocols and results, time sheets and activity records, payroll records, invoices.
 
-Our git history plus a dated weekly technical entry covers most of this natively. What we do not yet have is a **dated state-of-the-art record**, which line 242 asks for and whose absence is a recurring reason claims fail.
+Our git history plus a dated weekly technical entry covers most of this natively, and the **dated state-of-the-art record** that line 242 asks for now exists twice in [`sred-log.md`](sred-log.md) — once for the project at onset and once for outcome milestone derivation specifically. That gap is closed.
+
+**The remaining gap is discipline, not documents.** Git history is contemporaneous evidence only if the work is committed as it happens, and a log entry carries a tamper-evident date only once it is committed *separately from and before* the code it describes. This was got wrong on 2026-09-07: a state-of-the-art entry written before the work sat uncommitted in the same working tree as the finished code for hours, which left the ordering resting on file modification times. Modification times are not evidence. The log now records that failure against itself and states the rule; treat the rule as the actual documentation requirement, because the documents were never the hard part.
 
 ## Ontario provincial credits — an open gap
 

@@ -1,6 +1,8 @@
 # SR&ED contemporaneous documentation log
 
-**Purpose.** CRA expects evidence created *as the work happened*, not reconstructed at filing time. Reconstruction is one of the most common reasons software claims are reduced or denied. This file is the primary record; it is committed to git, so every entry carries a tamper-evident timestamp and a diff.
+**Purpose.** CRA expects evidence created *as the work happened*, not reconstructed at filing time. Reconstruction is one of the most common reasons software claims are reduced or denied. This file is the primary record.
+
+**The discipline that makes it evidence.** Git gives an entry a tamper-evident date only once it is committed, and **an entry must be committed separately from the code it describes, before that code exists.** An entry sitting uncommitted in the same working tree as the work it claims to predate proves nothing; file modification times are not evidence and can be set to anything. This was got wrong once already — see the 2026-09-07 implementation entry below, which had to record its own broken chain of custody. Commit the entry first, then do the work, then commit the work.
 
 **Company:** Trampoline (working name). Ontario CCPC.
 **Fiscal year:** to be set on incorporation.
@@ -55,7 +57,7 @@ Written up front so entries can be honest rather than opportunistic. To be revie
 | --- | --- | --- |
 | Multi-attester expiry and restriction reconciliation | Likely | Independent organizations issue overlapping, contradictory, and separately-expiring assertions about the same person with no central authority and no shared clock. Determining whether a deterministic, explainable resolution exists — and what it must give up — is not answerable from known practice. |
 | Gate evaluation under conflicting and partially-visible evidence | Possibly | A gate must return an explainable verdict while being structurally denied access to part of the record. Whether explainability survives mandatory partial blindness is a real question. |
-| Outcome milestone derivation from fragmentary employment spells | Possibly | Cumulative-week milestones over interrupted spells with mixed-quality verification, reproducible after retroactive correction. Bitemporal data is well-studied, so the uncertainty may be lower than it looks. |
+| Outcome milestone derivation from fragmentary employment spells | **No, on the evidence of the work actually done** | Implemented 2026-09-07 (`3090288`). What shipped is half-open interval containment, a sum, a threshold comparison, and a four-value priority list. The one rule with no public source was parameterised and deferred to a provider interview rather than investigated. Downgraded from "possibly" by the implementation entry below, which is the honest outcome of having done the work. |
 | Next.js app, routes, forms, styling | No | Routine application of known practice. |
 | Drizzle schema, migrations, Auth.js integration | No | Standard configuration of existing tools. |
 | Accessibility conformance work | No | Applying a published standard. |
@@ -114,6 +116,76 @@ Also learned that throwing is the correct response to a misconfigured employment
 
 ---
 
+### 2026-09-07 — State of the art for outcome milestone derivation, written before the work
+
+**Why this entry exists, and why now.** The standing assessment above marks "outcome milestone derivation from fragmentary employment spells" as *possibly* eligible. The next work session implements it. Line 242 asks for the knowledge base **at the onset**, and *National R&D* failed partly because documents were not made contemporaneously — so this record is written before the first line of `src/engine/outcomes.ts` exists, not after it works.
+
+**The technological objective.** Determine whether a funder-payable milestone can be derived from an interrupted, mixed-verification employment history such that the derivation is deterministic, explainable to the person whose money depends on it, and reproducible after retroactive correction of any underlying spell.
+
+Note the framing discipline required by the social-sciences exclusion. The objective above is a *technology* question about derivation over incomplete records. It is **not** the question "do these milestones predict retention," which is social science, is excluded by paragraph (g), and belongs in the WSIB proposal instead. See the never-write/write-instead table earlier in this file.
+
+**Known and publicly available as of today**, which we therefore cannot claim as advancement:
+
+- **Bitemporal and valid-time modelling.** Textbook material. Covers as-of reconstruction and retroactive correction directly, and is the reason this area is only "possibly" eligible rather than "likely." Any claim here must show the difficulty lies beyond as-of querying.
+- **Interval algebra and interval-overlap computation.** Allen's interval relations, interval trees, and sweep-line coverage over half-open ranges are all standard. Determining whether a set of spells covers a checkpoint date is a solved problem and is not claimable.
+- **Time-weighted averaging over irregular intervals.** Standard practice in time-series and metering systems. Computing an average weekly-hours figure across spells of differing length is arithmetic, not research.
+- **Event sourcing and append-only ledgers with derived read models.** Well documented, including recomputation from an immutable event log after a correction.
+- **Rules engines returning a decision trace.** Producing a per-decision explanation from declarative rules is established practice.
+
+**Where the difficulty may actually lie.** Each item above assumes something this problem does not supply:
+
+1. **The aggregation rule itself is not publicly defined.** Ontario's directives specify checkpoints at 1, 3, 6, and 12 months after job start and a 20-plus-hour average threshold, but no public directive defines how "cumulative" aggregates across *non-consecutive* weeks. This is recorded as open question 3 in `docs/outreach/ontario-outcome-framework.md`. So this is not an insufficiency of *technological* knowledge — it is missing domain specification, which is obtained by asking a provider, not by experiment. **That distinction matters and cuts against eligibility here.** An interview answers it; a systematic investigation does not.
+2. **Evidence admissibility is a per-spell property that interacts with the arithmetic.** A spell whose hours qualify but whose verification source is inadmissible must not contribute to a payable milestone, while still remaining visible in the record as work that happened. The interaction between an admissibility lattice and a time-weighted average is the part least covered by the known work above.
+3. **Reproducibility under correction with an already-submitted claim.** A milestone asserted to a funder must remain explainable after a later spell correction changes the value it was derived from. Bitemporal modelling gives the mechanism; whether the *explanation* survives correction as well as the number does is the more interesting half.
+
+**Honest interim assessment: likely not claimable, and item 1 is why.** The hardest part of this work is discovering an undocumented administrative rule, which is domain research rather than technological uncertainty, and CRA is explicit that circumventing a problem with available knowledge — here, asking the provider — disqualifies it. Item 2 is the only candidate that looks like genuine system uncertainty, and it is narrow.
+
+Recorded now, in advance, precisely so the answer cannot be reverse-engineered into eligibility once the code is written and the cost is already incurred. **This is a strong candidate for pre-claim approval** rather than a self-assessed claim: put items 2 and 3 to CRA and get a determination before spending real payroll on it.
+
+**Method commitment for the implementation session.** Before writing the engine, re-check the state of the art for the specific question in item 2. If prior art resolves it, apply the known answer and record the work as routine.
+
+**Artifacts.** None yet. Next session: `src/engine/outcomes.ts`, `src/engine/outcomes.test.ts`.
+
+**Hours.** Documentation setup. Not claimable.
+
+---
+
+### 2026-09-07 — Outcome milestone derivation, implemented
+
+Follows the state-of-the-art entry above and answers its three items in order. Nothing in that entry has been edited; amending a pre-work record after the fact is the reconstruction this log exists to prevent, so the corrections are here instead.
+
+**Chain of custody, stated first because it is a defect.** The entry above claims to have been written before `src/engine/outcomes.ts` existed. That is true, but it was never *evidenced*: the entry sat as an uncommitted modification in the same working tree as the finished code for several hours, and both were committed on the same day. File modification times ordered them correctly and file modification times are not evidence. The pre-work entry is therefore weaker than intended, and this is recorded rather than glossed because an auditor who finds it independently will discount the whole log. The rule added at the top of this file exists because of this session.
+
+**Objective, restated unedited.** "Determine whether a funder-payable milestone can be derived from an interrupted, mixed-verification employment history such that the derivation is deterministic, explainable to the person whose money depends on it, and reproducible after retroactive correction of any underlying spell."
+
+Not reached. Two of its three parts were never attempted.
+
+**Item 1 — the aggregation rule. Parameterised, not resolved.** The pre-work entry predicted this would be domain research rather than technological uncertainty, and that is exactly what happened. `CUMULATIVE_AGGREGATION` is a two-member union, `continuous_at_checkpoint | weighted_since_start`, with only the first branch implemented. There is no second code path, no comparison between them, and no measurement. The choice was made by inference from the documented evidence test and is disclosed on screen as an assumption rather than a fact. This is routing around the uncertainty with available knowledge — the disqualifying pattern CRA names explicitly — and it was the right engineering decision precisely because a provider interview answers the question more cheaply than any experiment could.
+
+**Item 2 — admissibility interacting with the arithmetic. A negative result, and the item's own hypothesis was initially implemented backwards.** The pre-work entry hypothesised that a spell "whose hours qualify but whose verification source is inadmissible must not contribute to a payable milestone, while still remaining visible in the record as work that happened." The first implementation did the opposite: it summed hours across every spell covering the checkpoint and then let the single best document anywhere in the set carry the total, so twenty-four hours backed only by a client's word were certified `claimable` by an unrelated eight-hour employment letter. A passing test asserted that behaviour, which is how it survived. It was found by audit, not by experiment, and corrected in `3090288` by attributing evidence per spell.
+
+The correction is worth being precise about, because it is the difference between a defect and an advancement: this was a **specification error**, not a research finding. The right answer was already written down in this log before the code existed. Recovering it required reading the log, not investigating anything. What finally shipped is a filtered sum plus a four-value priority list ordered by `indexOf` — a total order over an enum, not the admissibility lattice the pre-work entry imagined interacting unpredictably with a time-weighted average. There is no unpredictable interaction, because there is no averaging and no lattice.
+
+**Item 3 — reproducibility under correction. Not attempted.** There is no write path anywhere in the application, so no spell can be corrected and the question cannot arise. No bitemporality, no as-of query, no reconciliation of a submitted claim against a later-changed value. `outcomeMilestones` rows are seeded once and never checked against the derived verdicts. The one design decision pointing at this item — keeping the derived verdict and the recorded ledger as separate layers so a later correction cannot silently rewrite a submitted claim — is a structural choice made in advance of the problem, not an investigation of it.
+
+**A discovery that contradicts the earlier framing.** The pre-work entry listed "time-weighted averaging over irregular intervals" among the known techniques we could not claim. It turns out we never implemented it at all: the threshold is assessed on the hours declared on the spells covering the checkpoint date, at a point in time. `cumulativeWeeks` is computed and displayed on two screens but feeds no verdict. The module docstring claimed an average "computed across spells" and was corrected in this commit to say what the code does. Recorded because the earlier entry gave a misleading impression of the work's shape.
+
+**Method commitment from the pre-work entry: not kept.** That entry committed to re-checking the state of the art for item 2 before writing the engine. There is no record that this was done, and the honest account is that the question dissolved on contact: the implementation treats admissibility and hours as independent gates in a fixed precedence order, so the interaction the entry expected never had to be confronted.
+
+**Approaches not tried, stated as the weakness it is.** No alternative aggregation was implemented. No two approaches were compared. Nothing was measured. No implementation was built and rejected. The 107 passing tests are **specification tests, not experiments**: they assert intended behaviour and would pass or fail identically whether or not any result was in doubt. A hypothesis test would have to be capable of telling us something we did not already believe.
+
+**One new open question, which is not an advancement.** Where several disqualifiers apply to the same checkpoint, the engine reports one, and the precedence is ours — no public directive says which reason a Service System Manager records. The same is true of which blocker to name when hours are unprovable across several spells; the code names the one standing in front of the most hours. Both are inventions to be checked with a provider, added to the open questions in `docs/outreach/ontario-outcome-framework.md`.
+
+**Eligibility assessment: not claimable, and the implementation makes the case weaker than the pre-work entry left it.** That entry judged the work likely ineligible because the hard part was discovering an undocumented administrative rule. The code confirms it and adds three points against. The undefined rule was parameterised and deferred rather than investigated. The one item resembling system uncertainty was not investigated either — the code first implemented the inverse of the stated hypothesis, and its correction was specification recovery rather than research. The reproducibility item was never reached. Everything that shipped is standard technique: half-open interval containment, a filtered sum, a threshold comparison, a priority list, a switch statement for display copy, and month arithmetic with end-of-month clamping. That last one — a job starting 31 January has no 31 February checkpoint — is a well-known date-arithmetic pitfall documented in every date library. It is a bug avoided, not an advancement.
+
+**Consequence for the pre-claim approval plan.** Pre-claim approval covers *planned* work only, so this module is permanently outside that route; the money is spent. Scope the T1322 request to multi-attester reconciliation alone, which is unstarted, and drop items 2 and 3 of the earlier entry from it. Filing them now would ask CRA to rule on work already done and self-assessed as ineligible.
+
+**Artifacts.** `src/engine/outcomes.ts`, `src/engine/outcomes.test.ts`. Commit `3090288`, which also carries the per-spell attribution correction and the docstring fix. The pre-work entry is in `7ab5210`, committed before the code but in the same working tree, per the chain-of-custody note above.
+
+**Hours.** Not tracked for this session, which is itself a gap. Sessions from here are to be recorded per person at the time.
+
+---
+
 ### Template for the next entry
 
 ```
@@ -142,8 +214,11 @@ Kept deliberately. An auditor asks what you left out.
 - Drizzle schema definition, migration generation, and Auth.js email magic-link setup.
 - Vitest and PGlite test harness configuration.
 - WCAG 2.0 AA conformance work and the axe-core verification.
-- Seed data and demo fixtures.
+- Seed data and demo fixtures, including `src/db/demo-cohort.ts` and the twelve synthetic clients.
+- The three provider routes under `app/provider/` and all their markup, `components/status-badge.tsx` and the shadcn primitives, `src/db/queries.ts`, and `drizzle/0001_cohort_entry_state.sql`.
+- Outcome milestone derivation, `src/engine/outcomes.ts`. Assessed in full in the 2026-09-07 implementation entry and moved here.
 - All documentation, strategy, and research writing.
+- `scripts/demo-db.ts`, the PGlite-over-TCP demo database. Recorded here rather than as claimable work, and the reasoning matters. This is the one artifact of the session with a genuine observation-hypothesis-verification loop: `PGLiteSocketServer`'s error path detaches its handler and thereby removes the very `close` listener that frees the connection slot, so slots leak until every new connection is accepted and instantly destroyed, surfacing at the client as a bare `ECONNRESET` with no protocol error. Diagnosing that took real work. It is nonetheless **not claimable** — it is a workaround for a defect in a third-party dependency, in demo infrastructure rather than in the product, and the resolution was reasonably predictable once the cause was visible. An obstacle is not an uncertainty.
 
 ## Open questions
 
@@ -163,6 +238,8 @@ The sequence: web form for a case number → Form **T1322** uploaded via My Busi
 This is the right move and it inverts the original plan. Rather than documenting for a year on the hope that reconciliation qualifies, submit the reconciliation project for pre-claim approval and get a three-year answer in roughly ten weeks. The state-of-the-art entry above plus the standing assessment table is most of the T1322 input already.
 
 Do this **before** starting the reconciliation work in earnest, since the whole point of the service is a determination before costs are incurred.
+
+**Scope the request to reconciliation alone.** An earlier plan was to submit outcome milestone derivation alongside it. That work was implemented on 2026-09-07 and self-assessed as not claimable, and pre-claim approval covers planned work only, so including it would ask CRA to rule on money already spent on work we have written down as ineligible — which invites scrutiny of the rest of the request. One project, unstarted, honestly framed.
 
 ### Still open for a specialist
 

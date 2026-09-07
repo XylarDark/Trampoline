@@ -51,6 +51,8 @@ A **collaborator** is defined as central to the project and providing a specific
 
 **The IP term is aggressive.** WSIB retains "a non-exclusive, perpetual, irrevocable right to use, reproduce, display, distribute and prepare derivative works of all material produced from grant activities." Read that against contributing proprietary software as research infrastructure. It likely does not reach our pre-existing codebase, but it plainly reaches anything produced *under* the grant, and "prepare derivative works" is broad. Get legal advice on the boundary before signing, and scope our contribution so the thing we own is not the thing produced.
 
+**That boundary is only defensible with a provable date.** "Pre-existing" means pre-existing on the record, and an uncommitted working tree proves nothing about what existed when. Commit the engine, the tests, and the provider routes before any grant conversation starts. This is the same discipline gap the [SR&ED log](sred-log.md) records against itself, and it costs a minute to close in both cases.
+
 **The budget rules constrain how we could be paid.** Funds may not be used for capital expenditures or overhead; **IT hardware or software purchases may not be made unless explicitly identified in the budget**; consulting fees are prohibited outright; any external expert must be named in the proposal and budget with their role and compensation described; equipment is capped at 10% of total funds. So our line has to be written into the budget from the first draft as a named essential service — not added later, and not framed as consulting.
 
 **On data:** WSIB administrative data can be requested for a grant project, and proposals are strengthened by showing linkage to datasets outside WSIB — which is an opening for us. But WSIB "cannot actively support recruitment or refer individuals to a program for the purpose of a grant project," so it will not supply the cohort.
@@ -125,7 +127,7 @@ Other 2025 priorities worth knowing: tools and services that build **employer ca
 >
 > WSIB cannot fund a private organization as Project Lead but can fund a collaborator supplying something essential and not otherwise available. I am looking for a researcher who would find the question worth leading, and your work on negotiating workplace accommodations and on employment support systems is the closest fit I have found.
 >
-> Two things I would rather say up front than have you discover. We have no data yet, so anything here is prospective. And I am aware of the JDAPT work at IWH; I would genuinely like to understand whether what I am building is complementary to it or redundant with it, and I would rather be told the latter early.
+> Two things I would rather say up front than have you discover. We have no data yet, so anything here is prospective — though there is a working read-only prototype I can show you, which derives Ontario's funded-outcome milestones from an employment record and is honest on screen about the one aggregation rule no public directive defines. And I am aware of the JDAPT work at IWH; I would genuinely like to understand whether what I am building is complementary to it or redundant with it, and I would rather be told the latter early.
 >
 > Would a short conversation be useful?
 >
@@ -135,9 +137,11 @@ The last two paragraphs are not throat-clearing. A cold approach from a company 
 
 ## What we can and cannot offer honestly
 
-**Can offer:** the data structure and schema, our design rules and privacy posture, the software as research infrastructure, and access to the pilot cohort if the pre-apprenticeship pilot proceeds.
+**Can offer:** a deterministic, reproducible operationalisation of Ontario's funded-outcome definitions. It is a pure function with no hidden state and an injected clock, so the same record always produces the same verdict, and the one rule with no public source is isolated in a single named constant a reviewer can flip to test sensitivity. That is a measurement instrument rather than an application feature, and it is the part of this a methodologist will care about. Plus the data structure and schema, our design rules and privacy posture, and access to the pilot cohort if the pre-apprenticeship pilot proceeds.
 
 **Cannot offer, and must not imply:** existing data. We have none. Any proposal is prospective, and saying so up front is the only way this relationship survives contact with reality.
+
+The demo cohort is twelve synthetic fixtures at `@example.invalid` addresses, each engineered to produce one verdict. Say so the moment the screen is shown. A researcher who discovers it afterwards will not distinguish "demo" from "fabricated data," and would be right not to.
 
 ## Sequencing note
 

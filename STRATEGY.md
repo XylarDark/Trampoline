@@ -28,23 +28,35 @@ It is also what the law says. Ontario treats pre-offer medical inquiry as presum
 
 **Primary:** the person rebuilding both at once. They are hiring Trampoline to stop re-explaining their situation to every new organization, and to get the adjustment they need written into the job rather than discovered after they start.
 
-**Secondary:** the provider and the funder. A provider is hiring Trampoline to stop chasing employer letters and pay stubs at the 1-, 3-, 6-, and 12-month checkpoints by hand — client self-report is not acceptable evidence, so the chasing is not optional. A funder is hiring it to see referrals, placements, and retention as they happen instead of in a year-end survey their own evaluators flagged for selection bias.
+**Secondary:** the provider and the funder. A provider is hiring Trampoline for two things, and the second only became visible once we built the derivation. The first is to stop chasing employer letters and pay stubs at the 1-, 3-, 6-, and 12-month checkpoints by hand — client self-report is not acceptable evidence, so the chasing is not optional, and where the employer refuses outright the last resort is a lead-caseworker attestation carrying a Service System Manager pre-approval reference. The second is **to know which checkpoints cannot be proven at all, so that chasing stops going to them.** A funder is hiring it to see referrals, placements, and retention as they happen instead of in a year-end survey their own evaluators flagged for selection bias.
 
 ## Key metrics
 
-- **Milestones evidenced without manual chasing** — the 1-, 3-, 6-, and 12-month checkpoints captured as a by-product of the record. This is the wedge, so it is the first metric.
+- **Checkpoints earned but not provable, driven toward zero** — the person worked the hours and the paper is missing. This is the wedge, so it is the first metric, and it is the headline figure on the provider caseload screen. It deliberately excludes subsidized checkpoints, because no document makes those payable and counting them would overstate what a provider can act on.
 - **Supported referrals accepted, in and out** — the Service Coordination measure counts exactly this, in both directions, and we are a referral router. Caveat worth carrying: that measure is documented under the legacy Employment Service quality standard, and the equivalent weighting under the live Integrated Employment Services regime is not published. Strong fit in intent, unconfirmed in weight.
 - **Accommodations specified and provided** — restrictions that became a written workplace adjustment rather than a quiet rejection.
-- **Retention at 12 months** — the number that collapsed from 86% to 62%. If we do not move it, we have built reporting software.
-- **Zero health-derived hiring blocks** — an audit metric, expected to stay at zero permanently.
+- **Retention at 12 months** — the number that collapsed from 86% to 62%. If we do not move it, we have built reporting software. This is the destination, not a number we can currently produce: it needs a provider's own historical data, and the longest employment history in our demo cohort is 300 days. The near-term proxy is the share of checkpoints claimable at each checkpoint month.
+- **Zero health-derived hiring blocks** — an audit metric, expected to stay at zero permanently. Honest caveat: it is guaranteed at zero today for a reason unrelated to the control, since there is no write path anywhere in the application. It only starts measuring the control once writes and sign-in exist.
 
 ## Tracks
 
 ### Outcome evidence
 
-Referrals with acceptance, placements, employment spells with hours and wage, milestones, follow-ups at the months funders report on, and satisfaction from both the client and the employer.
+Referrals with acceptance, placements, employment spells with hours and wage, milestones, follow-ups at the months funders report on, and satisfaction from both the client and the employer — plus a pure engine that derives each funded-outcome checkpoint from those spells and names why it is or is not payable.
+
+The derivation and the recorded ledger are deliberately separate layers. The engine's verdict is recomputed from the spells every time; the ledger holds what was asserted to the funder when it was asserted, so a later spell correction cannot silently rewrite a submitted claim.
 
 _Why it serves the approach:_ it is the only part with a named payer today. No Ontario funder pays for readiness certification; they pay for placements, retention milestones, and referrals.
+
+_What building it taught us._ Five findings that change the pitch rather than decorate it:
+
+- **Only three of eleven verdicts are fixable by chasing a document.** Missing evidence, unacceptable evidence, and a missing pre-approval respond to effort. Below-threshold hours, sub-minimum wage, subsidized placements, uncounted job stacking, a client who needs a new employer, and no employment at all do not. A large share of the money a provider has visibly earned is structurally unclaimable, and saying so is worth as much as evidencing the rest.
+- **Entry state can make a client incapable of producing a funded outcome.** Someone who arrived already working 20-plus hours yields nothing with that same employer, regardless of hours, wage, or paperwork. This is decided before any other test.
+- **Wage screening cannot be fully automatic.** A base wage under general minimum wage is disqualifying unless most of the pay is tips, which can count. That case needs a person to look at it, so "no manual work" is not a defensible claim.
+- **Job stacking is undecidable from one person's record.** Reaching the threshold by summing concurrent jobs is permitted for up to 5% of clients per catchment, so a correct verdict needs catchment-level data only a Service System Manager holds. The engine flags rather than counts.
+- **Failed follow-up contact is real work with nowhere to go.** Three recorded attempts to reach a client who stopped answering is effort no funder report has a field for, and we already hold it.
+
+One thing we cannot do: attach a dollar value to any checkpoint. Integrated Employment Services performance weightings are not published, so no figure appears anywhere in the product, and no return-on-investment arithmetic belongs in a funding application either.
 
 ### Accommodation routing
 
@@ -76,7 +88,8 @@ _Why it serves the approach:_ every existing readiness record needs a container 
 
 ## Honest risks
 
-- **The wedge may be the whole product.** If automated retention proof is what people will pay for, the passport is a feature of a reporting tool rather than the reverse. The validation interviews are allowed to reach that conclusion.
+- **The wedge may be the whole product.** If automated retention proof is what people will pay for, the passport is a feature of a reporting tool rather than the reverse. The build has already provisionally taken that path: the placeholder passport was deleted, the provider surfaces are the only ones reading real data, and the person-facing views now hang off the same cohort. So the interviews confirm or reverse a decision already made in code rather than making it fresh.
 - **Better information may not change employer behaviour.** A verified quality signal raised callbacks 10 points for everyone and left the 25-point disability gap intact; a wage-subsidy offer moved nothing. Our employer value has to be administrative and legal, not persuasive.
-- **The benefits cliff may dominate.** ODSP claws back 75 cents per dollar above $1,000 per month and drives documented deliberate underworking, which collides with the 20-hour funding threshold. No record fixes that, and we should say so.
+- **The benefits cliff may dominate.** ODSP claws back 75 cents per dollar above $1,000 per month and drives documented deliberate underworking, which collides with the 20-hour funding threshold. No record fixes that, and we say so on the provider caseload screen: the hours that make a checkpoint payable to the provider can leave the client worse off.
+- **A wrong `claimable` verdict is now our liability.** The engine tells a provider that a checkpoint is payable against their own funding contract. One bad verdict is worse than no product, which is why the printed evidence pack states the basis for every verdict and lists its own assumptions. One such defect has already occurred and been fixed: hours backed only by a client's word were being certified by an unrelated employer letter.
 - **Two questions need a lawyer, not more research:** our status under PHIPA, and whether any employer-facing health disclosure survives Code s. 23(2) even post-offer.

@@ -71,6 +71,8 @@ Deliberately small. We are buying information, not a partnership.
 
 Twenty minutes. No demo, no deck. Ask which of the three blockers it is, and take the answer.
 
+**The provider milestone demo is not relevant here and must not enter these calls.** It answers a provider's reporting question; this call is about whether a gatekeeper platform will consume a credential it did not issue. Bringing it in would answer a question nobody asked and turn an information-buying call into a pitch.
+
 **With SALUS Safety, ask a sharper version,** because their API already answers the structural question:
 
 > Your API has an endpoint for creating a certificate provider. What does an organization have to be, or prove, before you would let it register as one — and has anyone outside a recognized safety association ever done it?
@@ -119,7 +121,7 @@ Short on purpose. A long email from an unknown company reads as a pitch and gets
 
 Do not quietly reinterpret the result. The honest response is that Trampoline is not a portable credential and should stop describing itself as one. What would remain:
 
-- **The outcome-evidence wedge**, which does not require any gatekeeper to read a credential. It only requires a provider to want its own reporting automated.
+- **The outcome-evidence wedge**, which does not require any gatekeeper to read a credential. It only requires a provider to want its own reporting automated. **This is now the built proposition rather than the theoretical fallback:** a derivation engine, three provider screens, and a printable funder submission exist and run. So falsifying portability costs considerably less than this section assumed when it was written — there is something to fall back to, not just a plan to fall back to.
 - **Accommodation specification**, which is consumed by a person and an employer in a conversation, not by a platform through an API.
 
 Both survive without portability. That is worth knowing before building the attestor network, which is the whole point of running this in week 4 rather than year 2.

@@ -23,7 +23,9 @@ The one part of the process that *is* fast is the end: once NRC has a complete p
 - What the software does, in one sentence, without the word "platform."
 - What is technically hard about it — the multi-attester reconciliation problem, not the CRUD.
 - Who is on the team, and what is incorporated.
-- What we are trying to reach: the pilot, and the evidence it produces.
+- What we are trying to reach: a read-only demo derives funded-outcome verdicts today; the pilot adds writes, sign-in, and a provider actually collecting documents. Naming that gap precisely is more useful to an advisor than either fact on its own, because it shows we know which half is unbuilt.
+
+**Keep this separate from what can be shown, and do not let the two narratives borrow each other's language.** The milestone demo exists and demonstrates delivery capability, but it is routine engineering and [our own SR&ED log](sred-log.md) says so in writing. IRAP's test is technology development and commercialization potential, not CRA's technological uncertainty — so work that is unclaimable for SR&ED is still a perfectly good signal to an IRAP advisor. Show the demo here; do not put it on a T661.
 
 NRC also names the documents it will want: CRA business number, business plan, recent financial statements, ownership structure, and résumés or profiles for the management and technical team. The team profiles are the item most likely to be missing, and the one that most directly answers the "is this a real company" question.
 
@@ -52,8 +54,9 @@ See [`verified-facts.md`](verified-facts.md) for the exact registration steps, r
 
 | Order | Action | Blocked by |
 | --- | --- | --- |
+| 0 | Commit the working tree, docs separately from code | Nothing. Costs one minute. Until it is done, the SR&ED log's dated entries and the pre-existing-IP boundary in [`wsib-collaborator.md`](wsib-collaborator.md) are both unevidenced. |
 | 1 | Incorporate (Ontario CCPC) | Nothing. Gates SR&ED, TPON, and IRAP. |
-| 2 | Open the [SR&ED log](sred-log.md) | Nothing — already done, before incorporation, deliberately. |
+| 2 | Open the [SR&ED log](sred-log.md) | Nothing — already written, before incorporation, deliberately. But only evidenced once committed; see row 0. |
 | 3 | Call for an IRAP advisor | Incorporation, for the business number and financials |
 | 4 | Register on TPON | Incorporation |
 | 5 | [SR&ED pre-claim approval](verified-facts.md) request | Incorporation. ~10 weeks to a 3-year answer. |

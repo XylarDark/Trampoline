@@ -110,21 +110,26 @@ Have this ready before the first call. A partner who has to extract material fro
 | --- | --- |
 | The problem, with evidence | The retention-cliff and unmet-accommodation figures with sources, from [`../research/`](../research/) |
 | The intervention, with an evidence base | Clinician-to-workplace contact and accommodation offers as strongly-evidenced levers |
-| A measurement plan | Our outcome-evidence schema: referrals with acceptance, placements, employment spells with hours and wage, milestones, follow-ups at the reported months |
+| A measurement plan | A working derivation of the funder's own outcome definitions — not a schema, a running engine. Checkpoints at 1, 3, 6, and 12 months from job start, the hours and wage tests, per-document evidence acceptability, and a printable per-participant evidence pack. Read-only, under 107 tests, with every assumption we could not source named on the screen it affects. |
 | A costed technology line | Build, hosting, and support, at a defensible day rate |
 | Risk and privacy treatment | The eight design rules in [`../business-design.md`](../business-design.md) section 3, which pre-answer the privacy and human rights questions an assessor will raise |
 | Cost-share evidence | The private cost share the fund requires. Confirm the percentage and what counts as eligible in-kind before promising anything. |
+
+**The demo is the specific answer to the duplication exclusion.** The fund can deprioritize projects duplicating existing digital workforce platforms, and that is the exclusion most likely to catch us. Incumbents track placements. None of them tells a provider *why* a checkpoint is unclaimable, or which of those reasons a document can fix and which are structural. Show the caseload screen and the earned-but-not-provable count; it makes the distinction in less time than describing it takes.
 
 ## Honest position on our own credibility
 
 We have no customers and no pilot yet. A sector council that puts us in a proposal is taking a real risk, and pretending otherwise wastes the relationship.
 
-Two things reduce that risk, and both come from work already scheduled ahead of this:
+**A demo is not a pilot.** The twelve demo clients are synthetic fixtures engineered to produce specific verdicts, at `@example.invalid` addresses. They must never be described to a lead applicant as participants, as a cohort, or as data. Say what they are the moment the screen is shown; a partner who works it out later cannot tell "demo" from "fabricated," and would be right not to try.
+
+Three things reduce the risk, and the first two come from work scheduled ahead of this:
 
 1. The [retention interviews](../outreach/retention-interviews.md), which produce quotable provider demand.
 2. Workforce planning board endorsement, which is cheap for them to give and materially strengthens someone else's application.
+3. The read-only demo — twelve synthetic cases across ten distinct verdicts, running on a laptop with no Docker and no deployment. It takes the delivery-capability question off the table in ninety seconds.
 
-Sequence this **after** both. Approaching a sector council with nothing but a repository is the fastest way to be politely declined by the one lead applicant we most needed.
+Sequence this **after** the first two. The demo is a real asset now, but it does not substitute for either of them, and it is important to be clear about why: a council's risk is not "can they build it," which the demo answers, but "will providers use it," which only the interviews answer. Lead with provider quotes and show the demo second.
 
 ## Tracker
 

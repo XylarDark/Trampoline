@@ -12,7 +12,7 @@ The plan specified milestones at "6 and 13 cumulative weeks, retention to 15 and
 
 A **Funded Outcome** is defined by entry state:
 
-- Client enters unemployed, or working under 20 hours per week on average: outcome achieved at **an average of at least 20 hours per week**, at Ontario general minimum wage or better. Tips and commission may count.
+- Client enters unemployed, or working under 20 hours per week on average: outcome achieved at **an average of at least 20 hours per week**, at Ontario general minimum wage or better. Tips and commission may count — so a base wage below the general rate is not automatically disqualifying, and that case needs a person rather than a rule.
 - Client enters already working 20-plus hours: outcome requires 20-plus hours **with a new employer**. A client who achieves an outcome then loses the job reverts to this second definition.
 
 Checkpoints and payment: performance-based funding is paid at **1, 3, 6, and 12 months after job start**. Not after program exit — after the job starts. Our schema anchors follow-ups to job start for this reason.
@@ -49,6 +49,8 @@ Sector-level and well-sourced. None of it is a claim any one of our four intervi
 
 The last quote is the one to sit with. The current process costs providers clients. That is a stronger argument for our product than any efficiency claim, and it is also a warning: whatever we build must not become one more thing that makes the person feel surveilled. Our access log and per-recipient consent are the answer to that, and they should be in the demo, not a footnote.
 
+**Half-satisfied today, and worth being precise about before saying it to a provider.** The access log and per-recipient consent render on the person-facing views. Nothing on the three provider screens surfaces either, and the printable evidence pack puts one named client's employment periods, wages, contact history, and end reason on paper without writing anything the person can later read. Whether generating a pack should be logged is an open decision, not a solved problem.
+
 ### Community Living Toronto has already tried this
 
 Their own published MyJobMatch evaluation, whose stated goal was to "minimize administrative burden," found that "most ES staff reported that the change may have actually made things more challenging and added to their overall administrative burden. A total of 23/48 (48%) response were consistent with this interpretation."
@@ -78,11 +80,22 @@ Under IES, roughly 20% of an SSM's allocation is performance-based, weighted tow
 
 Ask these in the interviews. Each one is a real fork in the product.
 
-1. Which regime is your contract actually under — IES, legacy ES, or ODSP Employment Supports? A mixed transition is documented, and legacy outcomes explicitly do not count toward IES performance funding.
-2. Is ESMS-SPM still live for you, or only for First Nations sites?
-3. How does "cumulative" aggregate for non-consecutive weeks? No public directive defines it.
-4. Would your funder accept a milestone evidenced through a third-party system, given ESCases already links to CaMS?
-5. Who approves that — you, your SSM, or the ministry?
+1. Which regime is your contract actually under — IES, legacy ES, or ODSP Employment Supports? A mixed transition is documented, and legacy outcomes explicitly do not count toward IES performance funding. **Still open, and the engine serves IES only:** `IES_CHECKPOINT_MONTHS` is `[1, 3, 6, 12]`. A "mixed" answer means a second checkpoint set, not a configuration toggle.
+2. Is ESMS-SPM still live for you, or only for First Nations sites? **Still open.** Nothing in the code touches this.
+3. How does "cumulative" aggregate for non-consecutive weeks? No public directive defines it. **Now encoded as an assumption we have to defend:** `CUMULATIVE_AGGREGATION` is set to `continuous_at_checkpoint`, so only hours in a period covering the checkpoint date count and a gap before it is irrelevant. The alternative, `weighted_since_start`, is declared in the type and never implemented. The assumption is disclosed on every screen showing a verdict and printed in the evidence pack. Elif Kaya in the demo cohort exists to put this question to a provider directly.
+4. Would your funder accept a milestone evidenced through a third-party system, given ESCases already links to CaMS? **Still open, but now testable with an artifact** rather than as a hypothetical — hand over a printed evidence pack.
+5. Who approves that — you, your SSM, or the ministry? **Still open.**
+6. When several disqualifiers apply to the same checkpoint, which one does the Service System Manager actually record? **New, and invented by us.** The engine reports one reason per checkpoint in a fixed precedence — entry state, then no employment, then hours, then subsidy, then stacking, then wage, then evidence — and no public source says that order is right. Same problem when hours are unprovable across several employment periods: the code names the blocker standing in front of the most hours, which is a choice, not a rule.
+7. Does a document evidence only the period it covers, or can one document carry a checkpoint's whole hours total? **New, and load-bearing.** The engine takes the strict reading: hours count only from periods with their own acceptable document, so hours *worked* can exceed hours *evidenced*. The permissive reading would let an eight-hour employment letter carry twenty-four hours of self-reported work, which we judge unsupportable — but a provider may report that their SSM in practice accepts less.
+
+### Where the engine is knowingly incomplete
+
+Recorded so nobody mistakes the code for the framework. The framework text above is correct in each case; the implementation is not there yet.
+
+- **Reversion after job loss.** A client who achieves an outcome then loses the job reverts to the new-employer definition. The engine reads intake-time flags only and does not model reversion.
+- **Primary job.** The framework assesses the outcome on the client's primary job, and `placements.primaryJob` exists, but nothing reads it. Related and more serious: one placement row per client means concurrent jobs at *different* employers cannot be represented at all, so the stacking demo is two periods at a single employer. Fix the model before demonstrating stacking to anyone who will look closely.
+- **Self-employment.** Net business income equivalent to 20 hours per week for four weeks is a second evidence model, not another enum member, and none of it is built.
+- **The five-field document test.** The engine checks a document's *type* and whether it is on file. It cannot check that the document carries employer name, client name, payment date, pay period, and hours worked. So where the product says a document is accepted, it means an acceptable kind of document is recorded — the evidence pack now says this in its own assumptions list. This is also why the interview asks about field-level rejection rates rather than about acceptable document types.
 
 ## Caveats on this file
 
@@ -95,3 +108,4 @@ Ask these in the interviews. Each one is a real fork in the product.
 - [`contacts.md`](contacts.md)
 - [`retention-interviews.md`](retention-interviews.md)
 - [`../../src/db/schema.ts`](../../src/db/schema.ts) — the outcome-evidence tables this file governs
+- [`../../src/engine/outcomes.ts`](../../src/engine/outcomes.ts) — the derivation engine, which declares itself governed by this file. Read this file before changing a threshold there.
