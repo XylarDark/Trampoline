@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { DEMO_SHARE_TOKEN } from "@/src/db/demo-cohort";
 import { CHECK_TYPES, LEVEL_BUNDLES } from "@/src/db/seed-data";
 import { LEVEL_NAMES, LEVELS } from "@/src/engine/types";
 
@@ -59,11 +60,18 @@ export default function Home() {
       <section className="space-y-2 text-sm">
         <h2 className="text-lg font-medium">Where things are</h2>
         <p className="text-muted-foreground">
-          These routes are scaffolding. The first vertical slice — one user completes a check, opens
-          a mocked seat, and the placement is recorded as funder-reportable evidence — is the next
-          piece of work.
+          The provider caseload, the evidence timeline, and the printable pack read from a seeded
+          database and are the part worth looking at. Intake and the attestor console are still
+          disabled markup, because writing to this record needs sign-in and organization scoping
+          first.
         </p>
         <ul className="list-inside list-disc space-y-1">
+          <li>
+            <Link href="/provider" className="underline">
+              Provider caseload
+            </Link>{" "}
+            — funded-outcome checkpoints, and what cannot be proven
+          </li>
           <li>
             <Link href="/intake" className="underline">
               Dual intake
@@ -83,7 +91,7 @@ export default function Home() {
             — issue or revoke a check
           </li>
           <li>
-            <Link href="/share/demo" className="underline">
+            <Link href={`/share/${DEMO_SHARE_TOKEN}`} className="underline">
               Share view
             </Link>{" "}
             — what a school or employer sees

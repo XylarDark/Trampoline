@@ -11,8 +11,11 @@ import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/pglite";
 import { beforeAll, describe, expect, it } from "vitest";
 
+import { placementCheckpoints } from "@/src/engine/outcomes";
 import { gateDefinitionSchema } from "@/src/engine/types";
 
+import { DEMO_COHORT, DEMO_SHARE_TOKEN } from "./demo-cohort";
+import { caseload } from "./queries";
 import * as schema from "./schema";
 import { CHECK_TYPES, GATES, LEVEL_BUNDLES, OPPORTUNITIES, RESTRICTIONS } from "./seed-data";
 import { runSeed } from "./seed";
@@ -58,6 +61,13 @@ async function expectConstraintViolation(query: Promise<unknown>, constraint: st
   }
 
   expect(messages.join("\n")).toContain(constraint);
+}
+
+/** One cohort client's placement and spells, in the shape the engine takes. */
+async function loadCohortPlacement(email: string) {
+  const row = (await caseload(db)).find((candidate) => candidate.clientEmail === email);
+  if (!row) throw new Error(`Demo cohort is missing ${email}`);
+  return row;
 }
 
 beforeAll(async () => {
@@ -172,7 +182,10 @@ describe("migrations and seed", () => {
       },
     ]);
 
-    const rows = await db.select().from(schema.outcomeFollowUps);
+    const rows = await db
+      .select()
+      .from(schema.outcomeFollowUps)
+      .where(eq(schema.outcomeFollowUps.userId, user.id));
     expect(rows.map((row) => row.monthsAfterJobStart).sort((a, b) => a - b)).toEqual([4, 12]);
   });
 
@@ -313,5 +326,110 @@ describe("migrations and seed", () => {
       }),
       "exit_satisfaction_score_range",
     );
+  });
+});
+
+describe("demo cohort", () => {
+  it("seeds every client exactly once across two seed runs", async () => {
+    for (const client of DEMO_COHORT) {
+      const rows = await db.select().from(schema.users).where(eq(schema.users.email, client.email));
+      expect(rows, `${client.email} should exist exactly once`).toHaveLength(1);
+    }
+  });
+
+  it("gives every client a placement with an employer and a supported referral", async () => {
+    for (const client of DEMO_COHORT) {
+      const [user] = await db
+        .select()
+        .from(schema.users)
+        .where(eq(schema.users.email, client.email));
+
+      const rows = await db
+        .select()
+        .from(schema.placements)
+        .where(eq(schema.placements.userId, user.id));
+
+      expect(rows, `${client.email} should have one placement`).toHaveLength(1);
+      expect(rows[0].employerOrganizationId).not.toBeNull();
+      expect(rows[0].referralId).not.toBeNull();
+      expect(rows[0].jobTitle).toBe(client.jobTitle);
+    }
+  });
+
+  it("produces every milestone status the caseload screen can render", async () => {
+    const seen = new Set<string>();
+
+    for (const client of DEMO_COHORT) {
+      const { placement, spells } = await loadCohortPlacement(client.email);
+      for (const checkpoint of placementCheckpoints(placement, spells)) {
+        seen.add(checkpoint.status.tag);
+      }
+    }
+
+    // `needs_preapproval` is absent on purpose: the
+    // `employment_spells_attestation_needs_preapproval` constraint makes it
+    // unreachable from the database, so it is covered in the engine tests.
+    const expected = [
+      "claimable",
+      "not_due_yet",
+      "no_employment",
+      "below_threshold",
+      "below_minimum_wage",
+      "evidence_missing",
+      "evidence_unacceptable",
+      "subsidized_not_payable",
+      "stacking_uncounted",
+      "needs_new_employer",
+    ];
+
+    expect([...seen].sort()).toEqual([...expected].sort());
+  });
+
+  it("records the failed contact attempts, not just the successful ones", async () => {
+    const [user] = await db
+      .select()
+      .from(schema.users)
+      .where(eq(schema.users.email, "farah.nasser@example.invalid"));
+
+    const followUps = await db
+      .select()
+      .from(schema.outcomeFollowUps)
+      .where(eq(schema.outcomeFollowUps.userId, user.id));
+
+    const failed = followUps.filter((row) => row.contactOutcome !== "reached");
+    expect(failed).toHaveLength(3);
+    expect(failed.map((row) => row.contactOutcome)).toContain("unreachable");
+  });
+
+  it("carries an SSM pre-approval reference on the one attestation-evidenced spell", async () => {
+    const { spells } = await loadCohortPlacement("grigor.vasilev@example.invalid");
+    const attested = spells.filter((s) => s.verificationSource === "provider_attestation");
+
+    expect(attested).toHaveLength(1);
+    expect(attested[0].ssmPreApprovalRef).toBe("SSM-HN-2026-0418");
+  });
+
+  it("gives the featured client a passport and a share link, so one story spans both views", async () => {
+    const [user] = await db
+      .select()
+      .from(schema.users)
+      .where(eq(schema.users.email, DEMO_COHORT[0].email));
+
+    const checks = await db
+      .select()
+      .from(schema.attestations)
+      .where(eq(schema.attestations.userId, user.id));
+    expect(checks).toHaveLength(6);
+
+    const links = await db
+      .select()
+      .from(schema.shareLinks)
+      .where(eq(schema.shareLinks.userId, user.id));
+    expect(links).toHaveLength(2);
+    expect(links.map((link) => link.token)).toContain(DEMO_SHARE_TOKEN);
+
+    // The generated token is 24 random bytes rendered as hex.
+    const generated = links.find((link) => link.token !== DEMO_SHARE_TOKEN);
+    expect(generated?.token).toMatch(/^[0-9a-f]{48}$/);
   });
 });

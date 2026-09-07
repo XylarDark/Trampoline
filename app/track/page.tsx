@@ -1,14 +1,26 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
-import { DEMO_SHARE_TOKEN, demoPassport } from "@/src/db/demo-passport";
+import { db } from "@/src/db";
+import { DEMO_COHORT } from "@/src/db/demo-cohort";
+import { featuredUserId, passportForUser, shareLinksForUser } from "@/src/db/queries";
 import { GATES, OPPORTUNITIES } from "@/src/db/seed-data";
 import { evaluateGate, parseGate } from "@/src/engine/rules";
 import { nextStep } from "@/src/engine/routing";
 import { buildPersonalView } from "@/src/engine/share";
 
-export default function TrackPage() {
+export const dynamic = "force-dynamic";
+
+export default async function TrackPage() {
   const now = new Date();
-  const snapshot = demoPassport();
+
+  // No sign-in yet, so the route shows the featured seeded client — the same
+  // person the provider caseload opens with, rather than a separate invention.
+  const userId = await featuredUserId(db, DEMO_COHORT[0].email);
+  const snapshot = userId ? await passportForUser(db, userId) : null;
+  if (!snapshot) notFound();
+
+  const links = await shareLinksForUser(db, userId!);
 
   const view = buildPersonalView(snapshot, now);
   const step = nextStep(snapshot, now);
@@ -36,8 +48,7 @@ export default function TrackPage() {
         </h1>
         <p className="text-sm text-muted-foreground">
           This page is yours. Your level is a private routing signal, not a credential: it decides
-          what support to offer you, and no employer ever sees it. Attestations are not read from
-          the database yet.
+          what support to offer you, and no employer ever sees it.
         </p>
       </header>
 
@@ -129,16 +140,27 @@ export default function TrackPage() {
 
       <section className="space-y-2 text-sm">
         <h2 className="text-lg font-medium">What others can see</h2>
-        <p>
-          <Link href={`/share/${DEMO_SHARE_TOKEN}`} className="underline">
-            The skills view an employer gets before an offer
-          </Link>
+        <p className="text-muted-foreground">
+          Each link carries its own scope. A skills link cannot be widened into a functional
+          abilities one by editing the address, so releasing your functional limits is always a
+          separate decision you make after a conditional offer.
         </p>
-        <p>
-          <Link href={`/share/${DEMO_SHARE_TOKEN}?scope=functional_abilities`} className="underline">
-            The functional abilities view, only after a conditional offer
-          </Link>
-        </p>
+        <ul className="space-y-1">
+          {links.map((link) => (
+            <li key={link.id}>
+              <Link href={`/share/${link.token}`} className="underline">
+                {link.scope === "skills"
+                  ? "The skills view an employer gets before an offer"
+                  : "The functional abilities view, only after a conditional offer"}
+              </Link>
+              <span className="text-muted-foreground">
+                {" "}
+                — issued to {link.recipientLabel}, expires{" "}
+                {link.expiresAt.toISOString().slice(0, 10)}
+              </span>
+            </li>
+          ))}
+        </ul>
         <p>
           <Link href="/access-log" className="underline">
             Who has looked at your record

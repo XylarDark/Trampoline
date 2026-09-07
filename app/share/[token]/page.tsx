@@ -11,8 +11,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { DEMO_SHARE_TOKEN, demoPassport } from "@/src/db/demo-passport";
+import { db } from "@/src/db";
+import { passportForUser, shareLinkByToken } from "@/src/db/queries";
 import { buildEmploymentShareView, buildFunctionalAbilitiesView } from "@/src/engine/share";
+
+export const dynamic = "force-dynamic";
 
 function formatDate(value: Date): string {
   return value.toISOString().slice(0, 10);
@@ -22,13 +25,24 @@ export default async function SharePage({ params, searchParams }: PageProps<"/sh
   const { token } = await params;
   const query = await searchParams;
 
-  // Token lookup against `share_links` lands with the vertical slice, and will
-  // also write a `share_access_log` row so the person can see this view.
-  if (token !== DEMO_SHARE_TOKEN) notFound();
+  // Unknown, expired, and revoked all resolve to null and all render a 404.
+  // An expired link must not explain that it was once valid, since that alone
+  // confirms a person is on the system to whoever holds the URL.
+  const link = await shareLinkByToken(db, token);
+  if (!link) notFound();
 
-  const postOffer = query.scope === "functional_abilities";
+  const snapshot = await passportForUser(db, link.userId);
+  if (!snapshot) notFound();
+
+  // The link's own scope is the ceiling. A query parameter can ask for the
+  // narrower skills view but can never widen a skills link into a functional
+  // abilities one, which is the whole point of scoping the token.
+  const postOffer =
+    link.scope === "functional_abilities" && query.scope !== "skills";
   const now = new Date();
-  const snapshot = demoPassport();
+
+  // Writing the `share_access_log` row lands with the write paths. The read
+  // here is deliberately side-effect free until that write is authenticated.
 
   if (postOffer) {
     const view = buildFunctionalAbilitiesView(snapshot, now);
@@ -40,6 +54,9 @@ export default async function SharePage({ params, searchParams }: PageProps<"/sh
             Functional abilities · released after a conditional offer
           </p>
           <h1 className="text-2xl font-semibold">Conditions for doing the work</h1>
+          <p className="text-sm text-muted-foreground">
+            Issued to {link.recipientLabel}. This link stops working on {formatDate(link.expiresAt)}.
+          </p>
         </header>
 
         <section className="space-y-2">
@@ -90,6 +107,9 @@ export default async function SharePage({ params, searchParams }: PageProps<"/sh
           Demonstrated skills · shared by the person
         </p>
         <h1 className="text-2xl font-semibold">Verified skills checks</h1>
+        <p className="text-sm text-muted-foreground">
+          Issued to {link.recipientLabel}. This link stops working on {formatDate(link.expiresAt)}.
+        </p>
       </header>
 
       <section className="space-y-2">

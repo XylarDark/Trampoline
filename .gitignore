@@ -39,3 +39,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local demo database (npm run db:demo). A database directory, never committed.
+/.pglite/
+
+# logs from running the dev server and the demo database in the background
+dev.log
+demo-db.log
+demo-db.err

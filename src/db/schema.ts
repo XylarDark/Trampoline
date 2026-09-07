@@ -197,6 +197,12 @@ export const tracks = pgTable("tracks", {
    * restrict access to any job.
    */
   healthRenewalDueAt: timestamp("health_renewal_due_at", { withTimezone: true }),
+  /**
+   * Demonstrated attendance days, which some employment gates ask for. Kept on
+   * the track rather than derived from a health check, because attendance is a
+   * skills signal and an employment gate must never read a health one.
+   */
+  attendanceDays: smallint("attendance_days").notNull().default(0),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
@@ -467,6 +473,14 @@ export const placements = pgTable("placements", {
    * guessed.
    */
   primaryJob: boolean("primary_job").notNull().default(true),
+  /**
+   * Entry state at intake. A client who arrives already working 20-plus hours
+   * only achieves a funded outcome with a **new** employer, so entry state
+   * decides payability and cannot be inferred from the spells alone.
+   */
+  enteredEmployedFullHours: boolean("entered_employed_full_hours").notNull().default(false),
+  /** True when this placement is with the employer the client entered on. */
+  sameEmployerAsEntry: boolean("same_employer_as_entry").notNull().default(false),
   /** Set when the placement came through a gate, for pilot analysis. */
   gateId: uuid("gate_id").references(() => gates.id),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),

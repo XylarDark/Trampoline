@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Geist, Geist_Mono } from "next/font/google";
+
+import { DatabaseBanner } from "@/components/database-banner";
+import { DEMO_SHARE_TOKEN } from "@/src/db/demo-cohort";
+
 import "./globals.css";
 
 const geistSans = Geist({
@@ -20,10 +24,11 @@ export const metadata: Metadata = {
 
 const NAV = [
   { href: "/", label: "Overview" },
+  { href: "/provider", label: "Provider caseload" },
   { href: "/intake", label: "Intake" },
   { href: "/track", label: "Track" },
   { href: "/attestor", label: "Attestor" },
-  { href: "/share/demo", label: "Share view" },
+  { href: `/share/${DEMO_SHARE_TOKEN}`, label: "Share view" },
   { href: "/accommodation", label: "Accommodation" },
   { href: "/access-log", label: "Access log" },
 ] as const;
@@ -42,8 +47,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Skip to main content
         </a>
-        <header className="border-b">
-          <nav className="mx-auto flex max-w-3xl flex-wrap items-center gap-4 px-6 py-4 text-sm">
+        <DatabaseBanner />
+        <header className="border-b print:hidden">
+          <nav className="mx-auto flex max-w-6xl flex-wrap items-center gap-4 px-6 py-4 text-sm">
             <Link href="/" className="font-semibold">
               Trampoline
             </Link>
@@ -54,11 +60,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             ))}
           </nav>
         </header>
-        <main id="main" className="mx-auto w-full max-w-3xl flex-1 px-6 py-8">
+        <main id="main" className="mx-auto w-full max-w-6xl flex-1 px-6 py-8">
           {children}
         </main>
-        <footer className="border-t">
-          <div className="mx-auto max-w-3xl px-6 py-4 text-sm text-muted-foreground">
+        <footer className="border-t print:hidden">
+          <div className="mx-auto max-w-6xl px-6 py-4 text-sm text-muted-foreground">
             Targets WCAG 2.0 Level AA, the standard AODA requires.{" "}
             <Link href="/accommodation" className="underline">
               Request this information another way

@@ -8,6 +8,13 @@
       "when": 1788803141629,
       "tag": "0000_pivot_to_routing",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1788808128022,
+      "tag": "0001_cohort_entry_state",
+      "breakpoints": true
     }
   ]
 }

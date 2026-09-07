@@ -21,6 +21,7 @@ import {
   checkTypeDomainMap,
 } from "./seed-data";
 import { assertEmploymentGateScope, parseGate } from "@/src/engine/rules";
+import { seedDemoCohort } from "./demo-cohort";
 import * as schema from "./schema";
 import {
   checkTypes,
@@ -167,6 +168,7 @@ export async function runSeed(db: Database) {
   await seedRestrictions(db);
   const orgIds = await seedOrganizations(db);
   await seedGates(db, orgIds);
+  const cohort = await seedDemoCohort(db, orgIds);
 
   return {
     checkTypes: CHECK_TYPES.length,
@@ -175,6 +177,7 @@ export async function runSeed(db: Database) {
     organizations: SEED_ORGANIZATIONS.length,
     gates: GATES.length,
     opportunities: OPPORTUNITIES.length,
+    cohort,
   };
 }
 
@@ -185,7 +188,8 @@ async function main() {
   console.log(
     `Seeded ${counts.checkTypes} check types, ${counts.levelRequirements} level requirements, ` +
       `${counts.restrictions} restrictions, ${counts.organizations} organizations, ` +
-      `${counts.gates} gates, ${counts.opportunities} mocked opportunities.`,
+      `${counts.gates} gates, ${counts.opportunities} mocked opportunities, ` +
+      `${counts.cohort.created} of ${counts.cohort.clients} demo clients.`,
   );
   process.exit(0);
 }

@@ -27,6 +27,7 @@
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+  --color-destructive-strong: var(--destructive-strong);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -60,10 +61,25 @@
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  /*
+   * Darkened from the shadcn default of 0.556, which reaches 4.73:1 on white
+   * but only 4.34:1 once it sits on a muted surface — and every table row on
+   * the provider screens puts muted text on `bg-muted/50` while hovered. At
+   * 0.535 the same text clears 4.5:1 on white, on `bg-muted/50`, and on a full
+   * `bg-muted` fill, so no surface in the palette can fail it.
+   */
+  --muted-foreground: oklch(0.535 0 0);
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
+  /*
+   * `--destructive` is a fill colour: at 4.5:1 it is fine behind white text,
+   * but the badge and button "destructive" variants render it as text on a 10%
+   * tint of itself, which measures 3.99:1 and fails SC 1.4.3. This is the same
+   * red, darkened until it clears 4.5:1 on that tint (5.67:1) and on white
+   * (6.78:1). Use it for destructive *text*; use `--destructive` for fills.
+   */
+  --destructive-strong: oklch(0.48 0.22 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
@@ -99,6 +115,8 @@
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
+  /* The dark palette's destructive already reaches 5.30:1 on its own 20% tint. */
+  --destructive-strong: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
@@ -126,5 +144,70 @@
   }
   html {
     @apply font-sans;
+  }
+}
+
+/*
+ * Print. The evidence pack is a funder submission, so Ctrl+P has to produce a
+ * document rather than a screenshot of an app. No PDF library: a stylesheet
+ * keeps the output selectable, searchable, and free of a dependency.
+ *
+ * Rules are scoped to `.evidence-pack` where they change layout, so printing
+ * any other page still behaves normally.
+ */
+@media print {
+  :root {
+    /* Force a light palette. Dark mode prints as a solid black page. */
+    color-scheme: light;
+    --background: #ffffff;
+    --foreground: #000000;
+    --muted-foreground: #333333;
+    --border: #999999;
+  }
+
+  body {
+    background: #ffffff;
+    color: #000000;
+    font-size: 10.5pt;
+  }
+
+  @page {
+    margin: 18mm 16mm;
+  }
+
+  .evidence-pack {
+    max-width: none;
+  }
+
+  /* Keep a table's header with its first rows, and never split a row. */
+  .evidence-pack thead {
+    display: table-header-group;
+  }
+
+  .evidence-pack tr,
+  .evidence-pack dl {
+    break-inside: avoid;
+  }
+
+  .evidence-pack h2 {
+    break-after: avoid;
+  }
+
+  .evidence-pack section {
+    break-inside: avoid-page;
+  }
+
+  .evidence-pack th,
+  .evidence-pack td {
+    border-color: #999999;
+  }
+
+  /*
+   * Print the destination of any link that survives into the document, so a
+   * paper copy is not full of dead references.
+   */
+  .evidence-pack a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
   }
 }
