@@ -245,6 +245,18 @@ The closest thing in Canada to Trampoline's core data object, and it already exi
 - **Who pays:** WSIB / employers. **Who the user is:** employers planning accommodation; the worker consents to release.
 - **Verdict: PARTIAL OVERLAP — and a template Trampoline should copy rather than reinvent.** Its limitation is precisely the gap: it is claim-scoped, paper-scoped, and single-employer-scoped. There is no persistent, worker-held version.
 
+### JDAPT — Job Demands and Accommodation Planning Tool (Institute for Work & Health) — NEAR-DIRECT COMPETITOR on proposition 2
+
+Found while researching potential research partners, which is the uncomfortable way to find a competitor. Developed by **Dr. Monique Gignac**, IWH Scientific Director, whose research programme is workplace communication, privacy, support and **accommodation needs among people living with chronic, episodic conditions** — our population, named. It won a 2022 MaRS-CIBC inclusive design award, and sits alongside her ACED project (Accommodating and Communicating about Episodic Disabilities) and work on future-focused accommodation practices for the school-to-work transition.
+
+- **Who pays:** publicly funded research. Free at point of use.
+- **Who the user is:** a worker with an episodic or chronic condition, and their employer, planning accommodations together.
+- **Verdict: NEAR-DIRECT COMPETITOR on proposition 2, and it has what we lack** — peer-reviewed backing, an award, institutional credibility, and no commercial motive to be suspicious of. If the pitch is "software that helps specify accommodations for people with episodic conditions," this arrived first and better-credentialed.
+
+**The differentiation that has to hold up, stated so it can be tested:** JDAPT is a *planning instrument* used inside a conversation — it produces advice at a point in time. Trampoline is a *durable multi-party record* with expiry, revocable per-recipient consent, an access log, and evidence that survives the person moving between providers. Different object, adjacent purpose.
+
+**If that distinction does not survive contact with Gignac, proposition 2 needs rethinking.** Ask her directly rather than discovering it in a funding decline — the approach is drafted in [`../funding/wsib-collaborator.md`](../funding/wsib-collaborator.md). The best available outcome is that JDAPT becomes the accommodation-specification layer and we become the record it writes to.
+
 ### Bardavon Health Innovations (US) — PARTIAL OVERLAP
 
 Workers' compensation MSK platform with 40,000+ directly contracted outpatient therapy providers, the bNOTES clinical guidance system, the Bardavon Index predictive models, and notably **XRTS, "a unique work readiness program designed to ensure that an injured worker is physically ready to perform their job tasks safely."** Employers get visibility into return-to-work times, claims costs and outlier cases ([Bardavon injury recovery](https://www.bardavon.com/injury-recovery/), [homepage](https://www.bardavon.com/), [ten years blog](https://www.bardavon.com/blog/ten-years-dedicated-to-movement-health/), [Bardavon Index](https://www.bardavon.com/blog/the-bardavon-index-how-does-it-inform-better-treatment-decisions/), [Bardavon Analytics launch](https://www.globenewswire.com/news-release/2021/09/30/2306383/0/en/Bardavon-Analytics-Creates-Modern-Way-to-Manage-Workers-Compensation.html)).

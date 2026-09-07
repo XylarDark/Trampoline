@@ -6,6 +6,35 @@
 **Fiscal year:** to be set on incorporation.
 **Log opened:** 2026-09-07.
 
+## The test this log has to satisfy
+
+CRA applies **two requirements**, both mandatory, under guidelines dated 2021-08-13 that replaced the older five-question policy:
+
+- **Why** — the work must seek an advancement in *conceptual* knowledge, where it is unknown whether a result can be achieved because available knowledge is insufficient. Available means ours *plus* what is publicly reasonably available. **Routing around the uncertainty with known technique disqualifies the work.** Success is irrelevant.
+- **How** — a systematic investigation by experiment or analysis. CRA is explicit that **working systematically is not the same as a systematic investigation**: it requires a hypothesis, a test, logical conclusions, and evidence kept as the work progresses.
+
+The five-question framework is not dead. **The Tax Court still applies the *Northwest Hydraulic* questions**, including in a 2026 software case, so a defensible file satisfies both formulations. Full detail and citations in [`verified-facts.md`](verified-facts.md).
+
+### The framing to use: system uncertainty
+
+CRA recognizes **"system uncertainty"** — uncertainty arising "from or during the integration of technologies, the components of which are generally well known… due to unpredictable interactions between the individual components or sub-systems."
+
+**Frame every entry this way where it honestly applies.** Our components are individually unremarkable: expiry dates, attestations, restriction codes. The uncertainty is in their interaction — whether independent organizations' contradictory, separately-expiring assertions about one person resolve deterministically with no central authority and no shared clock.
+
+### The exclusion that could void the whole claim
+
+**Research in the social sciences or humanities is statutorily excluded.** So is routine data collection, and market research.
+
+We are an employment-services company, which puts us permanently one careless sentence away from writing ourselves out of eligibility. **Every entry must state a technology question, never a labour-market one.**
+
+| Never write this | Write this instead |
+| --- | --- |
+| Can restriction data predict work-disability duration? | Can contradictory multi-attester assertions be reconciled deterministically? |
+| Do accommodations improve retention? | Can a gate return an explainable verdict while structurally denied part of the record? |
+| Which milestone framework do providers need? | Can milestones be derived reproducibly from fragmentary spells after retroactive correction? |
+
+The left column is our research agenda and it is genuinely valuable — it belongs in the [WSIB proposal](wsib-collaborator.md), which welcomes exactly that kind of question. It must never appear in this log or on a T661.
+
 ## How to keep this log
 
 One entry per work session on anything that might be eligible. Write it the same day. An entry is worth keeping only if it answers all five of these:
@@ -32,6 +61,34 @@ Written up front so entries can be honest rather than opportunistic. To be revie
 | Accessibility conformance work | No | Applying a published standard. |
 
 ## Entries
+
+### 2026-09-07 — State of the art at project onset
+
+**Why this entry exists.** T661 line 242 asks for the **existing knowledge base at the onset of the project and its shortcomings**. Case law shows that failing to lead evidence on the state of the art is fatal, that uncertainty is judged **objectively** against what a competent professional would know rather than what our team happened not to know, and that **the onus is on the taxpayer**. This record has to be made now, dated, before the work — not reconstructed later when its date is worth nothing.
+
+**Known and publicly available as of today**, which we therefore cannot claim as advancement:
+
+- Bitemporal and valid-time data modelling, including retroactive correction and as-of reconstruction. Well-studied, textbook-documented, and directly applicable to expiry tracking. Any uncertainty in the milestone-derivation area has to be shown to lie *beyond* this, which is why that area is only marked "possibly" below.
+- Verifiable credentials, decentralized identifiers, and credential revocation and status lists. Public standards with reference implementations, covering issuance, expiry, holder-mediated presentation, and selective disclosure.
+- CRDTs and multi-writer conflict resolution, where writers are cooperative and converge on a shared value.
+- Policy and rules engines evaluating declarative rules against a fact base, and returning a decision trace.
+- Attribute-based access control and purpose-based disclosure, including field-level redaction by audience.
+
+**Where we believe the shortcoming lies.** Each body of work above assumes something our problem denies:
+
+1. Credential standards assume an **authoritative issuer per credential**. They specify how to verify who said something and whether it has expired, but not how to resolve two current, validly-issued, mutually contradictory assertions about the same functional capacity from two independent assessors with equal standing. The standards' answer is that this is out of scope for the verifier.
+2. Conflict-resolution work assumes writers are **cooperative and want to converge**. Our attestors are unaware of each other, have no protocol, no shared clock, and no incentive to agree. Divergence is the normal state, not a fault to be repaired.
+3. Rules engines assume the evaluator can **see the fact base**. Ours is structurally forbidden from seeing part of it — permanently, by law, not by configuration — and must still produce a verdict a person can act on and challenge.
+
+Whether these three constraints in combination admit a deterministic, explainable resolution, and what it must give up, is the open question. **Whether a competent professional in the field could resolve it from known practice is exactly what we do not yet know** — and that admission is the honest state of things today. It is also the question to put to CRA under pre-claim approval rather than to answer ourselves.
+
+**Method for keeping this current.** Before opening any new eligible-work entry, re-check the state of the art in that specific area and record what was found, including anything that *resolves* the problem. Finding prior art that answers our question is a legitimate and important outcome of this log: it means the work is routine, we should apply the known answer, and we should not claim it.
+
+**Eligibility assessment:** not itself claimable work. This is the required foundation for line 242 on every subsequent entry.
+
+**Hours.** Not applicable — recorded as part of documentation setup.
+
+---
 
 ### 2026-09-07 — Structural enforcement of a legal constraint in the type system and the database
 
@@ -88,11 +145,31 @@ Kept deliberately. An auditor asks what you left out.
 - Seed data and demo fixtures.
 - All documentation, strategy, and research writing.
 
-## Open questions for a specialist
+## Open questions
 
-1. Does multi-attester reconciliation meet the uncertainty test on its own, or only once we have documented failed approaches? (Current view: we need the failed approaches first, which means the log matters more than the argument.)
-2. Are the salaries of a founder-operator doing eligible work claimable in a pre-revenue CCPC with no payroll yet, and what has to be in place *before* the work to make them claimable later?
-3. Confirm the current expenditure limit, refundable rate, capital-expenditure eligibility date, and cloud-cost treatment against the CRA source before relying on any figure. See [`irap-and-tpon.md`](irap-and-tpon.md) for the verified figures once confirmed.
+### Resolved since this log opened
+
+- **The figures.** Expenditure limit, refundable rate, and capital eligibility are confirmed in [`verified-facts.md`](verified-facts.md). Note that the $6M limit is close to irrelevant to us: our claim is almost all salary, which is 100% refundable, so payroll is the binding constraint. Do not present the limit increase as a benefit we capture.
+- **Cloud costs: still unsettled, and not by us.** No CRA policy names cloud computing at all. The argument rests on inference, and CRA's overhead policy pulls the other way by treating internet service as non-incremental ordinary business expense. Raise it in the pre-claim approval application. Do not budget for it.
+
+### Question 1, now answerable directly — put it to CRA
+
+Does multi-attester reconciliation meet the uncertainty test on its own, or only once we have documented failed approaches?
+
+**Pre-claim approval, available since 2026-04-01, converts this from a judgement call into a written determination.** Eligible with gross business income under $25M, up to three projects per request, determination within **eight weeks**, valid **three years**, and it also cuts expenditure-review processing from 180 days to 90.
+
+The sequence: web form for a case number → Form **T1322** uploaded via My Business Account → a specialist meeting within four weeks, **mandatory for first-time claimants** → determination.
+
+This is the right move and it inverts the original plan. Rather than documenting for a year on the hope that reconciliation qualifies, submit the reconciliation project for pre-claim approval and get a three-year answer in roughly ten weeks. The state-of-the-art entry above plus the standing assessment table is most of the T1322 input already.
+
+Do this **before** starting the reconciliation work in earnest, since the whole point of the service is a determination before costs are incurred.
+
+### Still open for a specialist
+
+1. Are the salaries of a founder-operator doing eligible work claimable in a pre-revenue CCPC with no payroll yet, and what has to be in place *before* the work to make them claimable later? Unchanged, and still the most consequential unknown, since salary is essentially the entire claim.
+2. Choice of **traditional versus proxy** overhead method. The proxy amount replaces actual overhead and counts only toward qualified expenditures for ITC purposes. For a claim that is almost all salary, this choice probably matters more than the cloud question.
+3. **Ontario's provincial credits** — the Ontario Innovation Tax Credit and Ontario R&D Tax Credit stack on federal SR&ED, and there is an unconfirmed indication Ontario remains tied to the old $3M limit. Close this before modelling any combined recovery rate.
+4. Whether our claim narrative sits safely clear of the **social sciences exclusion**. Ask the specialist to read the framing table above adversarially, as a reviewer looking for a reason to reject.
 
 ## Related
 

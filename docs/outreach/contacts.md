@@ -78,9 +78,77 @@ Rebranded in autumn 2022; still hosts the Niagara Workforce Planning Board funct
 - info@workforcecollective.ca
 - **Co-Executive Directors Thalia Semplonius and Jamie Miller.** No individual emails are published; they invite meetings by appointment through the general address or phone.
 
+## Credential-gating platforms — the falsification test
+
+Rationale and the corrected target list in [`gate-falsification.md`](gate-falsification.md).
+
+### SALUS Safety (Salus Technologies Inc.) — primary target
+
+Vancouver. Construction safety, founded 2018, ~39 employees. Documents genuine refusal on expired qualifications *and* publishes `POST /v1/certificate/provider/` for registering external certificate issuers.
+
+- connect@salussafety.io · (833) 937-3007
+- **Founder and CEO Gabe Guetta.** No partnerships lead is published; there is an open partner program to route through.
+
+### Salus by Staffy (Staffy Health Inc.) — secondary target
+
+Toronto. Healthcare credentials. Claims refusal in near-identical language to ours, but the strongest claims are marketing copy and the enforcing product is explicitly in beta. Route through the site enquiry form.
+
+### Labourly (Resonant Solutions) — secondary target
+
+London, Ontario. Skilled trades and industrial staffing. Gates at shortlist rather than shift, drawing on ~1,600 trade licences. **Already admitted a third-party verification source** by partnering with Certn in 2023, which makes it the most likely yes.
+
+- info@labourly.ca
+
+### WorkSitePass — weaker test case
+
+Worker-held credential wallet for construction, with certificates verified against the issuing authority. Readiness visibility rather than documented refusal. Note a jurisdictional conflict: a third-party profile says Ottawa while its own privacy policy says Quebec incorporation.
+
+- support@worksitepass.ca
+
+## Research partners
+
+Full reasoning in [`../funding/wsib-collaborator.md`](../funding/wsib-collaborator.md).
+
+### Dr. Rebecca Gewurtz — best single entry point
+
+Associate Professor, School of Rehabilitation Science, McMaster. **Adjunct Scientist at IWH** and **Director of the IDEA (Inclusive Design for Employment Access) Social Innovation Laboratory** — one conversation reaches both institutions. Researches the process of negotiating workplace accommodations, work disability policy, and employment among people with episodic disabilities.
+
+- gewurtz@mcmaster.ca
+
+### Others, verified
+
+- **Dr. Sandra Moll**, McMaster Rehabilitation Science — mental health and return to work, e-mental health, co-design. molls@mcmaster.ca
+- **Dr. Monique Gignac**, IWH Scientific Director — accommodation needs in chronic and episodic conditions; created **JDAPT**, which is a competitive overlap as much as a contact. mgignac@iwh.on.ca · 416-927-2027 ext. 2150
+- **Dr. Dwayne Van Eerd**, IWH — work disability prevention; holds WSIB-funded accommodation projects. dvaneerd@iwh.on.ca
+- **Dr. Arif Jetha**, IWH Associate Scientific Director — employment participation of workers with disabilities, AI and work. ajetha@iwh.on.ca
+- **Dr. Nancy Carnide**, IWH — long-term recovery and return-to-work outcomes. ncarnide@iwh.on.ca
+- IWH general — info@iwh.on.ca · 416-927-2027 · 400 University Ave, Suite 1800, Toronto M5G 1S5
+- WSIB Research and Grants — grants@wsib.on.ca *(confirmed current; appears four times across live WSIB pages)*
+
+## Sector councils — the SWIF lead search
+
+Ranked with reasoning in [`../funding/swif-partner.md`](../funding/swif-partner.md).
+
+- **Food Processing Skills Canada** — Executive Director **Jennefer Griffith**, jgriffith@fpsc-ctac.com · info@fpsc-ctac.com · 613-237-7988 · Ottawa. $9.7M federal precedent, 23,000+ micro-credentials issued.
+- **Trucking HR Canada** — leads the Transportation and Supply Chain Workforce Alliance. President and CEO **Angela Splinter**. theteam@truckinghr.com · 613-244-4800
+- **BuildForce Canada** — new Executive Director **Irwin Bess** (started 2026-03-02), publicly committed to modernizing digital tools. info@buildforce.ca · 905-569-5552 · communications: raiswell@buildforce.ca
+- **Excellence in Manufacturing Consortium** — Guelph. Co-leads the Advanced Manufacturing Workforce Alliance. President **JP Giroux**.
+- **Retail Council of Canada** — info@retailcouncil.org · **Sebastian Prins**, Director of Government Relations, sprins@retailcouncil.org
+- **Supply Chain Canada, Ontario Institute** — **Kim Sforza**, ksforza@supplychaincanada.com
+- **Ontario Disability Employment Network** — best inclusive-hiring fit, Ontario-based. No partnerships email verified; use the site route. Runs a disability recruitment platform, so a possible competitive overlap.
+
+CCRW appears under Providers above and is also a strong SWIF candidate, having received roughly $3M through the National Workplace Accessibility Stream for workplace accommodation work.
+
 ## Do not use
 
 Recorded so nobody re-derives these and mistakes them for verified.
+
+- **BookJane**, for the falsification test. It only *alerts* on credential expiry rather than refusing, so it cannot falsify the hypothesis. Its assets were also sold under Ontario Superior Court order in June 2025 to its senior secured lender, with the company directed to drop the BookJane name and **no successor entity publicly disclosed.**
+- Any contact for **"Salus"** without checking which company. Salus by Staffy (Toronto, healthcare), SALUS Safety (Vancouver, construction), and Staffy's "Salus Workforce Management" beta are three different things.
+- Any **NRC IRAP** web form. There is none — the route is a phone call from a senior executive to 1-877-994-4727.
+- Widely-circulated **IRAP contribution figures** ("$75K-$200K typical," "80% of salary costs," named sub-streams with dollar totals). None appear on nrc.canada.ca. Do not repeat them to anyone.
+- Any **Emma Irvin** direct email at IWH. Her project work is relevant but no public address was found; route through info@iwh.on.ca.
+- **IWH as a commercial partnership route.** It publishes no process for a company to propose a partnership and no contact for one. Go through a named researcher, or the advisory-committee form.
 
 - Individual emails for **Thalia Semplonius** or **Jamie Miller**. Only a general address is published; a data-broker page asserts a `{first}@` pattern, which is a statistical guess, not an address.
 - **David Holman**, "Director, Employment Services" at Corbrook — appears only on LinkedIn and a data-broker page, not on corbrook.com. Corbrook's own site directs inquiries to the CEO.

@@ -51,9 +51,11 @@ Standardize what March of Dimes and Agilec already produce. Note the payer probl
 
 ### 4. The falsification test (weeks 4-8)
 
-Salus by Staffy and BookJane enforce hard credential gates in Canadian care settings today: they refuse shifts on credential expiry. If a platform that *already does credential refusal* will not accept one more credential type, the portability thesis has a problem no product work can fix.
+If a platform that *already does credential refusal* will not accept one more credential type, the portability thesis has a problem no product work can fix. This is the cheapest possible way to be proven wrong, which is why it is scheduled early rather than avoided.
 
-This is the cheapest possible way to be proven wrong, which is why it is scheduled early rather than avoided.
+**The targets changed on verification, and the test is now partly pre-answered.** BookJane turns out to only *alert* on expiry, not refuse, so testing there would have produced a false negative — and its assets were sold under court order in June 2025 with no successor entity disclosed. The primary target is now **SALUS Safety** (Vancouver, construction), which documents genuine refusal at the block screen *and* publishes an API endpoint whose purpose is registering external certificate issuers. That endpoint falsifies the structural objection before the first call, leaving the narrower commercial question: would anyone treat a Trampoline attestation as a first-class credential type?
+
+Their marketing also already argues our thesis — "the record belongs to the worker" — which is validation and a build-versus-partner problem in one sentence. See [`outreach/gate-falsification.md`](outreach/gate-falsification.md).
 
 ### 5. Clinical partner and hardest audience (weeks 6-10)
 
@@ -65,26 +67,33 @@ Expect the zero-exclusion objection immediately — IPS has a zero-exclusion rul
 
 Credivera for verifiable credential lifecycle, Certn for verification through an API into existing applicant tracking systems, MyCreds for education credentials. Building our own issuance layer would fail our own feature test.
 
+Add **SALUS Safety's certificate-provider API** to this list. It is the only Canadian gating platform found with a documented, public mechanism for admitting an outside credential issuer, which makes it a candidate rail rather than only a test subject. **Labourly** is a second precedent, having already admitted a third-party verification provider through its Certn partnership.
+
 ## 4. Capital
 
-**Structure: stay a for-profit Canadian-controlled private corporation, and win program money through partner-held grants.** The Ontario workforce funding stack pays service deliverers, not software vendors — Ontario Trillium Foundation excludes for-profits from every stream, WSIB bars private organizations as project lead, and Skills Advance Ontario's service-provider stream has no for-profit category. But SR&ED, the only money with no gatekeeper, requires the corporate form. Take the tax credit ourselves; let nonprofits and associations hold the grants.
+**Structure: stay a for-profit Canadian-controlled private corporation, and win program money through partner-held grants.** The workforce funding stack mostly pays service deliverers rather than software vendors — Ontario Trillium Foundation excludes for-profits from every stream, WSIB bars private organizations as project lead, Skills Advance Ontario's service-provider stream has no for-profit category, and the Skills Development Fund Training Stream confirms a for-profit vendor cannot be lead applicant. But SR&ED, the only money with no gatekeeper, requires the corporate form. Take the tax credit ourselves; let nonprofits and associations hold the grants.
+
+One correction to that generalization: **the federal Sectoral Workforce Innovation Fund does accept for-profit applicants.** Our reason for wanting a partner there is capacity, not eligibility — participant volume and multi-province reach — which is a better position to negotiate from and should be stated honestly when we do.
 
 ### Reachable now, no gatekeeper
 
 | Source | What it gives | Action |
 | --- | --- | --- |
-| SR&ED | 35% refundable for most CCPCs; expenditure limit doubled to $6M (max $2.1M/year); capital expenditures reinstated; cloud and development software newly eligible | Contemporaneous documentation starting immediately. Document the genuinely uncertain work, not routine build. |
-| NRC IRAP | Advisory, warm referrals, and a 12-18 month funding horizon | Call 1-877-994-4727 for an Industrial Technology Advisor. Treat it as a six-month relationship. |
-| Transfer Payment Ontario | Access to programs that route exclusively through it | Register now. Registration needs ministry approval, so being unregistered when a narrow call opens is an avoidable loss. |
+| SR&ED | 35% refundable on current expenditures, **100% refundable** for a CCPC. Limit now $6M, which is irrelevant to us — our claim is almost all salary, so payroll is the binding constraint. Capital ITC is only 40% refundable. | Contemporaneous documentation, already open. Document the genuinely uncertain work, not routine build. |
+| **SR&ED pre-claim approval** | A **written CRA determination in ~8 weeks, valid 3 years**, before incurring the cost — and expenditure reviews cut from 180 to 90 days | New since 2026-04-01, and the highest-value procedural item in the whole scan. Web form for a case number, then Form T1322. Do it **before** starting the reconciliation work. |
+| NRC IRAP | Advisory, warm referrals, and a 12-18 month funding horizon | **No web form.** A senior executive calls 1-877-994-4727. Pre-revenue is not a bar. Treat it as a six-month relationship, and ask what the Canada Innovation Corporation transition means for a relationship starting now. |
+| Transfer Payment Ontario | Access to programs that route exclusively through it | Register now. Registration completes in-session but **access takes up to 5 business days**, so being unregistered when a narrow call opens is an avoidable loss. |
 
-What SR&ED can actually claim: multi-attester expiry and restriction reconciliation, and gate evaluation under conflicting attestations. Not the Next.js app.
+What SR&ED can actually claim: multi-attester expiry and restriction reconciliation, and gate evaluation under conflicting attestations, framed as CRA's **"system uncertainty"** — well-known components with unpredictable interactions. Not the Next.js app.
+
+**And a hard constraint that cuts across our own research agenda: social sciences research is statutorily excluded from SR&ED.** "Can restriction data predict duration" is not claimable and belongs in the WSIB proposal. "Can contradictory multi-attester assertions be reconciled deterministically" is claimable and belongs on the T661. The two narratives must never appear in the same document. Cloud costs are unsettled — no CRA source names them — so do not budget for them.
 
 ### Needs a partner to hold it
 
 | Source | Size and timing | Our role |
 | --- | --- | --- |
-| Sectoral Workforce Innovation Fund | Continuous intake since 2026-08-25, up to $10M over 36 months, 25% private cost share, digitization eligible | Shared sector infrastructure in a sector council's Statement of Interest. For-profits qualify but cannot represent a single enterprise, and the fund explicitly invites organizations that aggregate employer demand. Best-timed opportunity found. |
-| WSIB Research and Grants | Up to $150K/year to $300K over 24 months | Funded collaborator "supplying data not otherwise available". We cannot lead. Approach the Institute for Work and Health or a McMaster occupational health researcher on early identification of prolonged-duration risk. Confirm 2026-27 timing at grants@wsib.on.ca. |
+| Sectoral Workforce Innovation Fund | Continuous intake since 2026-08-25, up to $10M over 36 months, 25% private cost share, digitization eligible | Shared sector infrastructure in a sector council's Statement of Interest. **We are in fact eligible to lead** — for-profits are named applicants — but we would fail the multi-employer and multi-province tests and the 100/500 participant minimums, and could be deprioritized for duplicating existing digital workforce platforms. A council fails none of those. Best-timed opportunity found. Prioritize the six new **Workforce Alliance** delivery organizations, who are effectively pre-vetted leads. |
+| WSIB Research and Grants | Up to $150K/year to $300K over 24 months, **but no open competition and the program page has been stale since 2025-09-17** | Funded collaborator supplying an essential service not otherwise available. We cannot lead. First action is an enquiry to grants@wsib.on.ca to find out whether the 2026 competition ran, was deferred, or was cancelled — it cannot be determined publicly. Our proposed question is verbatim a 2025 WSIB priority: identifying those at risk of duration beyond 3 and 6 months. Note WSIB claims perpetual irrevocable derivative-works rights over material produced under a grant. |
 | Ontario Trillium Foundation Grow | Closes 2026-11-04 | A purchased-technology line in a nonprofit's budget. |
 | Realize Capital Partners | Tuesday office hours | Highest value per unit effort in the whole funding scan. Ask which portfolio intermediary backs Ontario workforce or health-equity technology. Raven's Community-Driven Outcomes Contracts, where government pays only for what works, are the closest structural match to our revenue thesis anywhere. |
 

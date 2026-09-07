@@ -13,17 +13,45 @@ Our whole record is worthless if no gatekeeper reads it. Two precedents say that
 
 Both failed on the consumption side while having a perfectly good supply side. So before recruiting a single attestor, find out whether anyone will read the output.
 
-## Why these targets specifically
+## Correction: the plan named the wrong targets
 
-Salus by Staffy and BookJane already enforce hard credential gates in Canadian care settings: they refuse shift assignment when a credential is missing or expired. That makes them the fairest possible test subject, and it is what makes this a real experiment rather than a survey.
+Verification changed this test substantially. Read this section before running it.
 
-They have already:
+**BookJane does not appear to hard-gate at all.** Its documented behaviour is credential *expiry alerting* ("Credential expiry — 2 staff — 14 days remaining") and qualification-based *matching*, not refusal. The only hard language is contractual rather than product-enforced: workers warrant that they maintain valid credentials, the obligation to keep documentation sits with the agency partner, and blocking a worker is described as a manual admin action. Running the test here would have produced a **false negative** — a platform declining because it does not gate, misread as a platform declining to accept external credentials.
 
-- built the concept of a credential with an expiry date,
-- accepted that expiry should block work,
-- and paid the product cost of enforcing it.
+BookJane also has an ownership problem. It filed a Notice of Intention under the *Bankruptcy and Insolvency Act* in April 2025 after a sale process drew no acceptable third-party bids, and in June 2025 the Ontario Superior Court approved the sale of substantially all assets to its senior secured lender. The order directed the company to change its name to exclude the BookJane brand, and **no successor entity has been publicly disclosed**. The brand continues to operate and announce partnerships, but confirm which legal entity you would be contracting with before signing anything.
 
-Every objection about the *idea* is pre-answered. If they still will not accept one more externally-issued credential type, the objection is to external issuance itself — and that is a problem no amount of product work fixes. That is the finding we want, cheap and early.
+**Salus by Staffy does claim refusal, in almost our own words:** the platform "refuses to let an expired document reach a shift assignment," and "If anything required for that shift expires before the shift ends, the assignment should not complete. Not a warning, not a flag. A refusal." Two caveats: the strongest claims are marketing copy rather than product documentation, and the sibling product that states enforcement most concretely is **explicitly in beta** — so the enforcement being tested may not be generally available.
+
+**Do not blur three unrelated companies.** Salus by Staffy (Toronto, healthcare credentials, Staffy Health Inc.), SALUS Safety (Vancouver, construction safety, Salus Technologies Inc.), and Staffy's own "Salus Workforce Management" beta are different things in different provinces and sectors.
+
+## The right primary target: SALUS Safety
+
+Construction and skilled trades, Vancouver, founded 2018, ~39 employees, roughly $10.8M raised. It satisfies **both** halves of the test, which neither originally-named target does.
+
+**It refuses, and says so in product documentation rather than marketing:** rules "block high-risk workflows when a qualification is expired"; "the credential check runs before the workflow opens, and the expired ticket is flagged before work starts"; expired certificates surface "at dispatch, at the gate, or at the moment the task is supposed to start," with a refresher offered "at the block screen."
+
+**And it already exposes a public mechanism for admitting a new external credential issuer.** The developer API can "track, create, upload, and download credentials, providers, and certificate types," and the reference documents `POST /v1/certificate/provider/` — "Create a new certificate provider to assign to company certificates." Authentication is OAuth, requiring a company-owner-level account. There is an open partner program that explicitly courts integrations, an existing safety-association partner, and a deep integration with a major construction platform.
+
+**Most striking: their public copy already argues our thesis.** "The worker profile travels with the person… **the record belongs to the worker**." "Certificates, training, and documents travel with the worker, site to site."
+
+That cuts both ways, and the honest reading is uncomfortable: strong validation of the portability thesis, and a **build-versus-partner conflict**. They may be a partner, or they may be the company that has already built the portable-record layer for a sector with more money in it than ours. Go in wanting to know which.
+
+Contact: `connect@salussafety.io`, (833) 937-3007. Founder and CEO **Gabe Guetta**. No named partnerships lead is published.
+
+## What the test has already partly answered
+
+A platform that hard-gates on expiry **already publishes an endpoint whose entire purpose is registering new external certificate issuers.** So the structural objection — "credential gating cannot admit an outside issuer" — is falsified before the first call.
+
+What remains open is the commercial question the docs cannot answer: whether anyone would treat a *Trampoline-issued* functional attestation as a first-class credential type. That is a narrower and more answerable question than the one the plan set out to ask, and it should be asked directly.
+
+## Secondary targets
+
+**WorkSitePass** — construction, worker-held credential wallet, certificates "verified against the issuing authority, not taken on faith," expiry alerts at 90/30/7 days, and explicit portability: "certifications live in a wallet on the worker's phone — they keep them across employers." Gating strength is readiness visibility rather than documented automatic refusal, so it is a weaker test case. Note a jurisdictional oddity: a third-party profile says Ottawa, founded 2025, while its own privacy policy says it is incorporated under the laws of Quebec. `support@worksitepass.ca`.
+
+**Labourly** — skilled trades and industrial staffing, London Ontario, a product of Resonant Solutions. Gates at *shortlist* rather than shift: candidates "must upload proof of necessary certifications in order to be shortlisted," drawn from a database of ~1,600 trade licences, with 90-day renewal notices. Most useful precedent for us: it **partnered with Certn**, a third-party background-check provider, in 2023 — an existing example of admitting an outside verification source. `info@labourly.ca`.
+
+Deliberately excluded: Procore and Deputy are not Canadian, and Deputy's own copy concedes it surfaces "a warning during schedule creation," not a refusal.
 
 ## The hypothesis, stated so it can fail
 
@@ -43,12 +71,19 @@ Deliberately small. We are buying information, not a partnership.
 
 Twenty minutes. No demo, no deck. Ask which of the three blockers it is, and take the answer.
 
+**With SALUS Safety, ask a sharper version,** because their API already answers the structural question:
+
+> Your API has an endpoint for creating a certificate provider. What does an organization have to be, or prove, before you would let it register as one — and has anyone outside a recognized safety association ever done it?
+
+That converts a yes/no into a requirements list, which is far more useful. And ask the build-versus-partner question outright: given that their own copy says the record belongs to the worker, do they intend to extend the portable record beyond construction safety tickets?
+
 ## Outreach sequence
 
 1. Partnerships or integrations contact if one is published; otherwise the general enquiry route.
 2. If nothing comes back in ten days, approach a product lead directly on LinkedIn with the same three-sentence ask.
-3. Run both targets in parallel. One decline is an anecdote; two is a finding.
-4. Then repeat with any additional Canadian platform enforcing credential-expiry refusal, to get to three or four data points before drawing a conclusion.
+3. **Run SALUS Safety and Salus by Staffy in parallel** — different sectors, both claiming refusal. One decline is an anecdote; two is a finding.
+4. Add Labourly third, since its Certn partnership makes it the most likely yes and therefore the best check on a run of noes.
+5. Skip BookJane until a successor entity is identifiable. It does not gate, so it cannot falsify anything.
 
 See [`contacts.md`](contacts.md) for verified contact routes.
 
@@ -72,12 +107,13 @@ Short on purpose. A long email from an unknown company reads as a pitch and gets
 
 ## Tracker
 
-| Platform | Contact route | Contacted | Response | Blocker named | Reading |
-| --- | --- | --- | --- | --- | --- |
-| Salus by Staffy | | | | | |
-| BookJane | | | | | |
-| | | | | | |
-| | | | | | |
+| Platform | Gates? | Contact route | Contacted | Response | Blocker named | Reading |
+| --- | --- | --- | --- | --- | --- | --- |
+| SALUS Safety | Yes, documented | connect@salussafety.io | | | | |
+| Salus by Staffy | Claimed, beta | site enquiry | | | | |
+| Labourly | At shortlist | info@labourly.ca | | | | |
+| WorkSitePass | Visibility only | support@worksitepass.ca | | | | |
+| BookJane | **No** — skip | n/a, entity unclear | n/a | n/a | n/a | Would give a false negative |
 
 ## If the thesis is falsified
 
