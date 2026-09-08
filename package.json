@@ -25,7 +25,9 @@
     "db:seed": "tsx --env-file=.env.local src/db/seed.ts",
     "db:up": "docker compose up -d",
     "db:demo": "tsx scripts/demo-db.ts",
-    "verify": "node scripts/verify.mjs"
+    "verify": "node scripts/verify.mjs",
+    "preflight": "node scripts/preflight.mjs",
+    "check:placeholders": "node scripts/check-placeholder-credentials.mjs"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.11.3",

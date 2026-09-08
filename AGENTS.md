@@ -55,6 +55,7 @@ permanent charge against it. Before adding one, prefer extending an existing ski
 | Format | `npm run format` / `npm run format:check` |
 | Contrast check | `npm run check:contrast` |
 | Everything, with evidence | `npm run verify` |
+| Pre-production gate, once per release | `npm run preflight` |
 | Run the whole demo for an interview | `npm run demo` / `npm run demo:stop` |
 | Local database, no Docker | `npm run db:demo` |
 | Local database, Docker | `npm run db:up` |
@@ -152,6 +153,13 @@ under **Rules that are load-bearing**. And the SR&ED log entry, whose whole valu
 **Promotion is a deliberate step.** When an area moves to settled, that same change adds tests for
 the behavior that survived, updated docs, deleted scratch files, and `docs/KNOWN_ERRORS.md` entries
 for the failures that cost real time. Shaping defers these obligations; it does not abolish them.
+
+**Then hardening, once.** When taste and features are locked and this is about to be deployed, run
+`npm run preflight` and work the hardening pass in the `secure-coding` skill. It adds a full build,
+the dependency audit CI only advises on, registry signatures, a secret scan, and a check that no
+placeholder credential ships. It cannot clear this project for real health data: that gate is the
+13 preconditions in `docs/research/legal-and-privacy.md`, and most of them need a lawyer, not a
+commit. Entering hardening is a decision; nothing is hardened while its shape is still moving.
 
 ## Conventions
 

@@ -6,7 +6,13 @@ description: Use when handling user input, secrets, authentication, environment 
 # Secure coding
 
 Assume every input is hostile and every secret will leak if it is checked in. Apply these
-checks while writing the code, not in a separate audit pass.
+checks while writing the code, not in a separate audit pass — a review that defers them all to
+the end finds them when they are expensive, and usually does not find them at all.
+
+One exception, and it is narrow: the deploy-time controls in [The hardening
+pass](#the-hardening-pass) cannot be applied while writing code, because they are properties of
+a running deployment rather than of a file. Everything above that section stays inline and
+mandatory. Nothing moves out of it into the pass.
 
 ## OWASP Top 10 checks
 
@@ -114,3 +120,52 @@ NODE_ENV=development
 - [ ] Error messages leak no internal detail (paths, stack traces, SQL)
 - [ ] HTTPS for all external connections
 - [ ] Security headers configured
+
+## The hardening pass
+
+> **Localize on copy.** The commands and the specifics below are Trampoline's. Another project
+> runs its own equivalent gate, or none; the substance of the pass is portable, the details are
+> not.
+
+Run once, when features and taste are locked and the product is about to be deployed for the
+first time — or redeployed after a change large enough that its shape moved. It is not a
+recurring chore, and it is not a substitute for the inline checks above: it covers only what
+writing code correctly cannot reach.
+
+Start with `npm run preflight`. It runs the verify pipeline, a full `next build`, the dependency
+audit, registry signatures, a `gitleaks` scan, and `npm run check:placeholders`, and it writes
+`.devenv/preflight-report.json`. Two of those deserve naming: the audit is **blocking** here
+while the `audit` job in CI runs it `continue-on-error`, and a missing `gitleaks` is reported as
+**not run** rather than passed, which blocks the gate exactly as a failure does.
+
+Then work the residue by hand, because no command in this repository can see any of it.
+
+**The legal preconditions come first.** `docs/research/legal-and-privacy.md` lists 13 things that
+must be true before this stores one real person's real health-derived data. Seven are legal or
+organizational, one needs a written opinion from an Ontario privacy and employment lawyer, and no
+change to this repository satisfies any of them. A green preflight says nothing about that list.
+
+**Deploy-time configuration.** Production secrets separate from every other environment, on a
+rotation schedule, in the hosting platform's secret store rather than a `.env` file copied to a
+server. The [Secrets](#secrets) section states the rule; the pass is when someone confirms it is
+true of the actual deployment.
+
+**Placeholder credentials that ship.** `.env.example` carries `AUTH_SECRET=replace-me`, and no
+startup check reads it, so a deployment that never replaced it would authenticate sessions with a
+value published in this repository. `npm run check:placeholders` compares the template against
+every local environment file; run it against the environment the deployment actually uses, since
+it can only see the files in this tree.
+
+**Fail-fast validation of required environment variables.** Nothing here does this yet. `auth.ts`
+falls back to a JSON transport when `AUTH_EMAIL_SERVER` is empty, which is right for local
+development and wrong in production, where a missing mail server should stop the process rather
+than silently swallow every sign-in link.
+
+**The CSP, as served.** `next.config.ts` sets `script-src 'self' 'unsafe-inline'` and says in a
+comment to move to the nonce-based policy before this handles real client data. That is a gate
+item. Verify CSP and HSTS against a response from the running deployment, not against the config:
+middleware order, a proxy, or a CDN can drop a header that the file plainly sets.
+
+**The sign-off list.** `preflight` prints the controls no repository check can observe, and
+records them in its report as requiring sign-off rather than passed. Someone accountable ticks
+them, or the release goes out with them open and that is a decision rather than an oversight.
