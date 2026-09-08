@@ -147,6 +147,19 @@ This repo is developed on Windows PowerShell. These bite repeatedly.
 - Use `;`, not `&&`. `&&` is not a valid statement separator in the PowerShell
   versions in use here.
 
+### A script flag passed after `--` never reaches the script
+
+- **Symptom:** `npm run doctor -- --fast` ran a full scan and `npm run doctor -- --json`
+  printed human output instead of JSON, which made a JSON parse of it fail. Nothing errored;
+  the flag simply had no effect.
+- **Cause:** PowerShell removes the first bare `--` from a native command's arguments before
+  npm sees it. npm then reads `--fast` as an argument to itself and ignores it. Found on
+  PowerShell 5.1.26100.9168. Quoting the flag rather than the separator does not help.
+- **Fix:** quote the separator — `npm run doctor '--' --fast`. Also correct in bash, which
+  strips the quotes and passes `--` through.
+- **Prevention:** `AGENTS.md` gives the quoted form beside the `--` rule. When a flag seems to
+  do nothing, read npm's echoed command line first: it must end in the flag you passed.
+
 ---
 
 ## Product correctness
