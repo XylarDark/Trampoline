@@ -169,8 +169,8 @@ the cheapest correction available to us.
 | Does this connect to CaMS? | Not yet, and we do not know whether it would be permitted. **Do not promise it.** |
 | Can we try it? Can I log in? | No. Nothing writes and there is no sign-in yet. |
 | Is this real client data? | No, all twelve are invented. |
-| What is a checkpoint worth? | Those weightings are not published, which is why no dollar figure appears anywhere on the screen. Ask your Service System Manager for your contract's numbers. |
-| What does it cost? What are you selling? | There is no price. This call is to find out whether the problem is real and worth solving. |
+| What is a checkpoint worth? | ODE Network documents the payment points as **$300 at placement, $600 at three months, $900 at six, $1,200 at twelve** — about **$3,000 a client** across the four. Offer that as our understanding and ask them to correct it against their own contract. The ministry's performance weightings really are unpublished, which is why no dollar figure appears on the screen itself. |
+| What does it cost? What are you selling? | A range, not a quote: **$20 to $40 per enrolled client per year, roughly $4,000 to $8,000 for a two-hundred-client site.** Nobody has paid it yet, and the first two or three sites are free in exchange for their data and a reference. Never say it before they have given their own cost figure, and do not negotiate — offer to price against their numbers instead. |
 | Who else is using it? | Nobody. This is one of the first four conversations. |
 | Anything about how the rules were derived | Point at the assumptions section, and offer to send [`ontario-outcome-framework.md`](ontario-outcome-framework.md), which lists every source and every open question. |
 

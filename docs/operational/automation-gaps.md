@@ -119,6 +119,30 @@ from evidence rather than from guessing.
   `HTMLInputElement` value setter plus an `input` event; the buttons enabling is
   the signal that the pattern matched.
 
+### Placing the caret without coordinates, from inserting a section on 2026-09-08
+
+Appending three paragraphs after a known paragraph worked first try with no
+keyboard step and no coordinate guessing. The method is worth reusing verbatim.
+
+- **Do not plan on scrolling to click.** Page-level scrolling does not move the
+  editor, and setting `scrollTop` on `.kix-appview-editor` updates the property
+  without repainting, so the screenshot keeps showing the old viewport. Clicking
+  a canvas position you cannot see is not a plan.
+- **Delete the target sentence to place the caret.** Put it in **Find**, leave
+  **Replace with** empty, and click **Replace all**. The caret lands where the
+  deletion happened. `browser_fill` populates the dialog fields directly — the
+  native value-setter dance is only needed for CDP-driven fills — and the
+  buttons enabling is still the signal that the pattern matched.
+- **The style toolbar confirms where the caret went.** It changed from
+  `Heading 1` at size 23, which was the stale document-title context, to
+  `Normal text` at size 11 after the replacement. That is the only readable
+  caret signal available, and it is worth checking before pasting.
+- **Restore the deleted sentence as the first block of the payload**, since the
+  first block merges into the current paragraph. **Include its trailing period
+  in the search**, so the caret ends at the very end of the paragraph: any text
+  left after the caret is pushed below the pasted blocks and strands punctuation
+  at the end of the last new paragraph.
+
 **To remove an automated edit, restore a version rather than deleting blocks.**
 Removing the same section on 2026-09-08 was four menu clicks: File, Version
 history, See version history, then **Expand detailed versions** on the current

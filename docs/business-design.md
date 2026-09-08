@@ -22,6 +22,12 @@ Items 1 and 2 are **kill tests**: they can tell us the product should not exist,
 
 What to ask once it is on screen is section 5 of [`outreach/retention-interviews.md`](outreach/retention-interviews.md), including the three rules that make the demo evidence rather than theatre: **it is shown only if the provider asks to see it**, **their cost number comes before ours**, and **nothing is shown before the falsifying question**.
 
+**If they ask what it would cost.** Nobody has paid for this, so any figure is a placeholder — but "I don't know" is a poor answer to an interested buyer, and a number invented mid-call is worse. Anchor it on what the checkpoints are actually worth. Under the Service System Manager model, a subcontracted provider's documented payment points are **$300 at placement, $600 at three months, $900 at six, and $1,200 at twelve**, so the four columns on the caseload screen carry roughly **$3,000 per client** — separate from the $2,000 enrollment payment, which is not outcome-contingent. That schedule comes from ODE Network's *Tangled in Red Tape* rather than a published ministry rate card, so offer it as our understanding and invite correction. Their correction is worth more than the sale.
+
+Against $3,000 a client, quote **$20 to $40 per enrolled client per year** — about **$4,000 to $8,000 a year for a two-hundred-client site**. That is under two percent of the revenue it protects, and it sits below the $40 to $75 per user per month that Canadian case-management platforms charge for a whole system, which is where something that sits *beside* their case management belongs rather than replacing it. Say it as a range with the arithmetic attached, never as a quote, and if their own number comes back lower, take theirs. **The first two or three sites are free**, in exchange for their retention-hours data and a reference: we need their numbers more than their money.
+
+Two constraints bind any pricing that follows. **Never price per seat** — it taxes the retention department this product exists to shrink, so we would earn most from the providers we had helped least, and price per client or per recovered checkpoint instead. And **the client can never be the payer**, because providers may not charge employment-supports clients for services. The money comes from the provider or the Service System Manager.
+
 ### Now — needs no money and no incorporation
 
 | # | Action | Where |
@@ -287,6 +293,8 @@ Rules that follow:
 | Sector bodies | Shared infrastructure inside a Sectoral Workforce Innovation Fund proposal they lead | Wants a partner to lead — see the correction below. |
 | Employers | Accommodation specification and audit trail — administrative and legal value | Later, and never persuasion-based. |
 | Consumers | Not primary. This user has the least ability to pay. | Not planned. |
+
+No price is set, because nobody has been asked for one yet. The ballpark to offer a provider who asks mid-interview, and the checkpoint arithmetic it is derived from, is under "If they ask what it would cost" at the top of this document. Two rules from there bind whatever schedule replaces it: never per seat, and never billed to the client.
 
 Structure: a for-profit Canadian-controlled private corporation, because SR&ED requires it and SR&ED is the only money with no gatekeeper. Program grants are mostly held by nonprofit and association partners, because the workforce funding stack largely pays service deliverers rather than software vendors — the Ontario Trillium Foundation excludes for-profits outright, WSIB bars them as project lead, and a for-profit vendor cannot lead a Skills Development Fund Training Stream application.
 
