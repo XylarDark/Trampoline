@@ -32,7 +32,9 @@ Hamilton-Niagara's prototype data is public: employment at 20-plus hours fell fr
 
 ## Interview guide
 
-Twenty-five minutes for sections 0 through 4, and **do not show the demo during them.** The goal is to find out whether we are wrong, and a milestone table shown early gets described back to us in our own vocabulary — we would hear our own framework repeated and mistake it for agreement. Section 5 is a separate instrument, offered only after the falsifying question has been asked and answered.
+Twenty-five minutes for sections 0 through 4, and **do not show the demo during them.** The goal is to find out whether we are wrong, and a milestone table shown early gets described back to us in our own vocabulary — we would hear our own framework repeated and mistake it for agreement.
+
+**Sections 0 through 4 are the call. Section 5 happens only if they want to see it.** It is offered once, after the falsifying question has been asked and answered, and it runs only on a clear yes. A call that ends at section 4 has collected everything we came for.
 
 **0. Which regime (2 min).** Ask first, because the rest of the guide depends on the answer.
 
@@ -67,9 +69,11 @@ One quote to keep in mind here: a provider told researchers that "the absolute i
 - If a tool populated all of this from the record you already keep, would you pay for it, or is this just part of the job? Say unprompted that nothing writes yet and there is no sign-in — "captured as a by-product" is what we are aiming at, not what exists, and overstating it here poisons the answer we came for.
 - What would you rather we build instead?
 
-**5. Recognition test (10 min, optional, only after section 4).** Offer it in these terms: "I have a screen built from the directives. Ten minutes, and what I want is for you to tell me where it's wrong."
+**5. Recognition test (10 min, only on their yes, and only after section 4).** Offer it once, in these terms: "I have a screen built from the directives. Ten minutes, and what I want is for you to tell me where it's wrong." Then take the first answer they give.
 
-Navigate straight to the provider caseload. Do not show the home page — it links to the passport, levels, and health-check surfaces this call is deliberately staying away from. Say at the outset that these are twelve synthetic people, that nothing writes, and that it is running on this laptop.
+**Anything short of a clear yes is a no.** Hesitation, running out of time, "another time", or "send it over and I'll look" all end section 5. Thank them and close. Do not ask a second time, do not talk them into it, and do not send screenshots, a recording, or a link afterwards as a substitute — an unaccompanied screen invites exactly the misreadings the live walk-through exists to prevent, and we would learn nothing from it. Their interest is the only thing that makes this section worth running: a provider watching out of politeness produces agreement, and agreement is what we are trying not to collect.
+
+If they say yes, navigate straight to the provider caseload. Do not show the home page — it links to the passport, levels, and health-check surfaces this call is deliberately staying away from. Say at the outset that these are twelve synthetic people, that nothing writes, and that it is running on this laptop.
 
 **Getting it on screen** is one command: `npm run demo` from the repo root starts the database and the app and opens the provider caseload directly, which is also how it avoids passing through the home page. Run it before dialling, since a cold start takes about a minute. `npm run demo:stop` shuts it down afterwards.
 
@@ -110,6 +114,7 @@ The third and fourth rows are live possibilities, not defensive hedging. The pla
 ## What not to do on these calls
 
 - Do not describe levels, or a passport, or a readiness score. It invites the gating conversation we have deliberately left behind, and it is not what this call is about. If section 5 happens, this is a navigation instruction as well as a talking-point one: go straight to the provider caseload, because the home page links to the track and share views that render exactly these things.
+- Do not show the demo to anyone who has not asked to see it. It is offered once in section 5 and shown only on a clear yes, never as a way to fill silence, rescue a flat call, or answer a question they did not ask.
 - Do not let the demo imply more than exists. Read-only, no sign-in, a local database, and twelve synthetic people — say it before they ask, not after.
 - Do not promise integration with CaMS or any ministry system. We do not know yet whether that is permitted.
 - Do not ask them to be a design partner on call one. Ask for the facts; earn the second call.

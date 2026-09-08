@@ -10,6 +10,21 @@ You do not need to know how any of it was built. If a question goes past what is
 here, "I don't know, I'll find out and come back to you" is a good answer and
 costs nothing. Write the question down.
 
+## You may well not show it at all
+
+The demo is shown **only if the provider says they want to see it.** It is
+offered once, near the end of the call, and anything short of a clear yes ends
+it: hesitation, no time, "another time", or "send it over and I'll look". Thank
+them and close. Do not ask twice, and do not send it afterwards instead.
+
+This is not politeness, it is the method. Someone watching out of courtesy will
+agree with whatever is on the screen, and agreement is the one thing the call is
+designed not to collect. The twenty-five minutes before the offer are the real
+interview; a call that ends without the demo has still done its job, and several
+of them will.
+
+So have it running and ready, and expect not to need it.
+
 ## What you are showing, and what it claims
 
 Ontario pays employment-services providers when a client they placed is still
@@ -123,9 +138,11 @@ them disagree.
 
 So the framing is "tell me where this is wrong", never "isn't this useful". The
 ask-by-ask mapping is the table in section 5 of
-[`retention-interviews.md`](retention-interviews.md). Two rules from that guide
+[`retention-interviews.md`](retention-interviews.md). Three rules from that guide
 decide whether any of it is worth anything:
 
+- **Show it only if they asked to see it.** Offered once, run on a clear yes,
+  dropped on anything else.
 - **Get their cost number before they see ours.** The middle card holds that
   exact quantity, so their own unprompted figure is only uncontaminated if it
   comes first.

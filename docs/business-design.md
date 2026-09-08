@@ -20,7 +20,7 @@ Items 1 and 2 are **kill tests**: they can tell us the product should not exist,
 
 **It belongs in item 1 only.** Item 2 asks a different question of a different kind of company, and the demo must not enter those calls: it answers a provider's reporting question, while SALUS is being asked whether a gatekeeper platform will consume a credential it did not issue. For item 2 the instrument is the twenty-minute script in [`outreach/gate-falsification.md`](outreach/gate-falsification.md), no demo and no deck.
 
-What to ask once it is on screen is section 5 of [`outreach/retention-interviews.md`](outreach/retention-interviews.md), including the two rules that make the demo evidence rather than theatre: **get their cost number before showing them ours**, and **show nothing before the falsifying question**.
+What to ask once it is on screen is section 5 of [`outreach/retention-interviews.md`](outreach/retention-interviews.md), including the three rules that make the demo evidence rather than theatre: **it is shown only if the provider asks to see it**, **their cost number comes before ours**, and **nothing is shown before the falsifying question**.
 
 ### Now — needs no money and no incorporation
 
