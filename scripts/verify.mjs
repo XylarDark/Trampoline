@@ -19,13 +19,13 @@
  *   npm run verify -- --json    machine-readable evidence
  */
 
-import { spawnSync } from 'node:child_process';
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { spawnSync } from "node:child_process";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const EVIDENCE_PATH = path.join(REPO_ROOT, '.devenv', 'verify-report.json');
+const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const EVIDENCE_PATH = path.join(REPO_ROOT, ".devenv", "verify-report.json");
 
 /**
  * Each stage names what passing it actually demonstrates, and extracts a specific number or fact
@@ -34,33 +34,33 @@ const EVIDENCE_PATH = path.join(REPO_ROOT, '.devenv', 'verify-report.json');
  */
 const STAGES = [
   {
-    id: 'typecheck',
-    title: 'Type check',
-    proves: 'Every TypeScript file compiles under strict mode.',
-    command: 'npm',
-    args: ['run', 'typecheck'],
-    evidence: ({ code }) => (code === 0 ? 'tsc reported no type errors' : null),
+    id: "typecheck",
+    title: "Type check",
+    proves: "Every TypeScript file compiles under strict mode.",
+    command: "npm",
+    args: ["run", "typecheck"],
+    evidence: ({ code }) => (code === 0 ? "tsc reported no type errors" : null),
   },
   {
-    id: 'lint',
-    title: 'Lint',
-    proves: 'No ESLint errors. Warnings are allowed and counted.',
-    command: 'npm',
-    args: ['run', 'lint'],
+    id: "lint",
+    title: "Lint",
+    proves: "No ESLint errors. Warnings are allowed and counted.",
+    command: "npm",
+    args: ["run", "lint"],
     evidence: ({ stdout, stderr, code }) => {
       const summary = `${stdout}\n${stderr}`.match(
-        /(\d+) problems? \((\d+) errors?, (\d+) warnings?\)/
+        /(\d+) problems? \((\d+) errors?, (\d+) warnings?\)/,
       );
       if (summary) return `${summary[2]} error(s), ${summary[3]} warning(s)`;
-      return code === 0 ? 'no problems reported' : null;
+      return code === 0 ? "no problems reported" : null;
     },
   },
   {
-    id: 'test',
-    title: 'Tests',
-    proves: 'The Vitest suite runs to completion and every test passes.',
-    command: 'npm',
-    args: ['test'],
+    id: "test",
+    title: "Tests",
+    proves: "The Vitest suite runs to completion and every test passes.",
+    command: "npm",
+    args: ["test"],
     evidence: ({ stdout, stderr }) => {
       const combined = `${stdout}\n${stderr}`;
 
@@ -76,11 +76,11 @@ const STAGES = [
     },
   },
   {
-    id: 'contrast',
-    title: 'Theme contrast',
-    proves: 'Every theme colour pair meets WCAG 2.0 AA, as AODA requires.',
-    command: 'npm',
-    args: ['run', 'check:contrast'],
+    id: "contrast",
+    title: "Theme contrast",
+    proves: "Every theme colour pair meets WCAG 2.0 AA, as AODA requires.",
+    command: "npm",
+    args: ["run", "check:contrast"],
     evidence: ({ stdout, stderr }) => {
       const combined = `${stdout}\n${stderr}`;
       const failures = combined.match(/FAILURES:\s*(\d+)/);
@@ -91,7 +91,7 @@ const STAGES = [
       const verdicts = (combined.match(/\b(PASS|FAIL)\b/g) || []).length;
       if (verdicts === 0) return null;
 
-      return failures[1] === '0'
+      return failures[1] === "0"
         ? `${verdicts} colour pairs checked, 0 failures`
         : `${failures[1]} failing pair(s) of ${verdicts} checked`;
     },
@@ -103,13 +103,13 @@ const STAGES = [
  * for a statement about them: the pipeline reads the working tree, and none of these live there.
  */
 const NOT_VERIFIABLE = [
-  'Branch protection rules and required status checks (GitHub settings, not repository files)',
-  'Whether CI actually ran these same commands on the last push',
-  'Environment approval rules and deployment gates',
-  'Secrets configured in GitHub Actions or the hosting platform, and who can read them',
-  'Whether the deployed build matches this source tree',
-  'That a full `next build` succeeds; this pipeline type-checks but does not build',
-  'Runtime behavior against real Postgres; the seed tests run on in-process PGlite',
+  "Branch protection rules and required status checks (GitHub settings, not repository files)",
+  "Whether CI actually ran these same commands on the last push",
+  "Environment approval rules and deployment gates",
+  "Secrets configured in GitHub Actions or the hosting platform, and who can read them",
+  "Whether the deployed build matches this source tree",
+  "That a full `next build` succeeds; this pipeline type-checks but does not build",
+  "Runtime behavior against real Postgres; the seed tests run on in-process PGlite",
 ];
 
 /**
@@ -123,19 +123,19 @@ function runStage(stage) {
 
   const result = spawnSync(stage.command, stage.args, {
     cwd: REPO_ROOT,
-    encoding: 'utf8',
-    shell: process.platform === 'win32',
+    encoding: "utf8",
+    shell: process.platform === "win32",
   });
 
-  const stdout = result.stdout || '';
-  const stderr = result.stderr || '';
+  const stdout = result.stdout || "";
+  const stderr = result.stderr || "";
   const code = result.status;
   const durationMs = Date.now() - started;
 
   if (result.error) {
     return {
       ...describe(stage),
-      status: 'failed',
+      status: "failed",
       durationMs,
       evidence: null,
       detail: `Could not run ${stage.command}: ${result.error.message}`,
@@ -147,22 +147,22 @@ function runStage(stage) {
   // Passing requires both a zero exit code and recognizable evidence. A stage that exits zero
   // without producing its expected output has not demonstrated anything.
   if (code === 0 && evidence) {
-    return { ...describe(stage), status: 'passed', durationMs, evidence, detail: null };
+    return { ...describe(stage), status: "passed", durationMs, evidence, detail: null };
   }
 
   if (code === 0 && !evidence) {
     return {
       ...describe(stage),
-      status: 'inconclusive',
+      status: "inconclusive",
       durationMs,
       evidence: null,
-      detail: 'Exited zero but produced no recognizable evidence, so nothing was demonstrated.',
+      detail: "Exited zero but produced no recognizable evidence, so nothing was demonstrated.",
     };
   }
 
   return {
     ...describe(stage),
-    status: 'failed',
+    status: "failed",
     durationMs,
     evidence,
     detail: failureDetail(stdout, stderr),
@@ -180,7 +180,7 @@ function describe(stage) {
     id: stage.id,
     title: stage.title,
     proves: stage.proves,
-    command: [stage.command, ...stage.args].join(' '),
+    command: [stage.command, ...stage.args].join(" "),
   };
 }
 
@@ -193,17 +193,17 @@ function describe(stage) {
  */
 function failureDetail(stdout, stderr) {
   const combined = `${stdout}\n${stderr}`
-    .split('\n')
-    .map(line => line.trimEnd())
+    .split("\n")
+    .map((line) => line.trimEnd())
     .filter(Boolean);
 
-  return combined.slice(-15).join('\n') || 'No output.';
+  return combined.slice(-15).join("\n") || "No output.";
 }
 
 function main() {
   const args = process.argv.slice(2);
-  const runAll = args.includes('--all');
-  const asJson = args.includes('--json');
+  const runAll = args.includes("--all");
+  const asJson = args.includes("--json");
 
   const results = [];
   let stopped = false;
@@ -212,10 +212,10 @@ function main() {
     if (stopped && !runAll) {
       results.push({
         ...describe(stage),
-        status: 'not run',
+        status: "not run",
         durationMs: 0,
         evidence: null,
-        detail: 'Skipped because an earlier stage failed. This is not a pass.',
+        detail: "Skipped because an earlier stage failed. This is not a pass.",
       });
       continue;
     }
@@ -228,18 +228,18 @@ function main() {
     if (!asJson) {
       const seconds = (result.durationMs / 1000).toFixed(1);
       console.log(
-        result.status === 'passed'
+        result.status === "passed"
           ? `passed  (${result.evidence}, ${seconds}s)`
-          : `${result.status.toUpperCase()}  (${seconds}s)`
+          : `${result.status.toUpperCase()}  (${seconds}s)`,
       );
     }
 
-    if (result.status !== 'passed') stopped = true;
+    if (result.status !== "passed") stopped = true;
   }
 
-  const failed = results.filter(r => r.status === 'failed' || r.status === 'inconclusive');
-  const notRun = results.filter(r => r.status === 'not run');
-  const passed = results.filter(r => r.status === 'passed');
+  const failed = results.filter((r) => r.status === "failed" || r.status === "inconclusive");
+  const notRun = results.filter((r) => r.status === "not run");
+  const passed = results.filter((r) => r.status === "passed");
 
   const report = {
     generatedAt: new Date().toISOString(),
@@ -269,7 +269,7 @@ function main() {
     return;
   }
 
-  console.log('');
+  console.log("");
 
   for (const result of failed) {
     console.log(`${result.title} ${result.status}:`);
@@ -277,31 +277,31 @@ function main() {
     if (result.detail) {
       console.log(
         result.detail
-          .split('\n')
-          .map(line => `  ${line}`)
-          .join('\n')
+          .split("\n")
+          .map((line) => `  ${line}`)
+          .join("\n"),
       );
     }
-    console.log('');
+    console.log("");
   }
 
   if (notRun.length > 0) {
     console.log(
-      `Not run (an earlier stage failed): ${notRun.map(r => r.title).join(', ')}.\n` +
-        'These stages proved nothing. Do not read their silence as success.\n'
+      `Not run (an earlier stage failed): ${notRun.map((r) => r.title).join(", ")}.\n` +
+        "These stages proved nothing. Do not read their silence as success.\n",
     );
   }
 
-  console.log('Not verified from repository contents:');
+  console.log("Not verified from repository contents:");
   for (const item of NOT_VERIFIABLE) console.log(`  - ${item}`);
-  console.log('');
+  console.log("");
 
   if (report.verified) {
     console.log(`Verified: ${passed.length} of ${results.length} stages passed with evidence.`);
   } else {
     console.log(
       `Not verified: ${passed.length} of ${results.length} stages passed. ` +
-        `Evidence in ${path.relative(REPO_ROOT, EVIDENCE_PATH)}.`
+        `Evidence in ${path.relative(REPO_ROOT, EVIDENCE_PATH)}.`,
     );
   }
 
