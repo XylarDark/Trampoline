@@ -85,13 +85,15 @@ npm run doctor --fix        # wrong: npm swallows --fix
 - Include error handling and validate inputs at boundaries.
 - Comment complex logic only; follow existing project patterns.
 - Verify the code compiles and runs.
-- **Verifiable goals:** for feature work, define or run tests as the success
-  criterion and iterate until they pass, or state explicitly why tests are deferred.
+- **Verifiable goals:** in a settled area, define or run tests as the success criterion
+  and iterate until they pass. While shaping, the developer's reaction is the success
+  criterion instead; say in one line what you did not verify.
 
 ## File management
 
 - Read before editing; preserve existing structure where possible.
-- Update related files (tests, docs) in the same change.
+- Update related files (tests, docs) in the same change in a settled area; while shaping,
+  that update is owed at promotion.
 - Do not create files the task does not need.
 
 ### When a file is blocked by globalignore
@@ -177,6 +179,10 @@ complete:
 
 Clean up after the objectives are verified and before reporting results. Do not
 defer cleanup to a future session.
+
+While an area is **shaping**, a scratch file that will be reused next turn may stay, provided
+it lives somewhere gitignored rather than in tracked space, and everything is deleted at
+promotion. Nothing temporary gets committed at any phase.
 
 ## Checklist
 

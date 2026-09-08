@@ -76,8 +76,12 @@ Rules for new docs:
 
 ## Maintenance
 
-- Update docs in the same change as the code they describe.
-- Delete outdated documentation rather than leaving it to mislead.
+- Update docs in the same change as the code they describe, once that code is in an area
+  `AGENTS.md` marks as **settled**. While an area is **shaping**, documenting a shape that is
+  about to change writes the document twice; the update is owed at promotion. The SR&ED log is
+  the exception — it is dated evidence, so it is never deferred.
+- Delete outdated documentation rather than leaving it to mislead. This one does not wait for
+  promotion: a stale document actively misleads, which is worse than an absent one.
 - Keep examples working; test them before committing.
 
 ## Checklist

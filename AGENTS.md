@@ -61,7 +61,10 @@ permanent charge against it. Before adding one, prefer extending an existing ski
 | Repository health check | `npm run doctor` |
 
 **Pass script flags after `--`.** `npm run doctor -- --fix` forwards the flag to the doctor;
-`npm run doctor --fix` gives it to npm instead, which silently ignores it.
+`npm run doctor --fix` gives it to npm instead, which silently ignores it. **In PowerShell, quote
+the separator:** `npm run doctor '--' --fix`. PowerShell strips a bare `--` before npm sees it, so
+the unquoted form silently runs with no flag. npm echoes the command it runs — it must end in your
+flag.
 
 ## Layout
 
@@ -125,6 +128,30 @@ be scripted, record it in `docs/operational/automation-gaps.md` instead.
 
 **Plan multi-file work.** For changes spanning several modules, or that touch architecture or public
 APIs, propose a short plan before editing. See the `plan-first` skill.
+
+## Development phase
+
+Every area is **shaping** or **settled**. Shaping means the design is still being decided and the
+developer's judgment is the success criterion. Settled means the shape is agreed and the job is to
+keep it that way.
+
+- `src/engine/**`, `src/db/**` — settled. The load-bearing rules live here and the engine is
+  tested as pure functions.
+- `app/**`, `components/**`, `docs/**`, `scripts/**` — shaping.
+
+**In a shaping area**, spend the budget on something the developer can react to. Skip tests, doc
+updates, and the pre-work baseline; say in one line what you did not verify.
+
+**These do not defer at any phase.** The security baseline. The legal and accessibility
+constraints — a contrast regression is a compliance defect, not a rough edge, so
+`npm run check:contrast` still runs after touching a variant or `app/globals.css`. Every rule
+under **Rules that are load-bearing**. And the SR&ED log entry, whose whole value is its date.
+
+**In a settled area**, every obligation in the skills applies as written.
+
+**Promotion is a deliberate step.** When an area moves to settled, that same change adds tests for
+the behavior that survived, updated docs, deleted scratch files, and `docs/KNOWN_ERRORS.md` entries
+for the failures that cost real time. Shaping defers these obligations; it does not abolish them.
 
 ## Conventions
 

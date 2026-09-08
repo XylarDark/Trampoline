@@ -9,6 +9,11 @@ Tests document expected behavior. Write many small, fast, isolated tests instead
 large ones, and test behavior rather than implementation. Aim for high coverage of critical
 paths; 100% is not the goal.
 
+**Scope.** These standards describe how to test a **settled** area. Where `AGENTS.md` marks an
+area as **shaping**, its design is still being decided, tests are optional, and logging is the
+evidence instead; the obligations below are owed when that area is promoted. `src/engine/` and
+`src/db/` are settled, so nothing here is optional for them.
+
 ## Test pyramid
 
 - **Unit (~70%):** individual functions and classes, fully isolated.
