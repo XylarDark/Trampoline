@@ -90,6 +90,4 @@ this file:
 ## Related
 
 - [`.cursor/mcp.json.example`](../../.cursor/mcp.json.example) — the template to copy
-- [`.cursor/hooks/secret-scan.js`](../../.cursor/hooks/secret-scan.js) — blocks reads of secret
-  files and commands that would exfiltrate credentials
 - [`AGENTS.md`](../../AGENTS.md) — the security baseline this guide expands on

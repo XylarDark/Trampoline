@@ -26,10 +26,6 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Embedded DevEnvTemplate doctor. Linted by its own config.
     ".devenv/**",
-    // Agent hook scripts vendored from DevEnvTemplate. Cursor executes them as plain CommonJS
-    // Node scripts, so they cannot use ESM imports, and this project's TypeScript rules do not
-    // apply to them. They are linted upstream.
-    ".cursor/hooks/**",
   ]),
 ]);
 
