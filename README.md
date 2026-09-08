@@ -35,6 +35,8 @@ No LLM, no chatbot clearance, no scraped job inventory.
 
 Requires Node 22+. Docker is optional: `npm run db:demo` serves PGlite over TCP on the same port and credentials the Compose service uses, so nothing downstream knows the difference.
 
+**To show the provider demo rather than work on it,** run `npm run demo`. It does everything below that is not already done, then opens the provider caseload. `npm run demo:stop` shuts it down. Re-running is safe. It is Windows-only, being a PowerShell script.
+
 ```bash
 cp .env.example .env.local     # then set AUTH_SECRET: npx auth secret
 npm install
@@ -71,6 +73,7 @@ For Docker instead, run `npm run db:up` and leave the `.env.example` defaults al
 | `npm run format` / `format:check` | Prettier over code. Markdown is excluded on purpose — see `.prettierignore` |
 | `npm run check:contrast` | WCAG contrast ratios for the palette — see [Accessibility](#accessibility) |
 | `npm run doctor` | Environment health check — see [Development environment](#development-environment) |
+| `npm run demo` / `demo:stop` | Start or stop the whole provider demo for an interview, Windows only |
 | `npm run db:demo` | PGlite over TCP on 5432, as a stand-in for Postgres |
 | `npm run db:up` | Start local Postgres in Docker |
 | `npm run db:generate` / `db:migrate` / `db:push` | Drizzle Kit |

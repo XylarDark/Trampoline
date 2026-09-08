@@ -16,36 +16,11 @@ Items 1 and 2 are **kill tests**: they can tell us the product should not exist,
 
 **One thing has been built ahead of them, deliberately.** A read-only demo now derives the funded-outcome checkpoints for a twelve-client synthetic cohort and prints a funder evidence pack. It was built as an instrument *for* the kill tests, not as a bet placed ahead of them: showing a provider a milestone table and asking "is this what you do, and which of these verdicts do you actually see?" extracts far more than asking them to describe a process from memory. It cost engineering time and no money, nothing writes, and it can still be thrown away. The rule stands unchanged for anything that costs money.
 
-#### How to run the demo, start to finish
+**Starting it takes one command.** `npm run demo` fills in whatever configuration is missing, starts the database and the app, seeds the twelve synthetic clients if they are not already there, and opens the caseload screen. `npm run demo:stop` shuts it down. It is safe to run twice — nothing is rebuilt and nobody is duplicated. A cold start takes about a minute, so start it before the call rather than during it.
 
-**It belongs in item 1 only.** Item 2 is a different question asked of a different kind of company, and the demo must not enter those calls — it answers a provider's reporting question, while SALUS is being asked whether a gatekeeper platform will consume a credential it did not issue. Bringing it in would answer a question nobody asked and turn an information-buying call into a pitch. For item 2 the instrument is the twenty-minute script in [`outreach/gate-falsification.md`](outreach/gate-falsification.md), no demo and no deck.
+**It belongs in item 1 only.** Item 2 asks a different question of a different kind of company, and the demo must not enter those calls: it answers a provider's reporting question, while SALUS is being asked whether a gatekeeper platform will consume a credential it did not issue. For item 2 the instrument is the twenty-minute script in [`outreach/gate-falsification.md`](outreach/gate-falsification.md), no demo and no deck.
 
-**Rehearse the day before, not five minutes before.** The first run downloads dependencies and builds pages on demand; the second run is fast. Every command below was run on Windows PowerShell against a clean checkout. Chain commands with `;` — `&&` is not PowerShell.
-
-**One-time setup.**
-
-1. Install Node 22 or newer. Docker is **not** required; the demo database runs in-process.
-2. In the repo root, run `npm install`.
-3. Copy `.env.example` to `.env.local`. Make two edits: change `localhost` to **`127.0.0.1`** in `DATABASE_URL`, and set `DATABASE_DRIVER=pglite`. The first is the step most likely to cost twenty minutes — the demo database binds IPv4 only, and on Windows `localhost` resolves to `::1` first, so leaving it produces a connection error that reads like the database never started. `AUTH_SECRET` can stay as it is; the provider screens have no sign-in.
-
-**Every time you run it.** Two terminals, both in the repo root.
-
-| | Terminal | Command | What you should see |
-| --- | --- | --- | --- |
-| 1 | first | `npm run db:demo` | The database starts and **stays running**. Leave this window open for the whole call. |
-| 2 | second | `npm run db:migrate` | `migrations applied successfully`. Notices about relations that already exist are normal on a re-run. |
-| 3 | second | `npm run db:seed` | `Seeded ... 12 demo clients` on the first run, `0 of 12 demo clients` afterwards. Zero is correct — the seed refuses to duplicate people, it has not failed. |
-| 4 | second | `npm run dev` | `Ready in ~5s`. Leave this open too. |
-
-Then open **`http://localhost:3000/provider`** directly. Type that address; do not start at the home page, which links to the passport, levels, and health-check surfaces this call is deliberately staying away from. For the same reason, do not click **Track** or **Accommodation** in the top navigation while sharing your screen.
-
-**What is on the screen.** Three headline numbers — checkpoints reached, claimable, and *earned but not provable* — over one row per placement and a verdict for each of the four checkpoints. The middle number is the whole argument: work the person genuinely did that the documents on file will not substantiate.
-
-**Driving it in the call.** Selecting a client's name opens the evidence timeline behind their verdicts: the employment periods, what document covers each one, the follow-up attempts including the failed ones, and a note stating plainly which parts are assumed rather than sourced. From there, **Evidence pack** renders the print-ready funder submission — use your browser's print dialogue and "Save as PDF" if they ask for a copy. Placement IDs are regenerated every time the database is seeded, so navigate by clicking names rather than saving URLs.
-
-**Three things to say before they ask,** not after: these are twelve synthetic people, nothing writes, and it is running on this laptop. Never call the cohort pilot data.
-
-The question script — which client to open for which question, and what each one is designed to provoke — is section 5 of [`outreach/retention-interviews.md`](outreach/retention-interviews.md). Two rules from it are worth repeating here, because they are what make the demo evidence rather than theatre. **Get their cost number before showing them ours**, since the headline card contains that exact figure and an unprompted number is the most valuable sentence in the call. And **do not show any of this during sections 0 through 4** — a milestone table shown early gets described back to us in our own vocabulary, and we would mistake our own framework repeated for agreement.
+What to ask once it is on screen is section 5 of [`outreach/retention-interviews.md`](outreach/retention-interviews.md), including the two rules that make the demo evidence rather than theatre: **get their cost number before showing them ours**, and **show nothing before the falsifying question**.
 
 ### Now — needs no money and no incorporation
 

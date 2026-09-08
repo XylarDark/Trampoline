@@ -33,6 +33,7 @@ Drizzle ORM on Postgres, Auth.js email magic link, Zod, Vitest.
 | Lint | `npm run lint` |
 | Format | `npm run format` / `npm run format:check` |
 | Contrast check | `npm run check:contrast` |
+| Run the whole demo for an interview | `npm run demo` / `npm run demo:stop` |
 | Local database, no Docker | `npm run db:demo` |
 | Local database, Docker | `npm run db:up` |
 | Environment health check | `npm run doctor` |

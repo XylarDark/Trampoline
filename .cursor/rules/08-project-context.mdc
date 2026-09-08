@@ -43,6 +43,8 @@ access to work on a score, a level, or a health fact.
 - `npm run typecheck` — `tsc --noEmit`
 - `npm run lint` / `npm run format` / `npm run format:check`
 - `npm run check:contrast` — arithmetic WCAG contrast check on the theme
+- `npm run demo` / `npm run demo:stop` — start or stop the whole provider demo
+ for an interview; idempotent, Windows only
 - `npm run db:demo` — local Postgres over PGlite, no Docker required
 - `npm run db:up` — Docker Postgres, the alternative to `db:demo`
 
