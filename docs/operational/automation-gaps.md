@@ -119,6 +119,18 @@ from evidence rather than from guessing.
   `HTMLInputElement` value setter plus an `input` event; the buttons enabling is
   the signal that the pattern matched.
 
+**To remove an automated edit, restore a version rather than deleting blocks.**
+Removing the same section on 2026-09-08 was four menu clicks: File, Version
+history, See version history, then **Expand detailed versions** on the current
+group. The collapsed groups are too coarse to be safe — the group ending 9:23 PM
+also contained an unrelated table-row deletion made 32 minutes earlier — but
+expanding it lists each edit by minute, so a restore point between the two is
+selectable. Deleting the equivalent content by hand means a table (context menu
+only, find and replace cannot touch it) and roughly a dozen paragraphs and list
+items, and leaves empty paragraphs behind that no find and replace can remove.
+Verify the restore against `/mobilebasic` before re-pasting: it confirms both
+that the unwanted content is gone and that older edits survived.
+
 ## Ontario funded-outcome rules cannot be verified from published sources
 
 - **Date:** 2026-09-07
