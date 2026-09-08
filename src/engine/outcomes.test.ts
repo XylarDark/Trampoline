@@ -97,10 +97,7 @@ describe("spell coverage and hours", () => {
   });
 
   it("sums concurrent spells at a checkpoint", () => {
-    const spells = [
-      spell({ id: "a", weeklyHours: 12 }),
-      spell({ id: "b", weeklyHours: 9.5 }),
-    ];
+    const spells = [spell({ id: "a", weeklyHours: 12 }), spell({ id: "b", weeklyHours: 9.5 })];
     expect(hoursAtCheckpoint(spells, checkpoint(3).dueOn)).toBe(21.5);
   });
 
@@ -206,10 +203,12 @@ describe("provable hours", () => {
 
 describe("evidence not yet collected", () => {
   it("reports the hours as worked but unprovable", () => {
-    expect(milestoneStatus(placement(), [spell({ verifiedAt: null })], checkpoint(3), NOW)).toEqual({
-      tag: "evidence_missing",
-      weeklyHours: 32,
-    });
+    expect(milestoneStatus(placement(), [spell({ verifiedAt: null })], checkpoint(3), NOW)).toEqual(
+      {
+        tag: "evidence_missing",
+        weeklyHours: 32,
+      },
+    );
   });
 
   it("will not let a small collected document carry a large uncollected spell", () => {
@@ -274,9 +273,9 @@ describe("milestone status", () => {
   });
 
   it("reports the shortfall at 19.5 hours rather than rounding it up", () => {
-    expect(milestoneStatus(placement(), [spell({ weeklyHours: 19.5 })], checkpoint(3), NOW)).toEqual(
-      { tag: "below_threshold", weeklyHours: 19.5, shortfall: 0.5 },
-    );
+    expect(
+      milestoneStatus(placement(), [spell({ weeklyHours: 19.5 })], checkpoint(3), NOW),
+    ).toEqual({ tag: "below_threshold", weeklyHours: 19.5, shortfall: 0.5 });
   });
 
   it("treats exactly 20 hours as meeting the threshold", () => {
@@ -290,10 +289,12 @@ describe("milestone status", () => {
   });
 
   it("blocks a subsidized placement even when hours and evidence are perfect", () => {
-    expect(milestoneStatus(placement(), [spell({ subsidized: true })], checkpoint(3), NOW)).toEqual({
-      tag: "subsidized_not_payable",
-      weeklyHours: 32,
-    });
+    expect(milestoneStatus(placement(), [spell({ subsidized: true })], checkpoint(3), NOW)).toEqual(
+      {
+        tag: "subsidized_not_payable",
+        weeklyHours: 32,
+      },
+    );
   });
 
   it("reports subsidy before evidence, so nobody chases a document that cannot pay", () => {
@@ -339,10 +340,7 @@ describe("milestone status", () => {
   });
 
   it("flags stacking when only the sum of concurrent jobs clears the threshold", () => {
-    const spells = [
-      spell({ id: "a", weeklyHours: 12 }),
-      spell({ id: "b", weeklyHours: 14 }),
-    ];
+    const spells = [spell({ id: "a", weeklyHours: 12 }), spell({ id: "b", weeklyHours: 14 })];
     expect(milestoneStatus(placement(), spells, checkpoint(3), NOW)).toEqual({
       tag: "stacking_uncounted",
       weeklyHours: 26,
@@ -351,10 +349,7 @@ describe("milestone status", () => {
   });
 
   it("does not flag stacking when one job alone clears the threshold", () => {
-    const spells = [
-      spell({ id: "a", weeklyHours: 30 }),
-      spell({ id: "b", weeklyHours: 6 }),
-    ];
+    const spells = [spell({ id: "a", weeklyHours: 30 }), spell({ id: "b", weeklyHours: 6 })];
     expect(milestoneStatus(placement(), spells, checkpoint(3), NOW).tag).toBe("claimable");
   });
 
@@ -456,7 +451,12 @@ describe("status descriptions", () => {
     const statuses = [
       milestoneStatus(placement(), [spell()], checkpoint(3), NOW),
       milestoneStatus(placement(), [spell()], checkpoint(12), new Date("2026-08-01")),
-      milestoneStatus(placement(), [spell({ periodEnd: new Date("2026-03-01") })], checkpoint(6), NOW),
+      milestoneStatus(
+        placement(),
+        [spell({ periodEnd: new Date("2026-03-01") })],
+        checkpoint(6),
+        NOW,
+      ),
       milestoneStatus(placement(), [spell({ weeklyHours: 19.5 })], checkpoint(3), NOW),
       milestoneStatus(placement(), [spell({ hourlyWage: 15 })], checkpoint(3), NOW),
       milestoneStatus(placement(), [spell({ verifiedAt: null })], checkpoint(3), NOW),

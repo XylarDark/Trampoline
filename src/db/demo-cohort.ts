@@ -116,7 +116,8 @@ export const DEMO_COHORT: ClientSeed[] = [
   {
     email: "amara.okonjo@example.invalid",
     name: "Amara Okonjo",
-    demonstrates: "Clean claimable at months 1, 3, and 6. What every case is supposed to look like.",
+    demonstrates:
+      "Clean claimable at months 1, 3, and 6. What every case is supposed to look like.",
     employer: "distribution",
     jobTitle: "Warehouse associate",
     nocCode: "75101",
@@ -132,9 +133,27 @@ export const DEMO_COHORT: ClientSeed[] = [
       },
     ],
     followUps: [
-      { monthsAfterJobStart: 1, daysAgo: 219, contactOutcome: "reached", employed: true, weeklyHours: 34 },
-      { monthsAfterJobStart: 3, daysAgo: 158, contactOutcome: "reached", employed: true, weeklyHours: 34 },
-      { monthsAfterJobStart: 6, daysAgo: 67, contactOutcome: "reached", employed: true, weeklyHours: 34 },
+      {
+        monthsAfterJobStart: 1,
+        daysAgo: 219,
+        contactOutcome: "reached",
+        employed: true,
+        weeklyHours: 34,
+      },
+      {
+        monthsAfterJobStart: 3,
+        daysAgo: 158,
+        contactOutcome: "reached",
+        employed: true,
+        weeklyHours: 34,
+      },
+      {
+        monthsAfterJobStart: 6,
+        daysAgo: 67,
+        contactOutcome: "reached",
+        employed: true,
+        weeklyHours: 34,
+      },
     ],
     milestones: [
       { kind: "placement_start", daysAgo: 250, evidenceNote: "Offer letter, emailed by employer." },
@@ -181,9 +200,27 @@ export const DEMO_COHORT: ClientSeed[] = [
       },
     ],
     followUps: [
-      { monthsAfterJobStart: 1, daysAgo: 219, contactOutcome: "reached", employed: true, weeklyHours: 30 },
-      { monthsAfterJobStart: 3, daysAgo: 158, contactOutcome: "reached", employed: true, weeklyHours: 30 },
-      { monthsAfterJobStart: 6, daysAgo: 67, contactOutcome: "reached", employed: true, weeklyHours: 30 },
+      {
+        monthsAfterJobStart: 1,
+        daysAgo: 219,
+        contactOutcome: "reached",
+        employed: true,
+        weeklyHours: 30,
+      },
+      {
+        monthsAfterJobStart: 3,
+        daysAgo: 158,
+        contactOutcome: "reached",
+        employed: true,
+        weeklyHours: 30,
+      },
+      {
+        monthsAfterJobStart: 6,
+        daysAgo: 67,
+        contactOutcome: "reached",
+        employed: true,
+        weeklyHours: 30,
+      },
     ],
   },
   {
@@ -207,11 +244,27 @@ export const DEMO_COHORT: ClientSeed[] = [
       },
     ],
     followUps: [
-      { monthsAfterJobStart: 1, daysAgo: 119, contactOutcome: "reached", employed: true, weeklyHours: 35 },
-      { monthsAfterJobStart: 3, daysAgo: 58, contactOutcome: "reached", employed: true, weeklyHours: 35 },
+      {
+        monthsAfterJobStart: 1,
+        daysAgo: 119,
+        contactOutcome: "reached",
+        employed: true,
+        weeklyHours: 35,
+      },
+      {
+        monthsAfterJobStart: 3,
+        daysAgo: 58,
+        contactOutcome: "reached",
+        employed: true,
+        weeklyHours: 35,
+      },
     ],
     milestones: [
-      { kind: "placement_start", daysAgo: 150, evidenceNote: "Initial pay stub showing zero cumulative hours." },
+      {
+        kind: "placement_start",
+        daysAgo: 150,
+        evidenceNote: "Initial pay stub showing zero cumulative hours.",
+      },
     ],
   },
   {
@@ -234,7 +287,13 @@ export const DEMO_COHORT: ClientSeed[] = [
       },
     ],
     followUps: [
-      { monthsAfterJobStart: 3, daysAgo: 158, contactOutcome: "reached", employed: true, weeklyHours: 19.5 },
+      {
+        monthsAfterJobStart: 3,
+        daysAgo: 158,
+        contactOutcome: "reached",
+        employed: true,
+        weeklyHours: 19.5,
+      },
     ],
   },
   {
@@ -264,9 +323,21 @@ export const DEMO_COHORT: ClientSeed[] = [
       },
     ],
     followUps: [
-      { monthsAfterJobStart: 1, daysAgo: 269, contactOutcome: "reached", employed: true, weeklyHours: 32 },
+      {
+        monthsAfterJobStart: 1,
+        daysAgo: 269,
+        contactOutcome: "reached",
+        employed: true,
+        weeklyHours: 32,
+      },
       { monthsAfterJobStart: 3, daysAgo: 209, contactOutcome: "reached", employed: false },
-      { monthsAfterJobStart: 6, daysAgo: 118, contactOutcome: "reached", employed: true, weeklyHours: 28 },
+      {
+        monthsAfterJobStart: 6,
+        daysAgo: 118,
+        contactOutcome: "reached",
+        employed: true,
+        weeklyHours: 28,
+      },
     ],
     milestones: [
       {
@@ -308,8 +379,20 @@ export const DEMO_COHORT: ClientSeed[] = [
       },
     ],
     followUps: [
-      { monthsAfterJobStart: 1, daysAgo: 219, contactOutcome: "reached", employed: true, weeklyHours: 30 },
-      { monthsAfterJobStart: 3, daysAgo: 158, contactOutcome: "reached", employed: true, weeklyHours: 30 },
+      {
+        monthsAfterJobStart: 1,
+        daysAgo: 219,
+        contactOutcome: "reached",
+        employed: true,
+        weeklyHours: 30,
+      },
+      {
+        monthsAfterJobStart: 3,
+        daysAgo: 158,
+        contactOutcome: "reached",
+        employed: true,
+        weeklyHours: 30,
+      },
       { monthsAfterJobStart: 4, daysAgo: 128, contactOutcome: "no_response" },
       { monthsAfterJobStart: 5, daysAgo: 97, contactOutcome: "no_response" },
       { monthsAfterJobStart: 6, daysAgo: 67, contactOutcome: "unreachable" },
@@ -352,8 +435,20 @@ export const DEMO_COHORT: ClientSeed[] = [
       },
     ],
     followUps: [
-      { monthsAfterJobStart: 3, daysAgo: 158, contactOutcome: "reached", employed: true, weeklyHours: 24 },
-      { monthsAfterJobStart: 6, daysAgo: 67, contactOutcome: "reached", employed: true, weeklyHours: 24 },
+      {
+        monthsAfterJobStart: 3,
+        daysAgo: 158,
+        contactOutcome: "reached",
+        employed: true,
+        weeklyHours: 24,
+      },
+      {
+        monthsAfterJobStart: 6,
+        daysAgo: 67,
+        contactOutcome: "reached",
+        employed: true,
+        weeklyHours: 24,
+      },
     ],
     milestones: [
       {
@@ -393,7 +488,13 @@ export const DEMO_COHORT: ClientSeed[] = [
       },
     ],
     followUps: [
-      { monthsAfterJobStart: 3, daysAgo: 158, contactOutcome: "reached", employed: true, weeklyHours: 26 },
+      {
+        monthsAfterJobStart: 3,
+        daysAgo: 158,
+        contactOutcome: "reached",
+        employed: true,
+        weeklyHours: 26,
+      },
     ],
   },
   {
@@ -418,7 +519,13 @@ export const DEMO_COHORT: ClientSeed[] = [
       },
     ],
     followUps: [
-      { monthsAfterJobStart: 3, daysAgo: 108, contactOutcome: "reached", employed: true, weeklyHours: 35 },
+      {
+        monthsAfterJobStart: 3,
+        daysAgo: 108,
+        contactOutcome: "reached",
+        employed: true,
+        weeklyHours: 35,
+      },
     ],
   },
   {
@@ -464,7 +571,13 @@ export const DEMO_COHORT: ClientSeed[] = [
       },
     ],
     followUps: [
-      { monthsAfterJobStart: 3, daysAgo: 158, contactOutcome: "reached", employed: true, weeklyHours: 34 },
+      {
+        monthsAfterJobStart: 3,
+        daysAgo: 158,
+        contactOutcome: "reached",
+        employed: true,
+        weeklyHours: 34,
+      },
       { monthsAfterJobStart: 6, daysAgo: 67, contactOutcome: "declined_to_answer" },
     ],
   },
@@ -488,7 +601,13 @@ export const DEMO_COHORT: ClientSeed[] = [
       },
     ],
     followUps: [
-      { monthsAfterJobStart: 3, daysAgo: 158, contactOutcome: "reached", employed: true, weeklyHours: 30 },
+      {
+        monthsAfterJobStart: 3,
+        daysAgo: 158,
+        contactOutcome: "reached",
+        employed: true,
+        weeklyHours: 30,
+      },
     ],
   },
 ];
@@ -561,7 +680,8 @@ async function seedFeaturedPassport(db: Database, userId: string, orgIds: Map<st
       .from(checkTypes)
       .where(eq(checkTypes.key, seed.checkTypeKey))
       .limit(1);
-    if (!checkType) throw new Error(`Demo cohort references unknown check type: ${seed.checkTypeKey}`);
+    if (!checkType)
+      throw new Error(`Demo cohort references unknown check type: ${seed.checkTypeKey}`);
 
     const organizationId = orgIds.get(seed.orgKey);
     if (!organizationId) throw new Error(`Demo cohort references unknown org: ${seed.orgKey}`);

@@ -233,8 +233,8 @@ export default async function PlacementDetailPage({
         {detail.milestones.length === 0 ? (
           <p className="text-muted-foreground text-sm">
             Nothing recorded against this placement yet. A milestone is written once, with the
-            evidence that supported it, so a later correction to a spell does not silently rewrite
-            a claim already submitted.
+            evidence that supported it, so a later correction to a spell does not silently rewrite a
+            claim already submitted.
           </p>
         ) : (
           <Table>
@@ -255,7 +255,9 @@ export default async function PlacementDetailPage({
                   <TableCell className="font-medium">{sourceLabel(milestone.kind)}</TableCell>
                   <TableCell className="tabular-nums">{formatDate(milestone.achievedOn)}</TableCell>
                   <TableCell className="tabular-nums">{milestone.cumulativeWeeks ?? "—"}</TableCell>
-                  <TableCell className="text-sm">{milestone.evidenceNote ?? "Not recorded"}</TableCell>
+                  <TableCell className="text-sm">
+                    {milestone.evidenceNote ?? "Not recorded"}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

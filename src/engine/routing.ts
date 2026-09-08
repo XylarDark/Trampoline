@@ -19,7 +19,9 @@ import type {
   SupportTrigger,
 } from "./types";
 
-function domainsByCheckType(attestations: AttestationSnapshot[]): Map<string, AttestationSnapshot["domain"]> {
+function domainsByCheckType(
+  attestations: AttestationSnapshot[],
+): Map<string, AttestationSnapshot["domain"]> {
   const domains = new Map<string, AttestationSnapshot["domain"]>();
   for (const attestation of attestations) domains.set(attestation.checkTypeKey, attestation.domain);
   return domains;

@@ -265,15 +265,15 @@ export default async function EvidencePackPage({
             the list of documents the funder accepts.
           </li>
           <li>
-            A provider attestation is treated as a last resort and is only shown as accepted where
-            a Service System Manager pre-approval reference is recorded against it.
+            A provider attestation is treated as a last resort and is only shown as accepted where a
+            Service System Manager pre-approval reference is recorded against it.
           </li>
           <li>
             A document is judged on its type and on whether it is on file. The funder also requires
-            five specific fields on the document itself — employer name, employee name, hours,
-            wage, and the period covered — and that is not checked here. Where this pack says a
-            document is accepted, it means an acceptable kind of document is recorded, not that its
-            contents have been verified field by field.
+            five specific fields on the document itself — employer name, employee name, hours, wage,
+            and the period covered — and that is not checked here. Where this pack says a document
+            is accepted, it means an acceptable kind of document is recorded, not that its contents
+            have been verified field by field.
           </li>
           <li>
             Hours are credited to the employment period the document covers, so a document for one

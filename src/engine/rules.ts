@@ -22,11 +22,7 @@ import type {
   TrainingGate,
   GateVerdict,
 } from "./types";
-import {
-  EMPLOYMENT_GATE_DOMAINS,
-  LEVEL_NAMES,
-  gateDefinitionSchema,
-} from "./types";
+import { EMPLOYMENT_GATE_DOMAINS, LEVEL_NAMES, gateDefinitionSchema } from "./types";
 
 export function parseGate(definition: unknown): GateDefinition {
   return gateDefinitionSchema.parse(definition);

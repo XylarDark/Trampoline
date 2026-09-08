@@ -105,10 +105,7 @@ const ACCEPTABLE_SOURCES: readonly VerificationSource[] = [
  * it. The source is acceptable; the paper is not on file.
  */
 export type EvidenceStatus =
-  | "acceptable"
-  | "not_collected"
-  | "needs_preapproval"
-  | "not_acceptable";
+  "acceptable" | "not_collected" | "needs_preapproval" | "not_acceptable";
 
 /**
  * A continuous stretch of work at known hours. Mirrors `employmentSpells`.

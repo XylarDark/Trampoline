@@ -19,11 +19,7 @@ import {
   parseGate,
 } from "./rules";
 import { supportTriggers } from "./routing";
-import {
-  buildEmploymentShareView,
-  buildFunctionalAbilitiesView,
-  buildPersonalView,
-} from "./share";
+import { buildEmploymentShareView, buildFunctionalAbilitiesView, buildPersonalView } from "./share";
 import type {
   AttestationResult,
   AttestationSnapshot,
@@ -70,10 +66,7 @@ function attest(
   };
 }
 
-function snapshot(
-  attestations: AttestationSnapshot[],
-  attendanceDays?: number,
-): PassportSnapshot {
+function snapshot(attestations: AttestationSnapshot[], attendanceDays?: number): PassportSnapshot {
   return {
     attestations,
     levelRequirements: LEVEL_BUNDLES,
@@ -120,10 +113,7 @@ describe("decay", () => {
 
   it("reports a lapsed check separately from one never attested", () => {
     const lapsed = lapsedCheckTypeKeys(
-      [
-        attest("medical.basic_contact", { expiresInDays: -5 }),
-        attest("wellness.movement_floor"),
-      ],
+      [attest("medical.basic_contact", { expiresInDays: -5 }), attest("wellness.movement_floor")],
       NOW,
     );
     expect(lapsed).toEqual(["medical.basic_contact"]);
@@ -147,11 +137,23 @@ describe("decay", () => {
 
 describe("levels", () => {
   it("holds Level 0 once its bundle passes", () => {
-    expect(computeLevel(LEVEL_0.map((key) => attest(key)), LEVEL_BUNDLES, NOW)).toBe(0);
+    expect(
+      computeLevel(
+        LEVEL_0.map((key) => attest(key)),
+        LEVEL_BUNDLES,
+        NOW,
+      ),
+    ).toBe(0);
   });
 
   it("reaches Level 2 when every bundle through 2 is current", () => {
-    expect(computeLevel(throughLevel2.map((key) => attest(key)), LEVEL_BUNDLES, NOW)).toBe(2);
+    expect(
+      computeLevel(
+        throughLevel2.map((key) => attest(key)),
+        LEVEL_BUNDLES,
+        NOW,
+      ),
+    ).toBe(2);
   });
 
   it("does not skip a level when a lower bundle is missing", () => {
@@ -179,7 +181,11 @@ describe("levels", () => {
   });
 
   it("names the next level and what it still needs", () => {
-    const gap = nextLevelGap([...LEVEL_0, ...LEVEL_1].map((key) => attest(key)), LEVEL_BUNDLES, NOW);
+    const gap = nextLevelGap(
+      [...LEVEL_0, ...LEVEL_1].map((key) => attest(key)),
+      LEVEL_BUNDLES,
+      NOW,
+    );
     expect(gap.nextLevel).toBe(2);
     expect(gap.missingCheckTypes).toEqual(["skills.placement_ready"]);
   });
@@ -192,7 +198,13 @@ describe("levels", () => {
   });
 
   it("does not call a never-started check a renewal", () => {
-    expect(healthRenewalDue(LEVEL_0.map((key) => attest(key)), LEVEL_BUNDLES, NOW)).toBe(false);
+    expect(
+      healthRenewalDue(
+        LEVEL_0.map((key) => attest(key)),
+        LEVEL_BUNDLES,
+        NOW,
+      ),
+    ).toBe(false);
   });
 });
 
@@ -200,7 +212,10 @@ describe("employment gates", () => {
   it("opens on demonstrated skills and attendance", () => {
     const verdict = evaluateEmploymentGate(
       warehouseGate,
-      snapshot(employmentSkills.map((key) => attest(key)), 14),
+      snapshot(
+        employmentSkills.map((key) => attest(key)),
+        14,
+      ),
       NOW,
     );
     expect(verdict.open).toBe(true);
@@ -220,7 +235,10 @@ describe("employment gates", () => {
   it("stays shut when the attendance window is short", () => {
     const verdict = evaluateEmploymentGate(
       warehouseGate,
-      snapshot(employmentSkills.map((key) => attest(key)), 6),
+      snapshot(
+        employmentSkills.map((key) => attest(key)),
+        6,
+      ),
       NOW,
     );
     expect(verdict.open).toBe(false);
@@ -231,7 +249,10 @@ describe("employment gates", () => {
     // The zero-exclusion case. Nothing about health is required to work.
     const verdict = evaluateEmploymentGate(
       warehouseGate,
-      snapshot(employmentSkills.map((key) => attest(key)), 20),
+      snapshot(
+        employmentSkills.map((key) => attest(key)),
+        20,
+      ),
       NOW,
     );
     expect(verdict.open).toBe(true);
@@ -519,7 +540,10 @@ describe("seeded gates", () => {
       const verdict = evaluateGate(
         parseGate(seed!.definition),
         { id: seat.key, title: seat.title, tags: seat.tags },
-        snapshot(throughLevel2.map((key) => attest(key)), 20),
+        snapshot(
+          throughLevel2.map((key) => attest(key)),
+          20,
+        ),
         NOW,
       );
       expect(verdict).toHaveProperty("open");

@@ -60,11 +60,7 @@ export const attestationEventKindEnum = pgEnum("attestation_event_kind", ["issue
 export const gateKindEnum = pgEnum("gate_kind", ["employment", "training"]);
 
 /** Scopes a share link can carry. `functional_abilities` is post-offer only. */
-export const shareScopeEnum = pgEnum("share_scope", [
-  "skills",
-  "functional_abilities",
-  "personal",
-]);
+export const shareScopeEnum = pgEnum("share_scope", ["skills", "functional_abilities", "personal"]);
 
 export const accommodationStatusEnum = pgEnum("accommodation_status", [
   "requested",
@@ -143,10 +139,7 @@ export const followUpContactEnum = pgEnum("follow_up_contact", [
   "unreachable",
 ]);
 
-export const satisfactionRespondentEnum = pgEnum("satisfaction_respondent", [
-  "client",
-  "employer",
-]);
+export const satisfactionRespondentEnum = pgEnum("satisfaction_respondent", ["client", "employer"]);
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -511,7 +504,9 @@ export const employmentSpells = pgTable(
      */
     subsidized: boolean("subsidized").notNull().default(false),
     verificationSource: verificationSourceEnum("verification_source").notNull(),
-    verifiedByOrganizationId: uuid("verified_by_organization_id").references(() => organizations.id),
+    verifiedByOrganizationId: uuid("verified_by_organization_id").references(
+      () => organizations.id,
+    ),
     verifiedAt: timestamp("verified_at", { withTimezone: true }),
     /** SSM pre-approval reference. Mandatory for a provider attestation. */
     ssmPreApprovalRef: text("ssm_pre_approval_ref"),
@@ -579,15 +574,8 @@ export const outcomeFollowUps = pgTable(
     inEducationOrTraining: boolean("in_education_or_training"),
   },
   (t) => [
-    unique("outcome_follow_ups_once_per_window").on(
-      t.userId,
-      t.placementId,
-      t.monthsAfterJobStart,
-    ),
-    check(
-      "outcome_follow_ups_reported_window",
-      sql`${t.monthsAfterJobStart} BETWEEN 1 AND 33`,
-    ),
+    unique("outcome_follow_ups_once_per_window").on(t.userId, t.placementId, t.monthsAfterJobStart),
+    check("outcome_follow_ups_reported_window", sql`${t.monthsAfterJobStart} BETWEEN 1 AND 33`),
   ],
 );
 

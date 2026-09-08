@@ -210,7 +210,12 @@ export const SEED_ORGANIZATIONS = [
     regulated: true,
   },
   { key: "skills", name: "Example Employment Agency", kind: "skills" as const, regulated: false },
-  { key: "employer", name: "Example Distribution Co.", kind: "employer" as const, regulated: false },
+  {
+    key: "employer",
+    name: "Example Distribution Co.",
+    kind: "employer" as const,
+    regulated: false,
+  },
 ];
 
 /** Map of level bundles in the shape the engine expects. */

@@ -58,10 +58,10 @@ export default async function ProviderCaseloadPage() {
       <div className="space-y-2">
         <h1 className="text-2xl font-semibold">Provider caseload</h1>
         <p className="text-muted-foreground max-w-2xl text-sm">
-          Integrated Employment Services funded-outcome checkpoints at {IES_CHECKPOINT_MONTHS.join(", ")}{" "}
-          months after job start. A funded outcome needs an average of{" "}
-          {FUNDED_OUTCOME_MIN_WEEKLY_HOURS}-plus hours per week at general minimum wage or better,
-          evidenced by a document the funder accepts.
+          Integrated Employment Services funded-outcome checkpoints at{" "}
+          {IES_CHECKPOINT_MONTHS.join(", ")} months after job start. A funded outcome needs an
+          average of {FUNDED_OUTCOME_MIN_WEEKLY_HOURS}-plus hours per week at general minimum wage
+          or better, evidenced by a document the funder accepts.
         </p>
       </div>
 
@@ -158,8 +158,8 @@ export default async function ProviderCaseloadPage() {
           <h3 className="font-medium">How much a checkpoint is worth</h3>
           <p className="text-muted-foreground">
             No dollar figure or performance weighting appears anywhere on this screen. The
-            Integrated Employment Services performance-management weightings are not published,
-            so any percentage here would be invented. Ask your Service System Manager for your
+            Integrated Employment Services performance-management weightings are not published, so
+            any percentage here would be invented. Ask your Service System Manager for your
             contract&apos;s figures.
           </p>
         </div>
@@ -168,8 +168,8 @@ export default async function ProviderCaseloadPage() {
           <h3 className="font-medium">The benefits cliff, which this does not solve</h3>
           <p className="text-muted-foreground">
             The 20-hour threshold above collides with ODSP&apos;s claw-back of 75 cents on every
-            dollar earned over $1,000 a month. For a client on income support, the hours that make
-            a checkpoint payable to you can leave them worse off. Trampoline records the outcome; it
+            dollar earned over $1,000 a month. For a client on income support, the hours that make a
+            checkpoint payable to you can leave them worse off. Trampoline records the outcome; it
             does not change that arithmetic, and a caseworker still has to have that conversation.
           </p>
         </div>

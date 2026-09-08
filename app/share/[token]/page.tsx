@@ -37,8 +37,7 @@ export default async function SharePage({ params, searchParams }: PageProps<"/sh
   // The link's own scope is the ceiling. A query parameter can ask for the
   // narrower skills view but can never widen a skills link into a functional
   // abilities one, which is the whole point of scoping the token.
-  const postOffer =
-    link.scope === "functional_abilities" && query.scope !== "skills";
+  const postOffer = link.scope === "functional_abilities" && query.scope !== "skills";
   const now = new Date();
 
   // Writing the `share_access_log` row lands with the write paths. The read
@@ -55,7 +54,8 @@ export default async function SharePage({ params, searchParams }: PageProps<"/sh
           </p>
           <h1 className="text-2xl font-semibold">Conditions for doing the work</h1>
           <p className="text-sm text-muted-foreground">
-            Issued to {link.recipientLabel}. This link stops working on {formatDate(link.expiresAt)}.
+            Issued to {link.recipientLabel}. This link stops working on {formatDate(link.expiresAt)}
+            .
           </p>
         </header>
 

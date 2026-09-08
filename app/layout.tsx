@@ -35,10 +35,7 @@ const NAV = [
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         {/* WCAG 2.0 AA, 2.4.1: a way to skip the repeated nav. */}
         <a
@@ -54,7 +51,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               Trampoline
             </Link>
             {NAV.slice(1).map((item) => (
-              <Link key={item.href} href={item.href} className="text-muted-foreground hover:underline">
+              <Link
+                key={item.href}
+                href={item.href}
+                className="text-muted-foreground hover:underline"
+              >
                 {item.label}
               </Link>
             ))}

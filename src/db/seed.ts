@@ -127,14 +127,10 @@ async function seedGates(db: Database, orgIds: Map<string, string>) {
       label: gate.label,
       kind: definition.kind,
       definition,
-      safetyRationale:
-        definition.kind === "training" ? (definition.safetyRationale ?? null) : null,
+      safetyRationale: definition.kind === "training" ? (definition.safetyRationale ?? null) : null,
     };
 
-    await db
-      .insert(gates)
-      .values(values)
-      .onConflictDoUpdate({ target: gates.key, set: values });
+    await db.insert(gates).values(values).onConflictDoUpdate({ target: gates.key, set: values });
   }
 
   const employerId = orgIds.get("employer");
