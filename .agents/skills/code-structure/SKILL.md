@@ -80,8 +80,8 @@ Design checklist:
 
 ## Language and tooling conventions in this repo
 
-- TypeScript in strict mode, targeting ES2022, on Node.js 24+.
-- Lint with ESLint flat config in `eslint.config.js`. The legacy `.eslintrc.*` format is
+- TypeScript in strict mode, targeting ES2017 with ESNext modules and bundler resolution.
+- Lint with ESLint flat config in `eslint.config.mjs`. The legacy `.eslintrc.*` format is
   dead — ESLint 10 ignores it entirely, so never add one.
 - Run `npm run lint`, or `npm run lint -- --fix` to autofix. Always use the `--` separator
   when passing a flag through an npm script; `npm run lint --fix` gives the flag to npm

@@ -5,30 +5,36 @@ description: Use when carrying out any coding task in this repo end-to-end - cov
 
 # Agent workflow
 
-Baseline behavior for agents working in DevEnvTemplate: how to gather context, run
+Baseline behavior for agents working in Trampoline: how to gather context, run
 commands, generate code, record errors, and finish cleanly.
 
 ## Project facts
 
-- Node.js **24+** is required. TypeScript is strict, ES2020, CommonJS.
+- Next.js with React and TypeScript. Strict mode, ES2017 target, ESNext modules with
+  bundler resolution. Tests run on Vitest; data access goes through Drizzle.
 - `AGENTS.md` at the repo root (plus any nested `AGENTS.md`) is the canonical
   always-loaded project context. Treat it as always true.
 - Documentation lives under `docs/` per `docs/DOCS_LAYOUT.md`. The docs root holds
-  only entry points; topic docs belong in `docs/guides/`, `docs/architecture/`,
-  `docs/best-practices/`, `docs/operational/`, or `docs/archive/`.
+  only entry points; topic docs belong in `docs/guides/`, `docs/operational/`,
+  `docs/outreach/`, `docs/funding/`, or `docs/research/`.
 
 ## Commands
 
 ```
-npm run doctor            # health check
-npm run doctor:fix        # health check with auto-fix
-npm run build             # tsc --build
-npm test                  # build, then run tests/**/*.test.js
+npm run dev               # next dev
+npm run build             # next build
+npm test                  # vitest run
+npm run typecheck         # tsc --noEmit
 npm run lint              # eslint
-npm run format            # prettier --write
-npm run clean             # remove build output
-npm run check:doc-links   # validate documentation links
+npm run format            # prettier --write .
+npm run check:contrast    # theme contrast gate
+npm run verify            # typecheck, lint, tests, contrast, with evidence per stage
+npm run doctor            # health check via the embedded .devenv/ doctor
+npm run doctor:fix        # health check with auto-fix
 ```
+
+Database work runs through Drizzle: `db:generate`, `db:migrate`, `db:push`, `db:seed`,
+and `db:up` (Docker Compose). Run `npm run verify` before reporting work complete.
 
 **Always use the `--` separator when passing a flag through an npm script.** npm
 consumes flags that appear before it, so the script never sees them:
