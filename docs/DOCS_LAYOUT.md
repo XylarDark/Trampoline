@@ -44,7 +44,7 @@ Do not add further documents to the repo root.
 | Directory | Purpose | Contents |
 |-----------|---------|----------|
 | **funding/** | Evidence and playbooks for specific funders | SR&ED log, verified facts, IRAP/TPON, SWIF, WSIB |
-| **outreach/** | Interview guides, target frameworks, contacts | retention interviews, gate falsification, Ontario outcome framework, contacts |
+| **outreach/** | Interview guides, target frameworks, contacts | retention interviews, gate falsification, Ontario outcome framework, contacts, demo screen briefing |
 | **research/** | Background research that informs the design | competitive landscape, evidence and economics, funding landscape, legal and privacy |
 | **operational/** | Automation limits and recurring chores | [automation-gaps.md](operational/automation-gaps.md) |
 

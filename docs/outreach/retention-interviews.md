@@ -73,6 +73,8 @@ Navigate straight to the provider caseload. Do not show the home page — it lin
 
 **Getting it on screen** is one command: `npm run demo` from the repo root starts the database and the app and opens the provider caseload directly, which is also how it avoids passing through the home page. Run it before dialling, since a cold start takes about a minute. `npm run demo:stop` shuts it down afterwards.
 
+**Whoever is reading the screen aloud should have [`demo-screen-briefing.md`](demo-screen-briefing.md) open beside this section.** It explains what every number and badge on the screen means, which client shows which verdict, and what to say to the questions the demo reliably provokes — written for someone who did not build it. The asks below stay here; the reading of the answers is there.
+
 | Ask | The client it hangs on |
 | --- | --- |
 | Read the Month 3 column aloud. Which of these verdicts do you recognise, and which make no sense? | the whole cohort — ten of the eleven verdicts are seeded |
@@ -144,6 +146,7 @@ Write the conclusion into [`../execution-strategy.md`](../execution-strategy.md)
 ## Related
 
 - [`ontario-outcome-framework.md`](ontario-outcome-framework.md) — **read before the first call.** What the funder measures and how it must be evidenced
+- [`demo-screen-briefing.md`](demo-screen-briefing.md) — **read before section 5.** What is on the caseload screen and what each part provokes
 - [`contacts.md`](contacts.md) — verified contact routes
 - [`gate-falsification.md`](gate-falsification.md) — the other early test that can kill a thesis cheaply
 - [`../research/evidence-and-economics.md`](../research/evidence-and-economics.md) — the retention-cliff and buyer-economics evidence
