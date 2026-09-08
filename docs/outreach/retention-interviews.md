@@ -71,6 +71,8 @@ One quote to keep in mind here: a provider told researchers that "the absolute i
 
 Navigate straight to the provider caseload. Do not show the home page — it links to the passport, levels, and health-check surfaces this call is deliberately staying away from. Say at the outset that these are twelve synthetic people, that nothing writes, and that it is running on this laptop.
 
+**Getting it on screen** is a four-command runbook in [`../business-design.md`](../business-design.md) under "How to run the demo, start to finish". Rehearse it the day before — the first run is slow, and the one setting that reliably wastes twenty minutes is `localhost` where the demo database needs `127.0.0.1`.
+
 | Ask | The client it hangs on |
 | --- | --- |
 | Read the Month 3 column aloud. Which of these verdicts do you recognise, and which make no sense? | the whole cohort — ten of the eleven verdicts are seeded |

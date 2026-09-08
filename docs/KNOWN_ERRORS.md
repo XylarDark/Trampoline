@@ -71,6 +71,22 @@ change), **Prevention** (test, rule, or doc that stops a recurrence).
 - **Prevention:** the backstop is deliberately narrow. Do not widen it to catch
   all exceptions — that would hide real bugs.
 
+### `db:demo` refuses connections when `DATABASE_URL` says `localhost`
+
+- **Symptom:** `npm run db:demo` reports the server is listening, but
+  `db:migrate`, `db:seed`, and the app all fail to connect. It reads as though
+  the database never started.
+- **Cause:** the PGlite socket server binds IPv4 only. On Windows, `localhost`
+  resolves to `::1` before `127.0.0.1`, so the client dials an address nothing
+  is listening on. `.env.example` ships the Docker default, which uses
+  `localhost` and is correct for Docker.
+- **Fix:** use `127.0.0.1` in `DATABASE_URL` whenever the database is `db:demo`,
+  and set `DATABASE_DRIVER=pglite`. `.env.example` now carries this warning.
+- **Prevention:** this is the most likely thing to break a demo run shortly
+  before a provider interview, so the runbook in
+  [business-design.md](business-design.md) calls it out and says to rehearse a
+  day ahead.
+
 ### A check script reported failures but exited 0
 
 - **Symptom:** `scripts/contrast-check.mjs` printed contrast failures while the
