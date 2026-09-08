@@ -54,9 +54,8 @@ See [`verified-facts.md`](verified-facts.md) for the exact registration steps, r
 
 | Order | Action | Blocked by |
 | --- | --- | --- |
-| 0 | Commit the working tree, docs separately from code | Nothing. Costs one minute. Until it is done, the SR&ED log's dated entries and the pre-existing-IP boundary in [`wsib-collaborator.md`](wsib-collaborator.md) are both unevidenced. |
 | 1 | Incorporate (Ontario CCPC) | Nothing. Gates SR&ED, TPON, and IRAP. |
-| 2 | Open the [SR&ED log](sred-log.md) | Nothing — already written, before incorporation, deliberately. But only evidenced once committed; see row 0. |
+| 2 | Open the [SR&ED log](sred-log.md) | Nothing — already written, before incorporation, deliberately, and committed and pushed as of 2026-09-07, so its entries carry third-party dates. |
 | 3 | Call for an IRAP advisor | Incorporation, for the business number and financials |
 | 4 | Register on TPON | Incorporation |
 | 5 | [SR&ED pre-claim approval](verified-facts.md) request | Incorporation. ~10 weeks to a 3-year answer. |

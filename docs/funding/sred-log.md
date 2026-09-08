@@ -186,6 +186,26 @@ The correction is worth being precise about, because it is the difference betwee
 
 ---
 
+### 2026-09-07 — Commit discipline established
+
+**Not claimable. Recorded because it is the entry that makes the other entries evidence**, and because the defect it closes is documented against this log two entries above.
+
+**What was outstanding.** The working tree held the entire project as uncommitted or unpushed work. While that was true, every date in this file rested on file modification times, and the "pre-existing codebase" boundary that [`wsib-collaborator.md`](wsib-collaborator.md) relies on in an IP negotiation could not be demonstrated at all.
+
+**What is now true.** The tree is clean and every commit is on `origin/main`. Documentation was committed separately from the code it describes, in both directions: the code fix in `3090288` and `cbfdcda` preceded the documentation in `4dfac8a`, and today's tooling commits `98c71e4` and `df564f8` preceded the documentation commit `363a39e`. The push matters independently of the commits: a local commit date is asserted by the machine that made it and can be back-dated with an environment variable, whereas GitHub's receipt of these objects is a timestamp attested by a third party with no stake in the claim.
+
+**The pre-existing-IP boundary is now demonstrable.** First commit for each asset the boundary covers: `src/engine/levels.ts`, `src/engine/rules.ts` and `src/db/schema.ts` in `087798e`; `src/engine/outcomes.ts`, `src/engine/outcomes.test.ts` and `app/provider/page.tsx` in `3090288`. All dated 2026-09-07 and all on the remote before any grant or partnership conversation has been opened.
+
+**What this does not fix, stated plainly.** The chain-of-custody defect recorded in the implementation entry is closed **going forward, not retroactively**. The state-of-the-art entry in `7ab5210` still sat uncommitted in the same working tree as the finished code for several hours, and no amount of committing now repairs the ordering evidence for that one entry. It remains weaker than intended. The rule at the top of this file is what prevents a second instance; it is not a cure for the first.
+
+**Consequence for how this log is kept from here.** The discipline is now mechanical rather than aspirational: write the entry, commit it alone, push it, then do the work. An entry that has not been pushed before the work begins should be treated as undated.
+
+**Artifacts.** `98c71e4`, `df564f8`, `363a39e`. Development-environment tooling only — see the excluded list below.
+
+**Hours.** Routine tooling and documentation. Not claimable.
+
+---
+
 ### Template for the next entry
 
 ```
@@ -218,6 +238,7 @@ Kept deliberately. An auditor asks what you left out.
 - The three provider routes under `app/provider/` and all their markup, `components/status-badge.tsx` and the shadcn primitives, `src/db/queries.ts`, and `drizzle/0001_cohort_entry_state.sql`.
 - Outcome milestone derivation, `src/engine/outcomes.ts`. Assessed in full in the 2026-09-07 implementation entry and moved here.
 - All documentation, strategy, and research writing.
+- The development environment adopted from DevEnvTemplate in `98c71e4`: CI workflow, Dependabot, Prettier, the `jsx-a11y` rule set, the Content Security Policy and other security headers in `next.config.ts`, the Cursor rules, and `docs/KNOWN_ERRORS.md` and `docs/operational/automation-gaps.md`. Configuration of existing tools against published guidance, with no uncertainty of any kind. The one finding worth noting is diagnostic rather than technological: three of the doctor's reported gaps fire on stack detection alone and inspect nothing, and its health score was identical before and after the work, so the tool's output is recorded as unreliable in `automation-gaps.md`. Reading a tool's source to establish that it does not check what it claims is debugging, not investigation.
 - `scripts/demo-db.ts`, the PGlite-over-TCP demo database. Recorded here rather than as claimable work, and the reasoning matters. This is the one artifact of the session with a genuine observation-hypothesis-verification loop: `PGLiteSocketServer`'s error path detaches its handler and thereby removes the very `close` listener that frees the connection slot, so slots leak until every new connection is accepted and instantly destroyed, surfacing at the client as a bare `ECONNRESET` with no protocol error. Diagnosing that took real work. It is nonetheless **not claimable** — it is a workaround for a defect in a third-party dependency, in demo infrastructure rather than in the product, and the resolution was reasonably predictable once the cause was visible. An obstacle is not an uncertainty.
 
 ## Open questions
