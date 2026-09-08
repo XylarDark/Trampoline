@@ -106,6 +106,23 @@ change), **Prevention** (test, rule, or doc that stops a recurrence).
 - **Prevention:** after adding any `.env*` ignore pattern, run
   `git check-ignore -v .env.example` to confirm the template still tracks.
 
+### A blank `AUTH_EMAIL_SERVER` broke the build, and CI could not see it
+
+- **Symptom:** `npm run build` failed collecting page data for
+  `/api/auth/[...nextauth]`, with "Nodemailer requires a `server`
+  configuration". CI built the same commit successfully.
+- **Cause:** `auth.ts` read `process.env.AUTH_EMAIL_SERVER ?? { jsonTransport:
+  true }`. `.env.example` ships that variable blank and instructs you to leave it
+  blank, but a blank variable is an empty string, and `??` only falls back on
+  `null` or `undefined`. So the documented local setup was the one that broke.
+  CI has no `.env.local`, so there the variable really was `undefined` and the
+  fallback applied — the bug could only reproduce where an env file existed.
+- **Fix:** `||` instead of `??` for both Nodemailer options in `auth.ts`.
+- **Prevention:** use `||` for any optional environment variable; `??` is only
+  correct when a blank value is meaningfully different from an absent one. More
+  generally, a green CI run is not evidence that the app builds for a developer:
+  CI runs without the env file that developers are told to create.
+
 ---
 
 ## PowerShell
