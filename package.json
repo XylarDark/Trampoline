@@ -24,7 +24,8 @@
     "db:push": "drizzle-kit push",
     "db:seed": "tsx --env-file=.env.local src/db/seed.ts",
     "db:up": "docker compose up -d",
-    "db:demo": "tsx scripts/demo-db.ts"
+    "db:demo": "tsx scripts/demo-db.ts",
+    "verify": "node scripts/verify.mjs"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.11.3",

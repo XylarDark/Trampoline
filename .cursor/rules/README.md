@@ -1,40 +1,79 @@
-# Cursor Rules
+# Cursor rules
 
-These rules come from [DevEnvTemplate](https://github.com/XylarDark/DevEnvTemplate),
-embedded in this repo at `.devenv/`. The doctor selected the subset matching
-Trampoline's stack, so the Python and game-engine rules are deliberately absent.
+Every rule here is **glob-scoped**: it enters the context window only when the agent touches a
+matching file. Nothing in this directory is always applied, and that is deliberate.
 
-## Always applied
+Always-loaded context belongs in one of two other places:
 
-- **00-core-principles.mdc** — reasoning transparency, pre-flight checklist
-- **01-code-quality.mdc** — organization, design principles, performance
-- **02-security.mdc** — OWASP Top 10, secrets management
-- **03-testing.mdc** — testing philosophy and structure
-- **04-git-workflow.mdc** — commit messages, branch naming
-- **05-error-handling.mdc** — defensive programming, edge cases
-- **06-documentation.mdc** — comments and documentation standards
-- **07-ai-agent-behavior.mdc** — agent tool usage, session cleanup
-- **08-project-context.mdc** — **Trampoline-specific.** Written for this repo,
-  not copied from the template. Holds the load-bearing evidence rules, the
-  legal constraints, and the SR&ED commit discipline.
-- **16-feature-debug-instrumentation.mdc** — debug instrumentation policy
-- **17-plan-first.mdc** — plan before multi-file work
-- **18-content-and-data-pipelines.mdc** — non-destructive pipelines
-- **19-docs-directory-structure.mdc** — follow [docs/DOCS_LAYOUT.md](../../docs/DOCS_LAYOUT.md)
-- **automation-standards.mdc** — API → script → UI; log gaps in
-  [docs/operational/automation-gaps.md](../../docs/operational/automation-gaps.md)
+- **[`AGENTS.md`](../../AGENTS.md)** (repository root) — facts about Trampoline that are true on
+  every turn: the stack, the commands, the load-bearing evidence rules, the legal constraints.
+  Cursor loads it automatically, as do Claude Code, Codex, and Gemini CLI, so one file serves every
+  tool.
+- **`.agents/skills/<name>/SKILL.md`** — procedural knowledge. A skill costs only its `description`
+  until that description matches the task, then the agent reads the body.
 
-## Conditional (loaded by file type)
+## Why nothing here is always-applied
 
-- **10-typescript.mdc** — `**/*.ts`, `**/*.tsx`
-- **13-markdown.mdc** — `**/*.md`
-- **14-json-yaml.mdc** — `**/*.json`, `**/*.yaml`, `**/*.yml`
-- **15-shell-scripts.mdc** — `**/*.sh`, `**/*.ps1`, `**/*.mjs` tooling
-- **20-frontend-frameworks.mdc** — `app/**`, `components/**`
+This directory used to carry 14 always-applied rules totalling 1,153 lines — roughly 12,000–15,000
+tokens billed on every single turn, including turns with nothing to do with their content. Long
+context evaluations consistently find that irrelevant always-loaded context *lowers* accuracy, so
+the cost was not merely wasted, it was harmful.
 
-## Updating
+That content now lives in `AGENTS.md` and `.agents/skills/`. `npm run doctor` reports the
+always-apply budget, so re-adding one is a visible decision rather than a quiet regression.
 
-Rules other than `08-project-context.mdc` are template-owned. To pull template
-improvements, sync `.devenv/` (see `.devenv/docs/SYNC.md`) and re-run
-`npm run doctor --prefix .devenv`. Edit `08-project-context.mdc` freely — it
-belongs to this repo and the template will not overwrite it.
+Where the retired rules went:
+
+| Was | Now |
+| --- | --- |
+| `00-core-principles` | `AGENTS.md`, working agreements |
+| `01-code-quality` | `.agents/skills/code-structure` |
+| `02-security` | `.agents/skills/secure-coding` |
+| `03-testing` | `.agents/skills/testing-standards` |
+| `04-git-workflow` | `AGENTS.md`, conventions |
+| `05-error-handling` | `.agents/skills/defensive-programming` |
+| `06-documentation`, `19-docs-directory-structure` | `.agents/skills/documentation` |
+| `07-ai-agent-behavior` | `.agents/skills/agent-workflow` |
+| `08-project-context` | `AGENTS.md` — stack, layout, load-bearing rules, legal constraints |
+| `16-feature-debug-instrumentation` | `.agents/skills/debug-instrumentation` |
+| `17-plan-first` | `.agents/skills/plan-first` |
+| `18-content-and-data-pipelines` | `.agents/skills/data-pipeline-safety` |
+| `automation-standards` | `.agents/skills/automation-standards` |
+
+## The rules
+
+| Rule | Applies to |
+| --- | --- |
+| `10-typescript.mdc` | `**/*.ts`, `**/*.tsx` |
+| `13-markdown.mdc` | `**/*.md` |
+| `14-json-yaml.mdc` | `**/*.json`, `**/*.yaml`, `**/*.yml` |
+| `15-shell-scripts.mdc` | `**/*.sh`, `**/*.ps1`, `**/*.bat` |
+| `20-frontend-frameworks.mdc` | `**/components/**`, `**/pages/**`, `**/app/**` |
+
+The leading numbers group related rules for humans. Cursor ignores them, and it ignores any
+frontmatter key outside `description`, `globs`, and `alwaysApply`.
+
+## File format
+
+```yaml
+---
+description: What this rule covers, shown in the rule picker
+globs: '**/*.ts'
+alwaysApply: false
+---
+```
+
+Write `globs`, plural. A singular `glob:` key is silently ignored, which produces a rule that looks
+scoped but never loads.
+
+## Keeping these in sync with the template
+
+These rules come from [DevEnvTemplate](https://github.com/XylarDark/DevEnvTemplate), embedded at
+`.devenv/`. To pull newer versions:
+
+```powershell
+npm run doctor -- --integrate-cursor-rules
+```
+
+Existing files are never overwritten, so local edits survive. Compare against
+`.devenv/.cursor/rules/` if you want the newer version of a rule you have changed.
