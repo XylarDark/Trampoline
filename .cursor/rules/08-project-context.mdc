@@ -1,0 +1,85 @@
+---
+name: "Trampoline Project Context"
+description: "Project-specific context for Trampoline so changes stay consistent with its architecture, evidence model, and legal constraints"
+alwaysApply: true
+priority: 8
+version: 1.0
+---
+
+# Trampoline Project Context
+
+## What this is
+
+Trampoline is one employment record that follows a person between services. Its
+working wedge is **outcome evidence**: deriving Ontario Integrated Employment
+Services (IES) funded-outcome milestones from fragmentary employment spells, and
+showing a provider which checkpoints they have earned but cannot prove.
+
+It is **not** a readiness certifier. Nothing in this repo should gate a person's
+access to work on a score, a level, or a health fact.
+
+## Tech stack
+
+- Next.js 16 App Router, React 19, TypeScript strict
+- Tailwind v4 + shadcn primitives (`components/ui/`)
+- Drizzle ORM against Postgres; migrations in `drizzle/`
+- Auth.js (email magic link) with the Drizzle adapter
+- Zod for rule payloads and share-token claims
+- Vitest for the engine and the seed
+
+## Layout
+
+- `src/engine/` — pure functions, no I/O. `outcomes.ts` (IES milestones),
+  `levels.ts`, `rules.ts`, `decay.ts`, `routing.ts`, `share.ts`, `types.ts`
+- `src/db/` — schema, queries, seed, and the 12-client demo cohort
+- `app/` — App Router routes. `app/provider/` is the built surface
+- `components/` — shared UI over shadcn primitives
+- `docs/` — see [docs/DOCS_LAYOUT.md](../../docs/DOCS_LAYOUT.md)
+
+## Commands
+
+- `npm run dev` — dev server
+- `npm test` — Vitest (engine + seed, seed runs on in-process PGlite)
+- `npm run typecheck` — `tsc --noEmit`
+- `npm run lint` / `npm run format` / `npm run format:check`
+- `npm run check:contrast` — arithmetic WCAG contrast check on the theme
+- `npm run db:demo` — local Postgres over PGlite, no Docker required
+- `npm run db:up` — Docker Postgres, the alternative to `db:demo`
+
+## Rules that are load-bearing
+
+These encode decisions that cost real research. Do not relax them casually.
+
+- **A document evidences the employment period it covers, and no other.** One
+  spell's evidence may never certify another spell's hours. This is enforced in
+  `provableHours` and by a database check constraint (design rule R9).
+- **Hours worked and hours provable are different numbers.** A `claimable`
+  verdict reports hours worked; `provableHours` is what the documents cover.
+  Never collapse the two.
+- **Append-only attestations.** Never update or delete an attestation row.
+- **`CUMULATIVE_AGGREGATION` is an assumption, not a sourced rule.** It sums
+  concurrent spells at a point in time. It is unverified with the ministry and
+  is flagged as a risk. Do not build on it as if it were settled.
+- **Engine functions stay pure.** No database or network access in
+  `src/engine/`. It is tested as pure functions and must remain so.
+
+## Legal and accessibility constraints
+
+- **PHIPA / PIPEDA / Ontario Human Rights Code.** Health facts must not reach an
+  employer surface. Employer-facing disclosure is governed by share links only.
+- **AODA / WCAG 2.0 AA.** UI changes must keep contrast passing. Run
+  `npm run check:contrast` after touching `app/globals.css` or a variant.
+- **The demo cohort is synthetic.** `src/db/demo-cohort.ts` holds 12 fabricated
+  clients. Never describe it as pilot data, in code, docs, or outreach.
+
+## SR&ED contemporaneity
+
+`docs/funding/sred-log.md` is a contemporaneous record. Commit **documentation
+separately from the code it describes**, and commit the log entry before or
+alongside the work, never long after. The log's value depends on provable dates.
+
+## Conventions
+
+- Conventional commits (`feat:`, `fix:`, `docs:`, `chore:`)
+- PowerShell is the shell here: chain with `;`, not `&&`
+- Keep `app/page.tsx` free of readiness-certifier language

@@ -66,11 +66,33 @@ For Docker instead, run `npm run db:up` and leave the `.env.example` defaults al
 | `npm run dev` | Next.js dev server |
 | `npm run build` | Production build |
 | `npm test` | Engine rules, plus migrations and seed against PGlite (no Docker needed) |
+| `npm run typecheck` | `tsc --noEmit`. Run a build first, or the App Router's generated route types are stale |
+| `npm run lint` | ESLint, including the 34 recommended `jsx-a11y` rules |
+| `npm run format` / `format:check` | Prettier over code. Markdown is excluded on purpose — see `.prettierignore` |
 | `npm run check:contrast` | WCAG contrast ratios for the palette — see [Accessibility](#accessibility) |
+| `npm run doctor` | Environment health check — see [Development environment](#development-environment) |
 | `npm run db:demo` | PGlite over TCP on 5432, as a stand-in for Postgres |
 | `npm run db:up` | Start local Postgres in Docker |
 | `npm run db:generate` / `db:migrate` / `db:push` | Drizzle Kit |
 | `npm run db:seed` | Idempotent seed |
+
+## Development environment
+
+Tooling comes from [DevEnvTemplate](https://github.com/XylarDark/DevEnvTemplate), embedded as `.devenv/`. That directory is a separate git checkout and is **gitignored**, so a fresh clone has to recreate it:
+
+```bash
+git clone https://github.com/XylarDark/DevEnvTemplate .devenv
+cd .devenv; npm install; npm run build; cd ..
+npm run doctor
+```
+
+Everything else it installed **is** committed: `.cursor/rules/` (with a Trampoline-specific `08-project-context.mdc`), `AGENTS.md`, `.editorconfig`, `.gitattributes`, `.prettierrc`, `.nvmrc`, and `.github/`. You only need `.devenv/` to re-run the doctor.
+
+**Read the doctor's gap report, not its score.** It reported 100/100 before this repo had any CI at all, and stayed at exactly 100/100 after CI, Dependabot, CSP headers, a11y linting and Prettier were added. Three of its gaps also fire unconditionally and can never be closed, and it reports "No JS Unit Tests Detected" against 107 passing tests because it looks for `vitest.config.ts` and ours is `.mts`. All of this is written up in [docs/operational/automation-gaps.md](docs/operational/automation-gaps.md) so nobody chases it twice.
+
+CI runs lint, format, build, typecheck, the tests, and the contrast check on every push and PR to `main`. `next.config.ts` sets a CSP and five other security headers; the `'unsafe-inline'` needed for App Router hydration weakens it, and the comment there records the upgrade path.
+
+Two other files carry hard-won context: [docs/KNOWN_ERRORS.md](docs/KNOWN_ERRORS.md) for failures that already cost us time, and [docs/DOCS_LAYOUT.md](docs/DOCS_LAYOUT.md) for where new documentation belongs.
 
 ## Layout
 
