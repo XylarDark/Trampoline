@@ -1,11 +1,27 @@
 # https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+#
+# Tuned for a solo maintainer: the scarce resource is attention, not CI minutes, so this file
+# optimizes for the smallest number of pull requests that still surfaces everything.
+#
+# Two rules keep the count down. Every group lists `major` explicitly, so a major bump cannot fall
+# out of its group and arrive as its own pull request. And nothing may be left ungrouped: an
+# ungrouped dependency always gets a pull request of its own, which is how a sibling repository
+# accumulated ten at once. The catch-all `production` group below exists for that reason and must
+# stay last, because Dependabot assigns a dependency to the first group it matches.
+#
+# Grouping majors keeps them visible while costing one review instead of ten. Read the group's diff
+# before merging: a grouped major bump can still break the build.
+#
+# Security updates ignore this file's schedule and grouping. Slowing version updates down does not
+# slow a security patch down.
+
 version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "monthly"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
     commit-message:
       prefix: "chore"
       prefix-development: "chore"
@@ -23,18 +39,49 @@ updates:
           - "react-dom"
           - "@types/react"
           - "@types/react-dom"
+        update-types:
+          - "major"
+          - "minor"
+          - "patch"
       drizzle:
         patterns:
           - "drizzle-orm"
           - "drizzle-kit"
+        update-types:
+          - "major"
+          - "minor"
+          - "patch"
       dev-tooling:
         dependency-type: "development"
+        update-types:
+          - "major"
+          - "minor"
+          - "patch"
+      # Catch-all. Keep last: anything not claimed above lands here instead of
+      # opening a pull request per package.
+      production:
+        dependency-type: "production"
+        update-types:
+          - "major"
+          - "minor"
+          - "patch"
 
+  # Keep workflow actions current; pinned SHAs still need bumping. Without a group here, each
+  # action becomes its own pull request.
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "monthly"
+    open-pull-requests-limit: 1
     commit-message:
       prefix: "chore"
     labels:
       - "dependencies"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+        update-types:
+          - "major"
+          - "minor"
+          - "patch"
