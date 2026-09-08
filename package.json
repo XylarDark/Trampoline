@@ -6,6 +6,8 @@
     "node": ">=20.9.0"
   },
   "scripts": {
+    "demo": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/start-demo.ps1",
+    "demo:stop": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/stop-demo.ps1",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
