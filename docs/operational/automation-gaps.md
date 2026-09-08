@@ -87,6 +87,38 @@ Fields: **Date**, **Area**, **What is needed**, **Why automation fails**,
 - **Follow-up:** provision Google Docs API credentials, or move the canonical
   business document out of Google Docs entirely.
 
+### What works and what does not, from inserting a section on 2026-09-08
+
+Four separate behaviours cost time. Recording them so the next attempt starts
+from evidence rather than from guessing.
+
+- **The tab must be visible.** A backgrounded Docs tab accepts a JS paste event
+  and saves the result, but does not repaint its canvas, so screenshots show the
+  old content and look like failure. `document.hasFocus()` reports `false` even
+  when the tab is visible and accepting clicks, so it is not a usable readiness
+  signal. Reveal the tab with `browser_navigate` and `position: "active"`.
+- **Verify against `/mobilebasic`, never a screenshot.** Appending
+  `/mobilebasic` to the document URL renders the saved document as ordinary
+  HTML, so its text and heading levels can be read directly. The canvas render
+  lags and the accessibility snapshot of the editor lags behind that;
+  `/mobilebasic` is ground truth. `/export?format=txt` is blocked by CSP when
+  fetched from the editor page.
+- **Mouse events register; keystrokes do not.** Clicking the canvas moves the
+  caret, and clicks on menu items and dialog buttons work, though the resulting
+  accessibility snapshot can be one call stale. Synthetic key events — including
+  Enter and Backspace, whether sent to the page or to the hidden
+  `.docs-texteventtarget-iframe` — do nothing. Plan any edit as clicks plus
+  paste events, with no keyboard step.
+- **A pasted first block merges into the current paragraph.** Every later block
+  becomes its own paragraph, so pasting `<h4>` at a caret silently appends the
+  heading text to the preceding paragraph. Prefix the payload with a throwaway
+  `<p>&nbsp;</p>` and the real first block survives as a block.
+- **Find and replace supports `\n` when searching but not when replacing.** It
+  inserts a literal backslash-n into the document. Use it to delete text, not to
+  create paragraph breaks. Populating its fields needs the native
+  `HTMLInputElement` value setter plus an `input` event; the buttons enabling is
+  the signal that the pattern matched.
+
 ## Ontario funded-outcome rules cannot be verified from published sources
 
 - **Date:** 2026-09-07
