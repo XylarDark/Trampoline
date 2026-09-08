@@ -74,9 +74,16 @@ Fields: **Date**, **Area**, **What is needed**, **Why automation fails**,
 - **Why automation fails:** no Google Docs API credentials are configured, and
   the Docs editing surface is a canvas, so synthetic keyboard events such as
   `Ctrl+A` do not register against it.
-- **Interim:** convert the markdown to HTML, serve it from a temporary local
-  HTTP server, select all via the Docs **Edit → Select all** menu item, and
-  paste through a CDP `DataTransfer`. Slow and manual to supervise.
+- **Interim, for a full re-mirror:** convert the markdown to HTML, serve it from
+  a temporary local HTTP server, select all via the Docs **Edit → Select all**
+  menu item, and paste through a CDP `DataTransfer`. Slow and manual to
+  supervise, and it rewrites the whole document to change one line.
+- **Interim, for a targeted edit — prefer this:** drive the Docs UI menus
+  instead of the keyboard. Click into the text to place the cursor, then
+  right-click for the context menu, whose items *are* exposed to the
+  accessibility tree even though the document body is canvas. Deleting one
+  table row this way took two clicks and touched nothing else. Menu-driven
+  editing is the reliable path; keyboard shortcuts against the canvas are not.
 - **Follow-up:** provision Google Docs API credentials, or move the canonical
   business document out of Google Docs entirely.
 
