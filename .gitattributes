@@ -1,0 +1,32 @@
+# Normalise line endings so a Windows checkout does not churn the diff.
+* text=auto eol=lf
+
+*.md text
+*.css text
+*.js text
+*.mjs text
+*.ts text
+*.mts text
+*.tsx text
+*.json text
+*.sql text
+*.yml text
+*.yaml text
+
+# PowerShell keeps CRLF.
+*.ps1 text eol=crlf
+
+# Binary.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+
+# Generated. Collapse in diffs and exclude from language stats.
+package-lock.json linguist-generated=true -diff
+drizzle/meta/*.json linguist-generated=true -diff

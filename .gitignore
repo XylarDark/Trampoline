@@ -32,6 +32,9 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# ...but the template must be committed, or a fresh clone has nothing to copy.
+# `.env*` above matches `.env.example` too, which is why it went missing once.
+!.env.example
 
 # vercel
 .vercel
@@ -47,3 +50,7 @@ next-env.d.ts
 dev.log
 demo-db.log
 demo-db.err
+# Embedded DevEnvTemplate doctor (npm run doctor). A separate git checkout and
+# its generated reports, both of which belong to the tool, not to this repo.
+# Recreate with: git clone https://github.com/XylarDark/DevEnvTemplate .devenv
+.devenv/

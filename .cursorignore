@@ -1,0 +1,14 @@
+﻿# Embedded DevEnvTemplate doctor. Tooling, not this project's source.
+.devenv/
+
+# Build output and local database
+.next/
+out/
+coverage/
+.pglite/
+
+# Generated
+next-env.d.ts
+drizzle/meta/
+package-lock.json
+*.log
